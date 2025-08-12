@@ -21,11 +21,11 @@ export function StickyBottom() {
           {/* Text Content */}
           <div className="flex flex-col flex-1">
             <p className="text-white text-sm">
-              <span className="text-gray-300">Hey, I'm </span>
+              <span className="text-gray-300">Hey, I&apos;m </span>
               <span className="font-semibold">Umar from Emerssive</span>
             </p>
             <p className="text-gray-400 text-xs">
-              Let's find the right solution to make your team work smarter
+              Let&apos;s find the right solution to make your team work smarter
             </p>
           </div>
 

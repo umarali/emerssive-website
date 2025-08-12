@@ -11,7 +11,7 @@ export function Contact() {
             Ready to start your project?
           </h2>
           <p className="text-xl text-text-light max-w-2xl mx-auto mb-8">
-            Book a consultation with our team and let's discuss how we can help bring your vision to life.
+            Book a consultation with our team and let&apos;s discuss how we can help bring your vision to life.
           </p>
         </div>
 

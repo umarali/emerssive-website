@@ -1,23 +1,23 @@
-import { Navigation } from '@/components/Navigation'
 import { Hero } from '@/components/Hero'
-import { CustomerLogos } from '@/components/CustomerLogos'
+import { About } from '@/components/About'
 import { Services } from '@/components/Services'
+import { CustomerLogos } from '@/components/CustomerLogos'
 import { Testimonials } from '@/components/Testimonials'
 import { FAQ } from '@/components/FAQ'
-import { Contact } from '@/components/Contact'
 import { Footer } from '@/components/Footer'
+import { Navigation } from '@/components/Navigation'
 import { StickyBottom } from '@/components/StickyBottom'
 
 export default function Home() {
   return (
-    <main className="min-h-screen gradient-bg">
+    <main>
       <Navigation />
       <Hero />
-      <CustomerLogos />
+      <About />
       <Services />
+      <CustomerLogos />
       <Testimonials />
       <FAQ />
-      {/* <Contact /> */}
       <Footer />
       <StickyBottom />
     </main>

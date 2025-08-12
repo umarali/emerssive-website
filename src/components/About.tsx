@@ -75,7 +75,7 @@ export function About() {
               </p>
 
               <p className="text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
-                From startups to Fortune 500 companies, we've built lasting partnerships based on trust, transparency, and exceptional results. Our commitment to quality, innovation, and client success has made us a trusted partner for businesses looking to lead the way in digital innovation.
+                From startups to Fortune 500 companies, we&apos;ve built lasting partnerships based on trust, transparency, and exceptional results. Our commitment to quality, innovation, and client success has made us a trusted partner for businesses looking to lead the way in digital innovation.
               </p>
             </div>
 
