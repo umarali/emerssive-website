@@ -43,16 +43,13 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-white mb-6">Links</h3>
             <ul className="space-y-3">
               <li>
-                <button 
-                  onClick={scrollToTop}
-                  className="text-gray-400 hover:text-white transition-colors duration-200"
-                >
-                  Home
-                </button>
-              </li>
-              <li>
                 <Link href="#services" className="text-gray-400 hover:text-white transition-colors duration-200">
                   Services
+                </Link>
+              </li>
+              <li>
+                <Link href="#case-studies" className="text-gray-400 hover:text-white transition-colors duration-200">
+                  Case Studies
                 </Link>
               </li>
             </ul>

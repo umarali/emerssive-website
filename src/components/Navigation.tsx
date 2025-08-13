@@ -55,6 +55,9 @@ export function Navigation() {
             <Link href="#services" className="text-text hover:text-primary transition-colors duration-200 text-base">
               Services
             </Link>
+            <Link href="#case-studies" className="text-text hover:text-primary transition-colors duration-200 text-base">
+              Case Studies
+            </Link>
             {/* <Link href="#about" className="text-text hover:text-primary transition-colors duration-200 text-base">
               About
             </Link> */}
@@ -96,6 +99,13 @@ export function Navigation() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Services
+              </Link>
+              <Link 
+                href="#case-studies" 
+                className="block px-3 py-2 text-text hover:text-primary transition-colors duration-200 text-base"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Case Studies
               </Link>
               {/* <Link 
                 href="#about" 
