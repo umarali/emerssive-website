@@ -12,8 +12,8 @@ const caseStudies = [
     keyMetric: '35%',
     metricLabel: 'reduction in manual errors',
     notableClients: 'Citi Foundation, USAID, Leukemia & Lymphoma Society',
-    bgColor: 'bg-primary/5',
-    hoverBgColor: 'group-hover:bg-primary/10'
+    bgColor: 'bg-primary/8',
+    hoverBgColor: 'group-hover:bg-primary/15'
   },
   {
     id: 2,
@@ -23,8 +23,8 @@ const caseStudies = [
     logo: '/assets/customers/qodexai-removebg-preview.png',
     keyMetric: '78K+',
     metricLabel: 'APIs secured globally',
-    bgColor: 'bg-accent/5',
-    hoverBgColor: 'group-hover:bg-accent/10'
+    bgColor: 'bg-indigo-500/8',
+    hoverBgColor: 'group-hover:bg-indigo-500/15'
   },
   {
     id: 3,
@@ -34,8 +34,8 @@ const caseStudies = [
     logo: '/assets/customers/bookbite-removebg-preview.png',
     keyMetric: '30s',
     metricLabel: 'average reservation time',
-    bgColor: 'bg-secondary',
-    hoverBgColor: 'group-hover:bg-secondary-dark/50'
+    bgColor: 'bg-purple-500/8',
+    hoverBgColor: 'group-hover:bg-purple-500/15'
   },
   {
     id: 4,
@@ -46,8 +46,8 @@ const caseStudies = [
     keyMetric: '1.2M+',
     metricLabel: 'monthly visitors supported',
     notableClients: 'Schools, Districts, Educational Institutions',
-    bgColor: 'bg-primary/5',
-    hoverBgColor: 'group-hover:bg-primary/10'
+    bgColor: 'bg-rose-500/8',
+    hoverBgColor: 'group-hover:bg-rose-500/15'
   }
 ]
 
@@ -77,9 +77,9 @@ export function CaseStudies() {
                 <Image
                   src={caseStudy.logo}
                   alt={caseStudy.title}
-                  width={100}
-                  height={100}
-                  className={`object-contain ${caseStudy.id === 3 ? 'w-18 h-18' : 'w-20 h-20'} drop-shadow-sm`}
+                  width={120}
+                  height={120}
+                  className={`object-contain ${caseStudy.id === 3 ? 'w-24 h-24' : 'w-28 h-28'} drop-shadow-sm`}
                 />
                 
 

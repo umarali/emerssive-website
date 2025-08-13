@@ -67,7 +67,7 @@ export function CustomerLogos() {
           {customerLogos.map((customer) => (
             <div
               key={customer.name}
-              className="group relative flex items-center justify-center p-6 bg-secondary rounded-lg border border-secondary-dark/10 hover:border-primary/20 transition-all duration-300 hover:shadow-md"
+              className="group relative flex items-center justify-center p-6 bg-secondary rounded-lg border border-secondary-dark/10 hover:border-transparent transition-all duration-300 hover:shadow-md"
               onMouseEnter={() => setHoveredLogo(customer.name)}
               onMouseLeave={() => setHoveredLogo(null)}
             >
