@@ -5,7 +5,7 @@ import { useState } from 'react'
 const faqs = [
   {
     question: 'What industries do you cater to?',
-    answer: 'We cater to various industries such as finance, healthcare, education, e-commerce, logistics, and startups.'
+    answer: 'We cater to various industries such as finance, education, e-commerce, logistics, and startups.'
   },
   {
     question: 'How do you manage projects?',
@@ -13,7 +13,7 @@ const faqs = [
   },
   {
     question: 'What technologies do you specialize in?',
-    answer: 'Our expertise includes Python/Django, JavaScript/React, React Native, Docker/Kubernetes, and LangChain.'
+    answer: 'Our expertise includes Python/Django, JavaScript/React, React Native, Docker/Kubernetes, LangChain, and Shopify.'
   },
   {
     question: 'How do you ensure quality?',
@@ -25,7 +25,7 @@ const faqs = [
   },
   {
     question: 'What scale of projects do you work on?',
-    answer: 'The minimum project cost we accept starts at $5,000.'
+    answer: 'The minimum project cost we accept starts at $2,000.'
   }
 ]
 

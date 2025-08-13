@@ -15,13 +15,13 @@ const openSans = Open_Sans({
 })
 
 export const metadata: Metadata = {
-  title: 'Emerssive - Immersive Technology Solutions',
-  description: 'Emerssive delivers cutting-edge immersive technology solutions for businesses. From VR/AR experiences to interactive digital solutions, we help companies create engaging, innovative digital experiences.',
-  keywords: 'immersive technology, VR, AR, digital experiences, interactive solutions, virtual reality, augmented reality',
+  title: 'Emerssive - A full-service software development company',
+  description: 'Emerssive is a full-service software development company specializing in Generative AI, Web and Mobile. Our experienced team transforms concepts into impactful applications for startups to enterprise companies.',
+  keywords: 'software development, generative ai, web development, mobile development, startups, enterprise companies',
   authors: [{ name: 'Emerssive' }],
   openGraph: {
-    title: 'Emerssive - Immersive Technology Solutions',
-    description: 'Cutting-edge immersive technology solutions for modern businesses',
+    title: 'Emerssive - A full-service software development company',
+    description: 'Emerssive is a full-service software development company specializing in Generative AI, Web and Mobile. Our experienced team transforms concepts into impactful applications for startups to enterprise companies.',
     type: 'website',
   },
 }

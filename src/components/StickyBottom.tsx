@@ -4,9 +4,9 @@ import Image from 'next/image'
 
 export function StickyBottom() {
   return (
-    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50">
+    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-full">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gray-900 rounded-full px-8 py-4 flex items-center space-x-6 shadow-xl min-w-[500px]">
+        <div className="bg-gray-900 rounded-full px-8 py-4 flex items-center space-x-6 shadow-xl">
           {/* Profile Picture */}
           <div className="relative w-14 h-14 rounded-full overflow-hidden">
             <Image
@@ -21,11 +21,12 @@ export function StickyBottom() {
           {/* Text Content */}
           <div className="flex flex-col flex-1">
             <p className="text-white text-sm">
-              <span className="text-gray-300">Hey, I&apos;m </span>
-              <span className="font-semibold">Umar from Emerssive</span>
-            </p>
-            <p className="text-gray-400 text-xs">
-              Let&apos;s find the right solution to make your team work smarter
+              <span className="font-semibold">
+                Hey, I&apos;m Umar from Emerssive Solutions.&nbsp;
+              </span>
+              <span className="text-gray-300">
+                Let&apos;s find the right solution to make your team work smarter.
+              </span>
             </p>
           </div>
 
