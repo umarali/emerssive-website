@@ -23,9 +23,6 @@ export function Services() {
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-2 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4">
-            Services
-          </span>
           <h2 className="text-3xl text-text mb-6">
             What we can do for you
           </h2>

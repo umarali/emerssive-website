@@ -58,9 +58,9 @@ export function Navigation() {
             {/* <Link href="#about" className="text-text hover:text-primary transition-colors duration-200 text-base">
               About
             </Link> */}
-            <Link href="#contact" className="text-text hover:text-primary transition-colors duration-200 text-base">
+            {/* <Link href="#contact" className="text-text hover:text-primary transition-colors duration-200 text-base">
               Contact
-            </Link>
+            </Link> */}
             <a 
               href="https://calendar.app.google/U3z2GqSza9Fhch8e9"
               target="_blank"
@@ -104,13 +104,13 @@ export function Navigation() {
               >
                 About
               </Link> */}
-              <Link 
+              {/* <Link 
                 href="#contact" 
                 className="block px-3 py-2 text-text hover:text-primary transition-colors duration-200 text-base"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 Contact
-              </Link>
+              </Link> */}
               <a 
                 href="https://calendar.app.google/U3z2GqSza9Fhch8e9"
                 target="_blank"
