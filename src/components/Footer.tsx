@@ -4,10 +4,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 
 export function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
-
   return (
     <footer className="bg-gray-900 text-white py-16 pb-32 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">

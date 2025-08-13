@@ -58,7 +58,7 @@ export function Testimonials() {
             Success, Powered by Emerssive
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover how we've helped businesses achieve their goals through innovative solutions and dedicated partnership.
+            Discover how we&apos;ve helped businesses achieve their goals through innovative solutions and dedicated partnership.
           </p>
         </div>
 
@@ -101,7 +101,7 @@ export function Testimonials() {
                       {/* Right Side - Content */}
                       <div className="w-3/5 p-6 flex flex-col">
                         {/* Quote Mark */}
-                        <div className="text-2xl text-gray-300 font-serif leading-none mb-3">"</div>
+                        <div className="text-2xl text-gray-300 font-serif leading-none mb-3">&ldquo;</div>
                         
                         {/* Quote Text */}
                         <div className="relative group mb-4 flex-grow">
@@ -183,7 +183,7 @@ export function Testimonials() {
 
                 {/* Mobile Content Section */}
                 <div className="p-6">
-                  <div className="text-3xl text-gray-300 font-serif leading-none mb-4">"</div>
+                  <div className="text-3xl text-gray-300 font-serif leading-none mb-4">&ldquo;</div>
                   <p className="text-gray-700 text-sm leading-relaxed mb-6">
                     {testimonial.quote}
                   </p>
