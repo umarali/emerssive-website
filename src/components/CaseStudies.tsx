@@ -11,7 +11,9 @@ const caseStudies = [
     logo: '/assets/customers/fluxx-removebg-preview.png',
     keyMetric: '35%',
     metricLabel: 'reduction in manual errors',
-    notableClients: 'Citi Foundation, USAID, Leukemia & Lymphoma Society'
+    notableClients: 'Citi Foundation, USAID, Leukemia & Lymphoma Society',
+    bgColor: 'bg-primary/5',
+    hoverBgColor: 'group-hover:bg-primary/10'
   },
   {
     id: 2,
@@ -20,7 +22,9 @@ const caseStudies = [
     description: 'Built complete AI-powered API testing platform from concept to enterprise-scale solution. Enables 80% faster testing with natural language processing for development teams.',
     logo: '/assets/customers/qodexai-removebg-preview.png',
     keyMetric: '78K+',
-    metricLabel: 'APIs secured globally'
+    metricLabel: 'APIs secured globally',
+    bgColor: 'bg-accent/5',
+    hoverBgColor: 'group-hover:bg-accent/10'
   },
   {
     id: 3,
@@ -29,7 +33,9 @@ const caseStudies = [
     description: 'Built an AI-powered restaurant management platform that streamlines operations and enhances customer experience.',
     logo: '/assets/customers/bookbite-removebg-preview.png',
     keyMetric: '30s',
-    metricLabel: 'average reservation time'
+    metricLabel: 'average reservation time',
+    bgColor: 'bg-secondary',
+    hoverBgColor: 'group-hover:bg-secondary-dark/50'
   },
   {
     id: 4,
@@ -39,7 +45,9 @@ const caseStudies = [
     logo: '/assets/customers/frontline-education-removebg-preview.png',
     keyMetric: '1.2M+',
     metricLabel: 'monthly visitors supported',
-    notableClients: 'Schools, Districts, Educational Institutions'
+    notableClients: 'Schools, Districts, Educational Institutions',
+    bgColor: 'bg-primary/5',
+    hoverBgColor: 'group-hover:bg-primary/10'
   }
 ]
 
@@ -64,8 +72,8 @@ export function CaseStudies() {
               key={caseStudy.id}
               className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer overflow-hidden border border-gray-100"
             >
-              {/* Logo Section at Top with Simple Background */}
-              <div className="h-24 bg-gray-50 group-hover:bg-gray-100 flex items-center justify-center transition-all duration-300 relative">
+              {/* Logo Section at Top with Theme Background */}
+              <div className={`h-24 ${caseStudy.bgColor} ${caseStudy.hoverBgColor} flex items-center justify-center transition-all duration-300 relative`}>
                 <Image
                   src={caseStudy.logo}
                   alt={caseStudy.title}
@@ -85,7 +93,7 @@ export function CaseStudies() {
 
                 {/* Key Metric with accent color */}
                 <div className="mb-4">
-                  <div className="text-2xl font-bold text-primary">{caseStudy.keyMetric}</div>
+                  <div className="text-2xl font-bold text-accent">{caseStudy.keyMetric}</div>
                   <div className="text-sm text-text-light">{caseStudy.metricLabel}</div>
                 </div>
 
