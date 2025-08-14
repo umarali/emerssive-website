@@ -93,7 +93,7 @@ export function Hero() {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-10 lg:p-12">
               <div className="bg-gray-900 text-white rounded-xl px-8 py-6 text-center">
                 <span className="text-6xl font-bold leading-none block">91%</span>
-                <span className="opacity-80 text-lg">on time and budget</span>
+                <span className="opacity-80 text-lg">projects delivered on time and budget</span>
               </div>
             </div>
           </div>
