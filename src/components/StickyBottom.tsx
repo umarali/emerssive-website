@@ -4,8 +4,8 @@ import Image from "next/image";
 
 export function StickyBottom() {
   return (
-    <div className="fixed bottom-4 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-full">
-      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8">
+    <div className="fixed bottom-3 sm:bottom-6 left-1/2 transform -translate-x-1/2 z-50 w-full max-w-[calc(100%-1.5rem)] sm:max-w-none">
+      <div className="max-w-4xl mx-auto px-0 sm:px-6 lg:px-8">
         {/* Mobile Layout */}
         <div className="sm:hidden bg-gray-900 rounded-2xl px-4 py-3 shadow-xl">
           <div className="flex items-center space-x-3">

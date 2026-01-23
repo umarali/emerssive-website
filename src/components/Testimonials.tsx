@@ -1,53 +1,61 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useState } from 'react'
+import Image from "next/image";
+import { useState } from "react";
 
 const testimonials = [
   {
-    name: 'Jerry Shu',
-    role: 'Co-Founder',
-    company: 'Lendica',
-    image: '/assets/testimonials/Jerry Shu - Co-Founder - Lendica.png',
-    quote: 'Working with Umar was an extremely pleasant experience as he was extremely communicative and flexible, and was able to complete our task of setting up a CI/CD pipeline faster than our expected timeline. Would highly recommend his services to anyone in need!',
-    bgGradient: 'from-amber-400 to-orange-500'
+    name: "Jerry Shu",
+    role: "Co-Founder",
+    company: "Lendica",
+    image: "/assets/testimonials/Jerry Shu - Co-Founder - Lendica.png",
+    quote:
+      "Working with Umar was an extremely pleasant experience as he was extremely communicative and flexible, and was able to complete our task of setting up a CI/CD pipeline faster than our expected timeline. Would highly recommend his services to anyone in need!",
+    bgGradient: "from-amber-400 to-orange-500",
   },
   {
-    name: 'Adi Chirilov',
-    role: 'CTO',
-    company: 'AppSeed',
-    image: '/assets/testimonials/Adi Chirilov - CTO - AppSeed.png',
-    quote: 'Umar helped our team with many projects, from average to high complexity. Besides his excellent technical skills, Umar is a good communicator and a proactive team member, positively influencing the whole team\'s performance. Highly recommended for React, Javascript tasks, and Tech Lead jobs',
-    bgGradient: 'from-purple-400 to-purple-600'
+    name: "Adi Chirilov",
+    role: "CTO",
+    company: "AppSeed",
+    image: "/assets/testimonials/Adi Chirilov - CTO - AppSeed.png",
+    quote:
+      "Umar helped our team with many projects, from average to high complexity. Besides his excellent technical skills, Umar is a good communicator and a proactive team member, positively influencing the whole team's performance. Highly recommended for React, Javascript tasks, and Tech Lead jobs",
+    bgGradient: "from-purple-400 to-purple-600",
   },
   {
-    name: 'Lindsey Holmes',
-    role: 'Chief of Product',
-    company: 'Code3Apps',
-    image: '/assets/testimonials/Lindsey Holmes - Chief of Product - Code3Apps.png',
-    quote: 'Umar and Code3Apps worked together for a couple years and Umar demonstrated a great work ethic, good technical knowledge (our project was a web based platform with an app interface), and was overall a pleasure to interact with.',
-    bgGradient: 'from-red-400 to-rose-500'
+    name: "Lindsey Holmes",
+    role: "Chief of Product",
+    company: "Code3Apps",
+    image:
+      "/assets/testimonials/Lindsey Holmes - Chief of Product - Code3Apps.png",
+    quote:
+      "Umar and Code3Apps worked together for a couple years and Umar demonstrated a great work ethic, good technical knowledge (our project was a web based platform with an app interface), and was overall a pleasure to interact with.",
+    bgGradient: "from-red-400 to-rose-500",
   },
   {
-    name: 'Justus Luttig',
-    role: 'Investment Associate',
-    company: 'Authentic Ventures',
-    image: '/assets/testimonials/Justus Luttig - Investment Associate - Authentic Ventures.png',
-    quote: 'We hired Umar to help with a complex problem on our website back end. He has a great understanding and proficiency in Vue, Node.js, MongoDB, and Heroku. Highly recommend Umar!',
-    bgGradient: 'from-blue-400 to-indigo-500'
-  }
-]
+    name: "Justus Luttig",
+    role: "Investment Associate",
+    company: "Authentic Ventures",
+    image:
+      "/assets/testimonials/Justus Luttig - Investment Associate - Authentic Ventures.png",
+    quote:
+      "We hired Umar to help with a complex problem on our website back end. He has a great understanding and proficiency in Vue, Node.js, MongoDB, and Heroku. Highly recommend Umar!",
+    bgGradient: "from-blue-400 to-indigo-500",
+  },
+];
 
 export function Testimonials() {
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const nextTestimonial = () => {
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length)
-  }
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  };
 
   const prevTestimonial = () => {
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length)
-  }
+    setCurrentIndex(
+      (prev) => (prev - 1 + testimonials.length) % testimonials.length,
+    );
+  };
 
   return (
     <section className="py-20 bg-secondary overflow-hidden">
@@ -58,31 +66,34 @@ export function Testimonials() {
             Success, Powered by Emerssive
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover how we&apos;ve helped businesses achieve their goals through innovative solutions and dedicated partnership.
+            Discover how we&apos;ve helped businesses achieve their goals
+            through innovative solutions and dedicated partnership.
           </p>
         </div>
 
-        {/* Testimonials Slider Container */}
-        <div className="relative">
+        {/* Testimonials Slider Container - Desktop Only */}
+        <div className="relative hidden lg:block">
           <div className="overflow-hidden">
-            <div 
+            <div
               className="flex transition-transform duration-500 ease-in-out"
-              style={{ 
+              style={{
                 transform: `translateX(-${currentIndex * 40}%)`,
-                width: `${testimonials.length * 40}%`
+                width: `${testimonials.length * 40}%`,
               }}
             >
               {testimonials.map((testimonial, index) => (
                 <div
                   key={index}
                   className="w-full px-3 flex-shrink-0"
-                  style={{ width: '40%' }}
+                  style={{ width: "40%" }}
                 >
                   <div className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-100 h-full">
                     {/* Main Content Layout - Side by side */}
                     <div className="flex h-full">
                       {/* Left Side - Image with Gradient Background */}
-                      <div className={`w-2/5 bg-gradient-to-br ${testimonial.bgGradient} p-6 flex items-center justify-center relative overflow-hidden`}>
+                      <div
+                        className={`w-2/5 bg-gradient-to-br ${testimonial.bgGradient} p-6 flex items-center justify-center relative overflow-hidden`}
+                      >
                         <div className="relative w-32 h-32 rounded-full overflow-hidden border-3 border-white shadow-lg z-10">
                           <Image
                             src={testimonial.image}
@@ -101,8 +112,10 @@ export function Testimonials() {
                       {/* Right Side - Content */}
                       <div className="w-3/5 p-6 flex flex-col">
                         {/* Quote Mark */}
-                        <div className="text-2xl text-gray-300 font-serif leading-none mb-3">&ldquo;</div>
-                        
+                        <div className="text-2xl text-gray-300 font-serif leading-none mb-3">
+                          &ldquo;
+                        </div>
+
                         {/* Quote Text */}
                         <div className="relative group mb-4 flex-grow">
                           <p className="text-gray-700 text-sm leading-relaxed line-clamp-4 cursor-help">
@@ -143,61 +156,127 @@ export function Testimonials() {
               onClick={prevTestimonial}
               className="w-12 h-12 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50"
             >
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              <svg
+                className="w-5 h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
               </svg>
             </button>
             <button
               onClick={nextTestimonial}
               className="w-12 h-12 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 hover:border-gray-400 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50"
             >
-              <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              <svg
+                className="w-5 h-5 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </button>
           </div>
         </div>
 
         {/* Mobile Version - Stack Layout */}
-        <div className="lg:hidden">
+        <div className="block lg:hidden">
           <div className="space-y-6">
-            {testimonials.slice(currentIndex, currentIndex + 1).map((testimonial, index) => (
-              <div
-                key={`mobile-${currentIndex}-${index}`}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"
-              >
-                {/* Mobile Image Section */}
-                <div className={`bg-gradient-to-br ${testimonial.bgGradient} p-8 flex items-center justify-center relative overflow-hidden`}>
-                  <div className="relative w-36 h-36 rounded-full overflow-hidden border-4 border-white shadow-lg z-10">
-                    <Image
-                      src={testimonial.image}
-                      alt={testimonial.name}
-                      width={144}
-                      height={144}
-                      className="object-cover w-full h-full"
-                    />
+            {testimonials
+              .slice(currentIndex, currentIndex + 1)
+              .map((testimonial, index) => (
+                <div
+                  key={`mobile-${currentIndex}-${index}`}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100"
+                >
+                  {/* Mobile Image Section */}
+                  <div
+                    className={`bg-gradient-to-br ${testimonial.bgGradient} p-6 flex items-center justify-center relative overflow-hidden`}
+                  >
+                    <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg z-10">
+                      <Image
+                        src={testimonial.image}
+                        alt={testimonial.name}
+                        width={96}
+                        height={96}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                    <div className="absolute top-4 right-4 w-12 h-12 bg-white/20 rounded-full opacity-60 blur-xl"></div>
                   </div>
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
-                  <div className="absolute top-4 right-4 w-16 h-16 bg-white/20 rounded-full opacity-60 blur-xl"></div>
-                </div>
 
-                {/* Mobile Content Section */}
-                <div className="p-6">
-                  <div className="text-3xl text-gray-300 font-serif leading-none mb-4">&ldquo;</div>
-                  <p className="text-gray-700 text-sm leading-relaxed mb-6">
-                    {testimonial.quote}
-                  </p>
-                  <div className="border-t border-gray-100 pt-4">
-                    <h4 className="text-gray-900 font-semibold text-base mb-1">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-gray-500 text-sm">
-                      {testimonial.role}, {testimonial.company}
+                  {/* Mobile Content Section */}
+                  <div className="p-5">
+                    <div className="text-2xl text-gray-300 font-serif leading-none mb-3">
+                      &ldquo;
+                    </div>
+                    <p className="text-gray-700 text-sm leading-relaxed mb-4">
+                      {testimonial.quote}
                     </p>
+                    <div className="border-t border-gray-100 pt-4">
+                      <h4 className="text-gray-900 font-semibold text-base mb-1">
+                        {testimonial.name}
+                      </h4>
+                      <p className="text-gray-500 text-sm">
+                        {testimonial.role}, {testimonial.company}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
+
+          {/* Mobile Navigation Arrows */}
+          <div className="flex justify-center mt-6 space-x-4">
+            <button
+              onClick={prevTestimonial}
+              className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-all duration-200 shadow-sm"
+            >
+              <svg
+                className="w-4 h-4 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              </svg>
+            </button>
+            <button
+              onClick={nextTestimonial}
+              className="w-10 h-10 rounded-full bg-white border border-gray-300 flex items-center justify-center hover:bg-gray-50 transition-all duration-200 shadow-sm"
+            >
+              <svg
+                className="w-4 h-4 text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -211,5 +290,5 @@ export function Testimonials() {
         }
       `}</style>
     </section>
-  )
+  );
 }
