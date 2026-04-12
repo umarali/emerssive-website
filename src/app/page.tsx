@@ -1,12 +1,12 @@
-import { Hero } from '@/components/Hero'
-import { Services } from '@/components/Services'
-import { CustomerLogos } from '@/components/CustomerLogos'
-import { CaseStudies } from '@/components/CaseStudies'
-import { Testimonials } from '@/components/Testimonials'
-import { FAQ } from '@/components/FAQ'
-import { Footer } from '@/components/Footer'
-import { Navigation } from '@/components/Navigation'
-import { StickyBottom } from '@/components/StickyBottom'
+import { Hero } from "@/components/Hero";
+import { Services } from "@/components/Services";
+import { CustomerLogos } from "@/components/CustomerLogos";
+import { CaseStudies } from "@/components/CaseStudies";
+import { Testimonials } from "@/components/Testimonials";
+import { FAQ } from "@/components/FAQ";
+import { Footer } from "@/components/Footer";
+import { Navigation } from "@/components/Navigation";
+import { StickyBottom } from "@/components/StickyBottom";
 
 export default function Home() {
   return (
@@ -21,5 +21,5 @@ export default function Home() {
       <Footer />
       <StickyBottom />
     </main>
-  )
+  );
 }

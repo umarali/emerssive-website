@@ -8,7 +8,7 @@ const testimonials = [
     name: "Jerry Shu",
     role: "Co-Founder",
     company: "Lendica",
-    image: "/assets/testimonials/Jerry Shu - Co-Founder - Lendica.png",
+    image: "/assets/testimonials/jerry-shu-lendica.png",
     quote:
       "Working with Umar was an extremely pleasant experience as he was extremely communicative and flexible, and was able to complete our task of setting up a CI/CD pipeline faster than our expected timeline. Would highly recommend his services to anyone in need!",
     bgGradient: "from-amber-400 to-orange-500",
@@ -17,7 +17,7 @@ const testimonials = [
     name: "Adi Chirilov",
     role: "CTO",
     company: "AppSeed",
-    image: "/assets/testimonials/Adi Chirilov - CTO - AppSeed.png",
+    image: "/assets/testimonials/adi-chirilov-appseed.png",
     quote:
       "Umar helped our team with many projects, from average to high complexity. Besides his excellent technical skills, Umar is a good communicator and a proactive team member, positively influencing the whole team's performance. Highly recommended for React, Javascript tasks, and Tech Lead jobs",
     bgGradient: "from-purple-400 to-purple-600",
@@ -26,8 +26,7 @@ const testimonials = [
     name: "Lindsey Holmes",
     role: "Chief of Product",
     company: "Code3Apps",
-    image:
-      "/assets/testimonials/Lindsey Holmes - Chief of Product - Code3Apps.png",
+    image: "/assets/testimonials/lindsey-holmes-code3apps.png",
     quote:
       "Umar and Code3Apps worked together for a couple years and Umar demonstrated a great work ethic, good technical knowledge (our project was a web based platform with an app interface), and was overall a pleasure to interact with.",
     bgGradient: "from-red-400 to-rose-500",
@@ -36,8 +35,7 @@ const testimonials = [
     name: "Justus Luttig",
     role: "Investment Associate",
     company: "Authentic Ventures",
-    image:
-      "/assets/testimonials/Justus Luttig - Investment Associate - Authentic Ventures.png",
+    image: "/assets/testimonials/justus-luttig-authentic-ventures.png",
     quote:
       "We hired Umar to help with a complex problem on our website back end. He has a great understanding and proficiency in Vue, Node.js, MongoDB, and Heroku. Highly recommend Umar!",
     bgGradient: "from-blue-400 to-indigo-500",

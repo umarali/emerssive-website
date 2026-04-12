@@ -4,26 +4,13 @@ import { useState, useEffect } from "react";
 
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const rotatingPhrases = [
-    "AI agents",
-    "AI powered apps",
-    "automations",
-    "web apps",
-    "mobile apps",
-  ];
 
   useEffect(() => {
     setIsVisible(true);
-    const id = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % rotatingPhrases.length);
-    }, 2500);
-    return () => clearInterval(id);
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center pt-20 pb-24 sm:pb-20">
+    <section className="relative min-h-screen flex items-center pt-20 pb-24 sm:pb-20 bg-secondary">
       <div
         className="w-full px-4 sm:px-6 lg:px-0"
         style={{
@@ -43,7 +30,7 @@ export function Hero() {
               </span>
             </div>
 
-            {/* Main Heading with rotating middle */}
+            {/* Main Heading */}
             <h1
               className={`text-4xl sm:text-5xl lg:text-6xl text-text mb-6 leading-tight transition-all duration-700 ${
                 isVisible
@@ -51,13 +38,8 @@ export function Hero() {
                   : "opacity-0 translate-y-2"
               }`}
             >
-              <span className="block">We build</span>
-              <span className="block min-h-[1.2em]">
-                <span className="text-accent transition-opacity duration-300">
-                  {rotatingPhrases[currentIndex]}
-                </span>
-              </span>
-              <span className="block">that ship in weeks</span>
+              Something in your business should
+              <span className="text-accent"> run better.</span>
             </h1>
 
             {/* Subheadline */}
@@ -68,9 +50,9 @@ export function Hero() {
                   : "opacity-0 translate-y-2"
               }`}
             >
-              We help innovative companies work smarter with custom AI solutions
-              and software development. From generative AI to web and mobile
-              technologies — we build software that drives your success.
+              Custom AI and software designed around your specific
+              challenge. We identify the right solution and ship it
+              in weeks.
             </p>
 
             {/* CTAs */}

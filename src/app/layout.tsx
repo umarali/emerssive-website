@@ -1,41 +1,57 @@
-import type { Metadata } from 'next'
-import { Roboto, Open_Sans } from 'next/font/google'
-import './globals.css'
+import type { Metadata } from "next";
+import { Roboto, Open_Sans } from "next/font/google";
+import "./globals.css";
 
-const roboto = Roboto({ 
-  subsets: ['latin'],
-  weight: ['400', '500', '700'],
-  variable: '--font-roboto'
-})
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-roboto",
+});
 
-const openSans = Open_Sans({ 
-  subsets: ['latin'],
-  weight: ['400'],
-  variable: '--font-opensans'
-})
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["400"],
+  variable: "--font-opensans",
+});
 
 export const metadata: Metadata = {
-  title: 'Emerssive - A full-service software development company',
-  description: 'Emerssive is a full-service software development company specializing in Generative AI, Web and Mobile. Our experienced team transforms concepts into impactful applications for startups to enterprise companies.',
-  keywords: 'software development, generative ai, web development, mobile development, startups, enterprise companies',
-  authors: [{ name: 'Emerssive' }],
+  metadataBase: new URL("https://emerssive.com"),
+  title: "Emerssive | AI & Software Development Agency",
+  description:
+    "Ship your AI product in weeks. Custom AI agents, web apps, and mobile solutions for startups and enterprises.",
+  keywords:
+    "ai development agency, custom ai solutions, software development, generative ai consulting, ai agents, web development, mobile development",
+  authors: [{ name: "Emerssive" }],
   openGraph: {
-    title: 'Emerssive - A full-service software development company',
-    description: 'Emerssive is a full-service software development company specializing in Generative AI, Web and Mobile. Our experienced team transforms concepts into impactful applications for startups to enterprise companies.',
-    type: 'website',
+    title: "Emerssive | AI & Software Development Agency",
+    description:
+      "Ship your AI product in weeks. Custom AI agents, web apps, and mobile solutions for startups and enterprises.",
+    type: "website",
+    url: "https://emerssive.com",
   },
-}
+  twitter: {
+    card: "summary_large_image",
+    title: "Emerssive | AI & Software Development Agency",
+    description:
+      "Ship your AI product in weeks. Custom AI agents, web apps, and mobile solutions.",
+  },
+  alternates: {
+    canonical: "https://emerssive.com",
+  },
+};
 
 export default function RootLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${roboto.variable} ${openSans.variable} font-opensans antialiased bg-secondary text-text`}>
+      <body
+        className={`${roboto.variable} ${openSans.variable} font-opensans antialiased bg-secondary text-text`}
+      >
         {children}
       </body>
     </html>
-  )
+  );
 }

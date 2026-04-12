@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { CONSULTATION_ENTRY_PATH } from "@/lib/consultation";
 
 export function StickyBottom() {
   return (
@@ -31,14 +33,12 @@ export function StickyBottom() {
             </div>
 
             {/* Button */}
-            <a
-              href="https://calendar.app.google/U3z2GqSza9Fhch8e9"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={CONSULTATION_ENTRY_PATH}
               className="bg-white text-gray-900 px-3 py-1.5 rounded-full text-xs font-medium hover:bg-gray-100 transition-colors duration-200 whitespace-nowrap flex-shrink-0"
             >
               Book a Call
-            </a>
+            </Link>
           </div>
         </div>
 
@@ -70,14 +70,12 @@ export function StickyBottom() {
             </div>
 
             {/* Button */}
-            <a
-              href="https://calendar.app.google/U3z2GqSza9Fhch8e9"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={CONSULTATION_ENTRY_PATH}
               className="bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors duration-200 whitespace-nowrap flex-shrink-0"
             >
               Get in Touch
-            </a>
+            </Link>
           </div>
         </div>
       </div>

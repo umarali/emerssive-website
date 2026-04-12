@@ -1,56 +1,56 @@
-'use client'
+"use client";
 
-import Image from 'next/image'
-import { useState } from 'react'
+import Image from "next/image";
+import { useState } from "react";
 
 const customerLogos = [
   {
-    name: 'Wazer',
-    logo: '/assets/customers/wazer-removebg-preview.png',
-    alt: 'Wazer Logo'
+    name: "Wazer",
+    logo: "/assets/customers/wazer-removebg-preview.png",
+    alt: "Wazer Logo",
   },
   {
-    name: 'PuffBar',
-    logo: '/assets/customers/puffbar-removebg-preview.png',
-    alt: 'PuffBar Logo'
+    name: "PuffBar",
+    logo: "/assets/customers/puffbar-removebg-preview.png",
+    alt: "PuffBar Logo",
   },
   {
-    name: 'Frontline Education',
-    logo: '/assets/customers/frontline-education-removebg-preview.png',
-    alt: 'Frontline Education Logo'
+    name: "Frontline Education",
+    logo: "/assets/customers/frontline-education-removebg-preview.png",
+    alt: "Frontline Education Logo",
   },
   {
-    name: 'Lendica',
-    logo: '/assets/customers/lendica-removebg-preview.png',
-    alt: 'Lendica Logo'
+    name: "Lendica",
+    logo: "/assets/customers/lendica-removebg-preview.png",
+    alt: "Lendica Logo",
   },
   {
-    name: 'Fluxx',
-    logo: '/assets/customers/fluxx-removebg-preview.png',
-    alt: 'Fluxx Logo'
+    name: "Fluxx",
+    logo: "/assets/customers/fluxx-removebg-preview.png",
+    alt: "Fluxx Logo",
   },
   {
-    name: 'QodexAI',
-    logo: '/assets/customers/qodexai-removebg-preview.png',
-    alt: 'QodexAI Logo'
+    name: "QodexAI",
+    logo: "/assets/customers/qodexai-removebg-preview.png",
+    alt: "QodexAI Logo",
   },
   {
-    name: 'InRule',
-    logo: '/assets/customers/inrule-removebg-preview.png',
-    alt: 'InRule Logo'
+    name: "InRule",
+    logo: "/assets/customers/inrule-removebg-preview.png",
+    alt: "InRule Logo",
   },
   {
-    name: 'AppSeed',
-    logo: '/assets/customers/appseed-removebg-preview.png',
-    alt: 'AppSeed Logo'
-  }
-]
+    name: "AppSeed",
+    logo: "/assets/customers/appseed-removebg-preview.png",
+    alt: "AppSeed Logo",
+  },
+];
 
 export function CustomerLogos() {
-  const [hoveredLogo, setHoveredLogo] = useState<string | null>(null)
+  const [hoveredLogo, setHoveredLogo] = useState<string | null>(null);
 
   return (
-    <section className="py-16 bg-secondary-light">
+    <section className="py-16 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="text-center mb-12">
@@ -58,7 +58,9 @@ export function CustomerLogos() {
             Trusted by Industry Leaders
           </h2>
           <p className="text-base text-text-light max-w-2xl mx-auto">
-            We&apos;ve partnered with innovative companies across various industries to deliver cutting-edge solutions that drive growth and success.
+            We&apos;ve partnered with innovative companies across various
+            industries to deliver cutting-edge solutions that drive growth and
+            success.
           </p>
         </div>
 
@@ -78,13 +80,13 @@ export function CustomerLogos() {
                   width={280}
                   height={160}
                   className={`object-contain transition-all duration-300 ${
-                    hoveredLogo === customer.name 
-                      ? 'filter brightness-0' // Makes logo black on hover
-                      : 'filter grayscale opacity-60' // Makes logo grey by default
+                    hoveredLogo === customer.name
+                      ? "filter brightness-0" // Makes logo black on hover
+                      : "filter grayscale opacity-60" // Makes logo grey by default
                   }`}
                   style={{
-                    maxWidth: '100%',
-                    maxHeight: '100%'
+                    maxWidth: "100%",
+                    maxHeight: "100%",
                   }}
                 />
               </div>
@@ -100,5 +102,5 @@ export function CustomerLogos() {
         </div> */}
       </div>
     </section>
-  )
+  );
 }
