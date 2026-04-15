@@ -38,8 +38,8 @@ export function Hero() {
                   : "opacity-0 translate-y-2"
               }`}
             >
-              Something in your business should
-              <span className="text-accent"> run better.</span>
+              We build the AI and software
+              <span className="text-accent"> your business actually needs.</span>
             </h1>
 
             {/* Subheadline */}
@@ -50,9 +50,9 @@ export function Hero() {
                   : "opacity-0 translate-y-2"
               }`}
             >
-              Custom AI and software designed around your specific
-              challenge. We identify the right solution and ship it
-              in weeks.
+              We help growing teams turn messy workflows, unused data, and
+              outdated platforms into working systems that ship in weeks —
+              not months.
             </p>
 
             {/* CTAs */}
@@ -69,13 +69,13 @@ export function Hero() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-primary-dark text-secondary-light px-6 py-3 rounded-full text-sm font-semibold hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02]"
               >
-                Book a Free Consultation →
+                Book a 30-minute strategy call →
               </a>
               <a
                 href="#case-studies"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-gray-300 text-text text-sm hover:bg-gray-50 transition-colors"
               >
-                See case studies
+                See case studies ↓
               </a>
             </div>
 
@@ -94,7 +94,7 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right: Professional KPI Card - Single KPI */}
+          {/* Right: Proof metrics */}
           <div
             className={`relative transition-all duration-700 ${
               isVisible
@@ -102,14 +102,23 @@ export function Hero() {
                 : "opacity-0 translate-y-2"
             }`}
           >
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-10 lg:p-12">
-              <div className="bg-gray-900 text-white rounded-xl px-8 py-6 text-center">
-                <span className="text-6xl font-bold leading-none block">
-                  91%
-                </span>
-                <span className="opacity-80 text-lg">
-                  projects delivered on time and budget
-                </span>
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 px-8 py-7">
+              <p className="text-xs font-semibold uppercase tracking-widest text-text-light mb-5">
+                You&apos;re in the right place if:
+              </p>
+              <div className="divide-y divide-gray-100">
+                <div className="flex items-start gap-3 pb-4">
+                  <span className="text-primary font-bold text-sm flex-shrink-0 mt-0.5">✓</span>
+                  <span className="text-sm text-text leading-relaxed">Your team does work that should not be manual</span>
+                </div>
+                <div className="flex items-start gap-3 py-4">
+                  <span className="text-primary font-bold text-sm flex-shrink-0 mt-0.5">✓</span>
+                  <span className="text-sm text-text leading-relaxed">You have a product idea but no engineering team</span>
+                </div>
+                <div className="flex items-start gap-3 pt-4">
+                  <span className="text-primary font-bold text-sm flex-shrink-0 mt-0.5">✓</span>
+                  <span className="text-sm text-text leading-relaxed">Your platform can&apos;t keep up with your growth</span>
+                </div>
               </div>
             </div>
           </div>
