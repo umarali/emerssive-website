@@ -16,16 +16,16 @@ export const HEADCOUNT_OPTIONS = [
   "1–10",
   "11–50",
   "51–200",
-  "201–500",
-  "500+",
+  "200+",
 ] as const;
 
 export const ANNUAL_REVENUE_OPTIONS = [
   "Pre-revenue",
-  "Under $500K",
-  "$500K–$2M",
-  "$2M–$10M",
-  "$10M+",
+  "Under $100K",
+  "$100K–$500K",
+  "$500K–$1M",
+  "$1M–$2.5M",
+  "$2.5M+",
 ] as const;
 
 export const PROJECT_STAGE_OPTIONS = [
@@ -37,11 +37,11 @@ export const PROJECT_STAGE_OPTIONS = [
 ] as const;
 
 export const BUDGET_OPTIONS = [
-  "Under $10K",
-  "$10K–$25K",
-  "$25K–$50K",
-  "$50K–$100K",
-  "$100K+",
+  "$2.5K–$5K",
+  "$5K–$15K",
+  "$15K–$30K",
+  "$30K–$50K",
+  "$50K+",
   "Not sure yet",
 ] as const;
 

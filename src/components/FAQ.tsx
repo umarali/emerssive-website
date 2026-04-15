@@ -4,33 +4,34 @@ import { useState } from "react";
 
 const faqs = [
   {
-    question: "What industries do you cater to?",
+    question: "What does 'problem first' mean in practice?",
     answer:
-      "We cater to various industries such as finance, education, e-commerce, real estate, hospitality, logistics, and startups.",
+      "We don't start a project by picking tools or writing code. We start by mapping the actual work slowing your business down — then figure out the simplest thing that fixes it. Sometimes that's an AI agent. Sometimes it's a workflow change and a simple dashboard. We tell you which before we start building.",
   },
   {
-    question: "How do you manage projects?",
+    question: "How quickly can we get started?",
     answer:
-      "We follow agile methodologies with regular updates and iterations to ensure transparency and flexibility throughout the development process.",
+      "Usually within a week of an initial call. For scoped projects, we typically ship a working prototype or first milestone in 2–4 weeks. We don't run long discovery phases that delay your real work.",
   },
   {
-    question: "What technologies do you specialize in?",
+    question: "Do I need a detailed spec or a clear idea before reaching out?",
     answer:
-      "Our expertise includes Python/Django, JavaScript/React, React Native, Docker/Kubernetes, LangChain, and Shopify.",
+      "No — and many clients don't have either. Some come with a vague sense that something could work better but can't name exactly what. Others have a rough idea but no spec. That's fine. The strategy call is designed to figure it out together. We ask the right questions, map what's actually slowing things down, and tell you honestly whether we can help and what that looks like.",
   },
   {
-    question: "How do you ensure quality?",
+    question: "What's the minimum project budget?",
     answer:
-      "We implement thorough testing phases including manual and automated QA to ensure bug-free and high-quality software.",
+      "Our minimum engagement starts at $2,500. Most projects run between $5K and $30K depending on scope. We'll give you a clear estimate before any work begins — no surprises.",
   },
   {
-    question: "What services do you offer?",
+    question: "Do you use off-the-shelf AI tools or build custom?",
     answer:
-      "We specialize in Generative AI, Mobile and Web Development, and AI-powered Automation solutions to drive innovation and efficiency for your business.",
+      "Both. We work across OpenAI, Claude, and Gemini — and we pick based on what fits the job, not what's trendy. Sometimes the right answer is a custom-built agent. Sometimes it's wiring an existing model into your workflow. And sometimes it's a simple no-code tool. We tell you which before we start.",
   },
   {
-    question: "What scale of projects do you work on?",
-    answer: "The minimum project cost we accept starts at $2,000.",
+    question: "Can you work with our existing team or codebase?",
+    answer:
+      "Yes. We've embedded in existing engineering teams, modernized legacy codebases, and built systems that integrate with what you already have. We adapt to your setup — not the other way around.",
   },
 ];
 
