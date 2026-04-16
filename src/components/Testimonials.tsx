@@ -40,6 +40,24 @@ const testimonials = [
       "We hired Umar to help with a complex problem on our website back end. He has a great understanding and proficiency in Vue, Node.js, MongoDB, and Heroku. Highly recommend Umar!",
     bgGradient: "from-blue-400 to-indigo-500",
   },
+  {
+    name: "Michael Leach",
+    role: "Founder & CEO, iDialogue",
+    company: "Ex-Engineering Manager, Meta",
+    image: "/assets/testimonials/michael-leach.png",
+    quote:
+      "The team studied and learned our API to build a full-featured fiduciary case management app. Adapted seamlessly to many changes from the end client. Guided us through both mobile app stores — Apple and Google.",
+    bgGradient: "from-emerald-400 to-teal-500",
+  },
+  // {
+  //   name: "Digital Marketing Manager",
+  //   role: "Marketing",
+  //   company: "GK Hair",
+  //   image: "",
+  //   quote:
+  //     "I had the pleasure of working with the Emerssive team on my project, and I couldn't be more satisfied with the results. They are true professionals — knowledgeable, efficient, and great communicators. Not only do they have the technical skills to get the job done right, but they always made sure to understand our requirements clearly and delivered high-quality work on time. I would highly recommend them and look forward to working together again in the future. True experts in their field!",
+  //   bgGradient: "from-pink-400 to-rose-500",
+  // },
 ];
 
 export function Testimonials() {
@@ -93,13 +111,21 @@ export function Testimonials() {
                         className={`w-2/5 bg-gradient-to-br ${testimonial.bgGradient} p-6 flex items-center justify-center relative overflow-hidden`}
                       >
                         <div className="relative w-32 h-32 rounded-full overflow-hidden border-3 border-white shadow-lg z-10">
-                          <Image
-                            src={testimonial.image}
-                            alt={testimonial.name}
-                            width={128}
-                            height={128}
-                            className="object-cover w-full h-full"
-                          />
+                          {testimonial.image ? (
+                            <Image
+                              src={testimonial.image}
+                              alt={testimonial.name}
+                              width={128}
+                              height={128}
+                              className="object-cover w-full h-full"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-white/20 flex items-center justify-center">
+                              <span className="text-white text-3xl font-bold">
+                                {testimonial.name.split(" ").map(w => w[0]).join("")}
+                              </span>
+                            </div>
+                          )}
                         </div>
                         {/* Background decorative elements */}
                         <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
@@ -204,13 +230,21 @@ export function Testimonials() {
                     className={`bg-gradient-to-br ${testimonial.bgGradient} p-6 flex items-center justify-center relative overflow-hidden`}
                   >
                     <div className="relative w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-lg z-10">
-                      <Image
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        width={96}
-                        height={96}
-                        className="object-cover w-full h-full"
-                      />
+                      {testimonial.image ? (
+                        <Image
+                          src={testimonial.image}
+                          alt={testimonial.name}
+                          width={96}
+                          height={96}
+                          className="object-cover w-full h-full"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-white/20 flex items-center justify-center">
+                          <span className="text-white text-2xl font-bold">
+                            {testimonial.name.split(" ").map(w => w[0]).join("")}
+                          </span>
+                        </div>
+                      )}
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
                     <div className="absolute top-4 right-4 w-12 h-12 bg-white/20 rounded-full opacity-60 blur-xl"></div>
