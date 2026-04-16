@@ -7,14 +7,10 @@ const caseStudies = [
     subtitle: "Legacy platform failing at K-12 scale",
     problem:
       "Legacy ExtJS choking a platform serving 1.2M students and districts.",
-    built:
-      "Migrated to HTML5/CSS3. Redesigned the API integration layer end to end.",
     result: "60% faster page loads. 25% more peak concurrency.",
     logo: "/assets/customers/frontline-education-removebg-preview.png",
     keyMetric: "1.2M+",
     metricLabel: "monthly visitors",
-    bgColor: "bg-primary/8",
-    hoverBgColor: "group-hover:bg-primary/15",
   },
   {
     id: 2,
@@ -22,44 +18,34 @@ const caseStudies = [
     subtitle: "Shopify stores losing buyers before checkout",
     problem:
       "No way to guide shoppers, answer questions, or keep them engaged before they left.",
-    built:
-      "Claude + Gemini AI shopping agent embedded in Shopify. Voice input, product discovery, support.",
     result: "Live on the Shopify App Store.",
     logo: "/assets/customers/alcemi-removebg-preview.png",
     keyMetric: "30%",
     metricLabel: "Shopify conversion boost",
-    bgColor: "bg-primary/8",
-    hoverBgColor: "group-hover:bg-primary/15",
   },
   {
     id: 3,
-    title: "Puffbar",
-    subtitle: "High-traffic DTC with no operational control",
+    title: "PuffBar",
+    subtitle: "$150M brand with no way to track who was selling what",
     problem:
-      "Explosive growth, no role controls, no dashboards, no order visibility.",
-    built:
-      "Role-based management, sales dashboards, and order processing rebuilt for scale.",
-    result: "Zero performance degradation at peak.",
+      "Orders flowed through Shopify but nothing connected a sale to the rep, team, or commission owed. The entire sales layer lived in spreadsheets.",
+    result:
+      "Eliminated manual commission calculations entirely. ~60–70% reduction in retailer onboarding time.",
     logo: "/assets/customers/puffbar-removebg-preview.png",
-    keyMetric: "5M+",
-    metricLabel: "monthly visitors",
-    bgColor: "bg-primary/8",
-    hoverBgColor: "group-hover:bg-primary/15",
+    keyMetric: "$150M+",
+    metricLabel: "annual retail volume tracked",
   },
   {
     id: 4,
-    title: "Qodex.ai",
-    subtitle: "API testing slow, manual, and broken",
+    title: "Blind Barber",
+    subtitle: "4-city lifestyle brand with no digital presence",
     problem:
-      "Engineers spending hours on manual, reactive API testing with no systematic security coverage.",
-    built:
-      "AI-powered testing and security platform from concept to enterprise. Natural language test generation.",
-    result: "80% faster testing. Hours of manual work automated.",
-    logo: "/assets/customers/qodexai-removebg-preview.png",
-    keyMetric: "78K+",
-    metricLabel: "APIs secured globally",
-    bgColor: "bg-primary/8",
-    hoverBgColor: "group-hover:bg-primary/15",
+      "No booking, payments, or loyalty system across any location. Customers calling the shop to check availability.",
+    result:
+      "Zero to digital: first-ever booking, payments, and loyalty across all locations. 300K+ app customers.",
+    logo: "/assets/customers/blind-barber-removebg-preview.png",
+    keyMetric: "300K+",
+    metricLabel: "app customers",
   },
 ];
 
@@ -81,77 +67,53 @@ export function CaseStudies() {
         </div>
 
         {/* Case Studies Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {caseStudies.map((caseStudy) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {caseStudies.map((cs) => (
             <div
-              key={caseStudy.id}
-              className="group bg-white rounded-xl shadow-sm transition-all duration-300 overflow-hidden border border-gray-100"
+              key={cs.id}
+              className="group bg-white rounded-2xl border border-gray-100 hover:shadow-lg transition-shadow duration-300 flex flex-col overflow-hidden"
             >
-              {/* Logo Section at Top with Theme Background */}
-              <div
-                className={`h-24 ${caseStudy.bgColor} ${caseStudy.hoverBgColor} flex items-center justify-center transition-all duration-300 relative`}
-              >
-                {caseStudy.logo ? (
-                  <Image
-                    src={caseStudy.logo}
-                    alt={caseStudy.title}
-                    width={120}
-                    height={120}
-                    className={`object-contain ${caseStudy.id === 3 ? "w-24 h-24" : "w-28 h-28"} drop-shadow-sm`}
-                  />
-                ) : (
-                  <span className="text-xl font-bold text-gray-700">
-                    {caseStudy.title}
-                  </span>
-                )}
+              {/* Logo zone */}
+              <div className="flex items-center justify-center px-6 border-b border-gray-100">
+                <Image
+                  src={cs.logo}
+                  alt={cs.title}
+                  width={200}
+                  height={96}
+                  className="h-24 w-auto object-contain"
+                />
               </div>
 
-              {/* Content */}
-              <div className="p-6 relative">
-                {/* Title and Problem Subtitle */}
-                <h3 className="text-xl font-bold text-text mb-1">
-                  {caseStudy.title}
-                </h3>
-                <p className="text-sm text-text-light mb-4">
-                  {caseStudy.subtitle}
-                </p>
-
-                {/* Key Metric with accent color */}
-                <div className="mb-4">
-                  <div className="text-2xl font-bold text-accent">
-                    {caseStudy.keyMetric}
-                  </div>
-                  <div className="text-sm text-text-light">
-                    {caseStudy.metricLabel}
-                  </div>
+              {/* Metric + title + subtitle */}
+              <div className="px-6 pt-5 pb-4">
+                <div className="mb-3">
+                  <p className="text-3xl font-bold text-accent leading-none">
+                    {cs.keyMetric}
+                  </p>
+                  <p className="text-xs text-text-light mt-1">{cs.metricLabel}</p>
                 </div>
+                <h3 className="text-base font-bold text-text">{cs.title}</h3>
+                <p className="text-xs text-text-light mt-0.5 leading-relaxed">
+                  {cs.subtitle}
+                </p>
+              </div>
 
-                {/* Problem / Built / Result labeled rows */}
-                <div className="space-y-2.5">
-                  <div className="flex gap-3">
-                    <span className="font-semibold text-text uppercase tracking-wide text-xs w-14 flex-shrink-0 pt-0.5">
-                      Problem
-                    </span>
-                    <span className="text-sm text-text-light leading-relaxed">
-                      {caseStudy.problem}
-                    </span>
-                  </div>
-                  <div className="flex gap-3">
-                    <span className="font-semibold text-text uppercase tracking-wide text-xs w-14 flex-shrink-0 pt-0.5">
-                      Built
-                    </span>
-                    <span className="text-sm text-text-light leading-relaxed">
-                      {caseStudy.built}
-                    </span>
-                  </div>
-                  <div className="flex gap-3">
-                    <span className="font-semibold text-text uppercase tracking-wide text-xs w-14 flex-shrink-0 pt-0.5">
-                      Result
-                    </span>
-                    <span className="text-sm text-text-light leading-relaxed">
-                      {caseStudy.result}
-                    </span>
-                  </div>
+              <div className="border-t border-gray-100 mx-6" />
+
+              {/* Problem */}
+              <div className="px-6 py-4 flex-1">
+                <p className="text-sm text-text-light leading-relaxed">
+                  {cs.problem}
+                </p>
+              </div>
+
+              {/* Result */}
+              <div className="px-6 pb-6">
+                <div className="bg-accent/10 rounded-xl px-4 py-3">
+                  <p className="text-xs font-semibold text-accent uppercase tracking-wide mb-1">
+                    Result
+                  </p>
+                  <p className="text-sm text-text leading-snug">{cs.result}</p>
                 </div>
               </div>
             </div>
