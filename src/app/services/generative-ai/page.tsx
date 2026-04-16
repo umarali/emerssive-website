@@ -189,7 +189,7 @@ export default function GenerativeAIPage() {
               href={CONSULTATION_ENTRY_PATH}
               className="inline-flex items-center justify-center bg-white text-gray-900 px-8 py-4 rounded-full text-base font-semibold hover:bg-gray-100 transition-all duration-300"
             >
-              Book a Free AI Audit
+              Book a Strategy Call
             </Link>
             <a
               href="#process"
@@ -370,7 +370,7 @@ export default function GenerativeAIPage() {
             href={CONSULTATION_ENTRY_PATH}
             className="inline-flex items-center justify-center bg-white text-gray-900 px-10 py-4 rounded-full text-lg font-semibold hover:bg-gray-100 transition-all duration-300"
           >
-            Book Your Free AI Audit →
+            Book a Strategy Call →
           </Link>
         </div>
       </section>

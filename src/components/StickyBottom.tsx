@@ -74,7 +74,7 @@ export function StickyBottom() {
               href={CONSULTATION_ENTRY_PATH}
               className="bg-white text-gray-900 px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-100 transition-colors duration-200 whitespace-nowrap flex-shrink-0"
             >
-              Get in Touch
+              Book a Strategy Call
             </Link>
           </div>
         </div>

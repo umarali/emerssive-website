@@ -8,7 +8,7 @@ export function ProblemFirst() {
         </p>
 
         {/* Editorial split */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mt-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mt-10">
           {/* Left: Pull quote */}
           <div>
             <h2 className="text-3xl sm:text-4xl font-bold text-text leading-tight mb-6">

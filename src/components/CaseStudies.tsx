@@ -4,22 +4,27 @@ const caseStudies = [
   {
     id: 1,
     title: "Frontline Education",
-    subtitle: "Educational Technology Platform",
-    description:
-      "Modernized a nationwide K-12 platform serving 1.2M+ monthly visitors. Migrated from legacy ExtJS to responsive HTML5/CSS3 and redesigned the API integration layer, achieving ~60% faster page loads and ~25% more concurrent users during peak school hours.",
+    subtitle: "Legacy platform failing at K-12 scale",
+    problem:
+      "Legacy ExtJS choking a platform serving 1.2M students and districts.",
+    built:
+      "Migrated to HTML5/CSS3. Redesigned the API integration layer end to end.",
+    result: "60% faster page loads. 25% more peak concurrency.",
     logo: "/assets/customers/frontline-education-removebg-preview.png",
     keyMetric: "1.2M+",
-    metricLabel: "monthly visitors supported",
-    notableClients: "Schools, Districts, Educational Institutions",
+    metricLabel: "monthly visitors",
     bgColor: "bg-primary/8",
     hoverBgColor: "group-hover:bg-primary/15",
   },
   {
     id: 2,
     title: "Alcemi",
-    subtitle: "AI Shopping Agent for Shopify",
-    description:
-      "Built a conversational AI agent powered by Claude and Gemini, embedded directly in Shopify stores. Handles product discovery through natural language, support queries, and voice input — guiding customers to checkout. Live on the Shopify App Store.",
+    subtitle: "Shopify stores losing buyers before checkout",
+    problem:
+      "No way to guide shoppers, answer questions, or keep them engaged before they left.",
+    built:
+      "Claude + Gemini AI shopping agent embedded in Shopify. Voice input, product discovery, support.",
+    result: "Live on the Shopify App Store.",
     logo: "/assets/customers/alcemi-removebg-preview.png",
     keyMetric: "30%",
     metricLabel: "Shopify conversion boost",
@@ -29,9 +34,12 @@ const caseStudies = [
   {
     id: 3,
     title: "Puffbar",
-    subtitle: "DTC E-Commerce Platform",
-    description:
-      "Built and optimized a high-traffic e-commerce platform with role-based management, sales tracking dashboards, and order processing systems. The platform scaled with explosive growth without performance degradation.",
+    subtitle: "High-traffic DTC with no operational control",
+    problem:
+      "Explosive growth, no role controls, no dashboards, no order visibility.",
+    built:
+      "Role-based management, sales dashboards, and order processing rebuilt for scale.",
+    result: "Zero performance degradation at peak.",
     logo: "/assets/customers/puffbar-removebg-preview.png",
     keyMetric: "5M+",
     metricLabel: "monthly visitors",
@@ -41,9 +49,12 @@ const caseStudies = [
   {
     id: 4,
     title: "Qodex.ai",
-    subtitle: "API Testing & Security Platform",
-    description:
-      "Built complete AI-powered API testing platform from concept to enterprise-scale solution. Enables 80% faster testing with natural language processing for development teams.",
+    subtitle: "API testing slow, manual, and broken",
+    problem:
+      "Engineers spending hours on manual, reactive API testing with no systematic security coverage.",
+    built:
+      "AI-powered testing and security platform from concept to enterprise. Natural language test generation.",
+    result: "80% faster testing. Hours of manual work automated.",
     logo: "/assets/customers/qodexai-removebg-preview.png",
     keyMetric: "78K+",
     metricLabel: "APIs secured globally",
@@ -61,12 +72,11 @@ export function CaseStudies() {
       <div className="max-w-4xl mx-auto">
         {/* Section Header */}
         <div className="mb-16">
-          <p className="text-sm text-gray-500 uppercase tracking-wide mb-2">
-            Our Success Stories
+          <p className="text-sm text-primary font-medium uppercase tracking-wide mb-2">
+            Our Work
           </p>
           <h2 className="text-3xl font-bold text-text mb-6">
-            Delivering exceptional results through innovative development
-            solutions
+            Real problems. Working solutions.
           </h2>
         </div>
 
@@ -98,7 +108,7 @@ export function CaseStudies() {
 
               {/* Content */}
               <div className="p-6 relative">
-                {/* Title and Subtitle */}
+                {/* Title and Problem Subtitle */}
                 <h3 className="text-xl font-bold text-text mb-1">
                   {caseStudy.title}
                 </h3>
@@ -116,19 +126,32 @@ export function CaseStudies() {
                   </div>
                 </div>
 
-                {/* Description */}
-                <p className="text-sm text-text-light mb-4 leading-relaxed">
-                  {caseStudy.description}
-                </p>
-
-                {/* Notable Clients */}
-                <div>
-                  <p className="text-xs text-text-light uppercase tracking-wide mb-1">
-                    {caseStudy.notableClients ? "Notable Clients" : ""}
-                  </p>
-                  <p className="text-sm text-text">
-                    {caseStudy.notableClients}
-                  </p>
+                {/* Problem / Built / Result labeled rows */}
+                <div className="space-y-2.5">
+                  <div className="flex gap-3">
+                    <span className="font-semibold text-text uppercase tracking-wide text-xs w-14 flex-shrink-0 pt-0.5">
+                      Problem
+                    </span>
+                    <span className="text-sm text-text-light leading-relaxed">
+                      {caseStudy.problem}
+                    </span>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="font-semibold text-text uppercase tracking-wide text-xs w-14 flex-shrink-0 pt-0.5">
+                      Built
+                    </span>
+                    <span className="text-sm text-text-light leading-relaxed">
+                      {caseStudy.built}
+                    </span>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="font-semibold text-text uppercase tracking-wide text-xs w-14 flex-shrink-0 pt-0.5">
+                      Result
+                    </span>
+                    <span className="text-sm text-text-light leading-relaxed">
+                      {caseStudy.result}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

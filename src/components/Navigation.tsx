@@ -108,7 +108,7 @@ export function Navigation() {
               href={CONSULTATION_ENTRY_PATH}
               className="bg-gradient-to-r from-primary to-primary-dark text-secondary-light px-6 py-2 rounded-full hover:shadow-lg transition-all duration-200 hover:-translate-y-0.5 text-base font-medium"
             >
-              Book a Call
+              Book a Strategy Call
             </Link>
           </div>
 
