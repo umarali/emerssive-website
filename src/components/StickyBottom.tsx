@@ -63,8 +63,7 @@ export function StickyBottom() {
                   Hey, I&apos;m Umar from Emerssive Solutions.&nbsp;
                 </span>
                 <span className="text-gray-300">
-                  Let&apos;s find the right solution to make your team work
-                  smarter.
+                  Let&apos;s talk about what you need built.
                 </span>
               </p>
             </div>

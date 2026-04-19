@@ -134,7 +134,7 @@ that ship in weeks
 
 **Section Title:** "Trusted by Industry Leaders"
 
-**Section Description:** "We've partnered with innovative companies across various industries to deliver cutting-edge solutions that drive growth and success."
+**Section Description:** "We've built for startups, PE-backed companies, and platforms serving Fortune 500 clients."
 
 ### Customers (8)
 | Company | Logo Path |
@@ -152,9 +152,9 @@ that ship in weeks
 
 ## Testimonials Section
 
-**Section Title:** "Success, Powered by Emerssive"
+**Section Title:** "What our clients say"
 
-**Section Subtitle:** "Discover how we've helped businesses achieve their goals through innovative solutions and dedicated partnership."
+**Section Subtitle:** "From a Meta engineering manager to a VC investor — hear from the people we've built for."
 
 ### Testimonial 1: Jerry Shu
 | Field | Value |

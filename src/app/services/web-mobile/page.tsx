@@ -103,7 +103,7 @@ const process = [
 const caseStudies = [
   {
     company: "Frontline Education",
-    subtitle: "K-12 Education Platform",
+    subtitle: "K-12 Platform · 80,000+ Schools · Acquired for $3.75B",
     problem:
       "Legacy ExtJS frontend couldn't deliver modern UX. Slow page loads, poor responsiveness, and couldn't handle peak concurrent users during school hours.",
     solution:
@@ -116,12 +116,13 @@ const caseStudies = [
   },
   {
     company: "Puffbar",
-    subtitle: "DTC E-Commerce Platform",
+    subtitle: "DTC E-Commerce · #1 U.S. E-Cigarette Brand · $150M+ Retail Volume",
     problem:
       "A fast-growing brand needed a platform that could handle explosive traffic and sales volume without performance degrading under load.",
     solution:
       "Built and optimized the full e-commerce platform with role-based management, sales tracking dashboards, and order processing systems built for scale. The platform grew with the business — not against it.",
     metrics: [
+      { value: "$150M+", label: "annual retail volume" },
       { value: "5M+", label: "monthly visitors" },
       { value: "300%", label: "YoY revenue growth" },
     ],
@@ -130,12 +131,12 @@ const caseStudies = [
     company: "Fluxx",
     subtitle: "Grants Management Platform",
     problem:
-      "300+ foundations managing $13B+ in grants needed better reporting, compliance tools, and financial system integrations that their platform didn't have.",
+      "450+ foundations managing $23B+ in grants needed better reporting, compliance tools, and financial system integrations that their platform didn't have.",
     solution:
       "We added what the platform was missing: custom reporting for Citi Foundation, USAID, and LLS, enhanced tagging, risk management tools, financial integration with Intacct, and architectural work that brought system load down.",
     metrics: [
-      { value: "$13B+", label: "grants managed annually" },
-      { value: "300+", label: "foundations on platform" },
+      { value: "$23B+", label: "grants managed annually" },
+      { value: "450+", label: "foundations on platform" },
     ],
   },
   {

@@ -58,9 +58,8 @@ export function CustomerLogos() {
             Trusted by Industry Leaders
           </h2>
           <p className="text-base text-text-light max-w-2xl mx-auto">
-            We&apos;ve partnered with innovative companies across various
-            industries to deliver cutting-edge solutions that drive growth and
-            success.
+            We&apos;ve built for startups, PE-backed companies, and platforms
+            serving Fortune 500 clients.
           </p>
         </div>
 

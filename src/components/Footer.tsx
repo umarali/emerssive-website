@@ -27,11 +27,10 @@ export function Footer() {
 
             {/* Company Description */}
             <p className="text-gray-400 text-sm leading-relaxed">
-              Emerssive is a young, full-service software development company
-              specializing in Generative AI, Web and Mobile.
-              <br />
-              Our experienced team transforms concepts into impactful
-              applications for startups to enterprise companies.
+              Emerssive is a software development company specializing in AI,
+              web, and mobile. We&apos;ve built for startups, growth companies,
+              and platforms serving Fortune 500 clients like Bank of America
+              and Allstate.
             </p>
           </div>
 

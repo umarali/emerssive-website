@@ -88,8 +88,8 @@ export function Hero() {
               }`}
             >
               <p className="text-primary font-medium text-sm">
-                Trusted by 100+ happy clients including affiliates and
-                acquisitions of Fortune 500 companies
+                Trusted by 100+ clients including companies serving and
+                acquired by Fortune 500 firms
               </p>
             </div>
           </div>

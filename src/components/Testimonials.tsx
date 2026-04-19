@@ -5,6 +5,15 @@ import { useState } from "react";
 
 const testimonials = [
   {
+    name: "Michael Leach",
+    role: "Founder & CEO, iDialogue",
+    company: "Ex-Engineering Manager, Meta",
+    image: "/assets/testimonials/michael-leach.png",
+    quote:
+      "The team studied and learned our API to build a full-featured fiduciary case management app. Adapted seamlessly to many changes from the end client. Guided us through both Apple and Google mobile app stores ",
+    bgGradient: "from-emerald-400 to-teal-500",
+  },
+  {
     name: "Jerry Shu",
     role: "Co-Founder",
     company: "Lendica",
@@ -40,15 +49,6 @@ const testimonials = [
       "We hired Umar to help with a complex problem on our website back end. He has a great understanding and proficiency in Vue, Node.js, MongoDB, and Heroku. Highly recommend Umar!",
     bgGradient: "from-blue-400 to-indigo-500",
   },
-  {
-    name: "Michael Leach",
-    role: "Founder & CEO, iDialogue",
-    company: "Ex-Engineering Manager, Meta",
-    image: "/assets/testimonials/michael-leach.png",
-    quote:
-      "The team studied and learned our API to build a full-featured fiduciary case management app. Adapted seamlessly to many changes from the end client. Guided us through both mobile app stores — Apple and Google.",
-    bgGradient: "from-emerald-400 to-teal-500",
-  },
   // {
   //   name: "Digital Marketing Manager",
   //   role: "Marketing",
@@ -79,11 +79,11 @@ export function Testimonials() {
         {/* Section Header */}
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-text mb-6">
-            Success, Powered by Emerssive
+            What our clients say
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover how we&apos;ve helped businesses achieve their goals
-            through innovative solutions and dedicated partnership.
+            From a Meta engineering manager to a VC investor — hear from
+            the people we&apos;ve built for.
           </p>
         </div>
 
