@@ -112,9 +112,9 @@ Every entry links to the pull request, branch or commit it came from, so you can
 work instead of taking my word for it.</p>
 
 <div class="stats">
-  <div class="stat"><b>195</b><span>commits I wrote, across 3 repos</span></div>
-  <div class="stat"><b>32</b><span>pull requests opened, 14 merged</span></div>
-  <div class="stat"><b>10</b><span>days of work</span></div>
+  <div class="stat"><b>197</b><span>commits I wrote, across 3 repos</span></div>
+  <div class="stat"><b>33</b><span>pull requests opened, 14 merged</span></div>
+  <div class="stat"><b>11</b><span>days of work</span></div>
   <div class="stat"><b>23</b><span>hours of my own time</span></div>
 </div>
 
@@ -132,7 +132,7 @@ version bump we owe, until the test suite came back clean. It stayed on a local 
 went out on its own.
 <div class="r"><span class="local">fix/contents-controller-syntax, not pushed</span><span class="local">Rails 7.1 lockfile branch</span></div></div>
 
-<h2>August <span>(7 days)</span></h2>
+<h2>August <span>(8 days)</span></h2>
 
 <div class="entry"><strong>I had the customer website gone through end to end.</strong> Security, purchases, quiz
 scoring, the lot. It turned up real problems: paid course content that is not actually locked
@@ -216,19 +216,33 @@ change now replaces a broken colour record instead of stopping the deploy, and t
 claims now match the code. The app register copy on main went up as its own pull request. Nothing merged.
 <div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, open</a><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, open</a><a href="https://github.com/Code3Apps/c3app/pull/122">app PR #122, open</a></div></div>
 
+<div class="entry"><strong>The second reviewer got its turn at last, and found nothing.</strong> The
+reviewer locked out on 18 August came back a day early and read the colour change and all four app
+changes against their real branches. Five reads, nothing to fix. I had the app changes read line by
+line first as well, to be sure no screen can draw itself before its colours arrive. The last copy of
+the colour register went onto the app's main branch, so all seven match.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, open</a><a href="https://github.com/Code3Apps/c3app/pull/114">app PRs #114 to #117, open</a><a href="https://github.com/Code3Apps/c3app/commit/96bed75328203269e36f316e2c540a6f860e6d41">register on app main</a></div></div>
+
+<div class="entry"><strong>The first of the three big security problems has a fix, on my machine only.</strong> In-app
+purchases could be forged: three requests and any account got any course free, for good. The fix refuses
+a purchase receipt already used by another account or another course. It sits behind a switch and only
+writes to the log for now, so no real customer restoring a purchase is turned away before we have read a
+week of those lines. Still on my machine, not pushed.
+<div class="r"><span class="local">fix/iap-transaction-id-guard, not pushed</span></div></div>
+
 <div class="time-box">
 <strong>Time I spent</strong>, hands on: writing the instructions, reading what came
 back, and checking it myself.
 <table>
   <tr><td>July</td><td>3 days</td><td>3.5 hours</td></tr>
-  <tr><td>August</td><td>7 days</td><td>19.5 hours</td></tr>
-  <tr><td>Total</td><td>10 days</td><td>23 hours</td></tr>
+  <tr><td>August</td><td>8 days</td><td>19.5 hours</td></tr>
+  <tr><td>Total</td><td>11 days</td><td>23 hours</td></tr>
 </table>
 </div>
 
 <footer>
 A living record. The commit count comes from git and covers only the commits I wrote
-(73 backend, 63 website, 59 mobile), including the ones still on my machine that are not
+(74 backend, 63 website, 60 mobile), including the ones still on my machine that are not
 pushed yet; the colour register alone is one document committed on each app branch, which
 is why the mobile number is high. Anything marked not pushed has nothing to open on
 GitHub yet. Day to day detail is in Asana. Last updated August 19, 2026.
