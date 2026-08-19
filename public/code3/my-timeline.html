@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>My timeline: July to August 2026</title>
+</head>
+<body>
+<style>
+  /* Code3Apps brand. See .claude/rules/brand.md; tokens from
+     artifacts/code3apps-claude-design-2026-08-05/brand-tokens.json */
+  :root {
+    --bg: #ffffff; --ink: #111827; --muted: #4b5563; --faint: #6b7280;
+    --brand: #042c53; --accent: #ef9f27; --accent-ink: #ba7517;
+    --hairline: #e5e7eb; --card: #f9fafb; --chip-bg: #f3f4f6; --chip-ink: #374151;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b1b2e; --ink: #e7edf5; --muted: #9fb0c3; --faint: #7286a0;
+      --brand: #33c3ff; --accent: #ef9f27; --accent-ink: #f2b04f;
+      --hairline: #1e3350; --card: #10233b; --chip-bg: #162944; --chip-ink: #c3d0df;
+    }
+  }
+  body { max-width: 47rem; margin: 3rem auto; padding: 0 1.25rem;
+         font: 15.5px/1.62 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         background: var(--bg); color: var(--ink); }
+  h1 { font-size: 1.5rem; color: var(--brand); margin-bottom: .2rem; }
+  .lede { color: var(--muted); margin-top: 0; }
+  h2 { font-size: 1.05rem; color: var(--brand); margin-top: 2.4rem;
+       border-bottom: 2px solid var(--accent); padding-bottom: .25rem; }
+  h2 span { color: var(--faint); font-weight: 400; font-size: .85rem; }
+  .stats { display: flex; gap: .6rem; flex-wrap: wrap; margin: .7rem 0 1rem; }
+  .stat { background: var(--card); border: 1px solid var(--hairline); border-radius: 8px;
+          padding: .45rem .7rem; min-width: 7rem; }
+  .stat b { display: block; font-size: 1.15rem; color: var(--accent-ink); }
+  .stat span { font-size: .78rem; color: var(--faint); }
+  .entry { margin: 1.15rem 0; padding-left: .9rem; border-left: 3px solid var(--hairline); }
+  .entry strong { color: var(--brand); }
+  .r { margin-top: .5rem; display: flex; flex-wrap: wrap; gap: .35rem; }
+  .r a, .r span { display: inline-flex; align-items: center; gap: .32rem;
+       font-size: .75rem; line-height: 1.35; padding: .22rem .6rem; border-radius: 999px;
+       border: 1px solid var(--hairline); background: var(--card); color: var(--chip-ink);
+       text-decoration: none; }
+  .r a { color: var(--accent-ink); }
+  .r a::after { content: "\2197"; font-size: .82em; opacity: .65; }
+  .r a:hover { border-color: var(--accent-ink); background: var(--chip-bg); }
+  .r span.local { color: var(--faint); }
+  .time-box { background: var(--card); border-left: 3px solid var(--accent);
+              padding: .8rem 1.1rem; margin-top: 1.6rem; }
+  .time-box table { border-collapse: collapse; margin-top: .5rem; }
+  .time-box td { padding: .18rem .9rem .18rem 0; color: var(--muted); font-size: .9rem; }
+  .time-box td:first-child { color: var(--ink); }
+  footer { margin-top: 2.5rem; color: var(--faint); font-size: .82rem;
+           border-top: 1px solid var(--hairline); padding-top: .7rem; }
+/* PAGES-NAV-CSS:start */@font-face{font-family:"Barlow SC";font-weight:600;font-display:swap;src:url(data:font/woff2;base64,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) format("woff2")}
+
+:root{
+  --ground:#fff; --surface:#f5f8fb; --surface-2:#eaf0f6;
+  --ink:#0c1929; --ink-2:#40566e; --ink-3:#6b8199; --rule:#dae3ec;
+  --brand:#042c53; --accent:#ba7517; --accent-fill:#ef9f27;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:"Avenir Next",Avenir,"Segoe UI",system-ui,-apple-system,sans-serif;
+  --display:"Barlow SC","Barlow Semi Condensed",Impact,"Arial Narrow",sans-serif;
+  /* the two pages' own token names, mapped onto the shared palette */
+  --bg:var(--ground); --card:var(--surface); --chip-bg:var(--surface-2);
+  --muted:var(--ink-2); --faint:var(--ink-3); --hairline:var(--rule);
+  --accent-ink:var(--accent); --chip-ink:var(--ink-2);
+  --warn-bg:#fbf1e0; --warn-edge:#8a5a12; --danger-bg:#fbeceb; --danger-edge:#96302f;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0a1727; --surface:#0f2033; --surface-2:#172c42;
+  --ink:#e8eef6; --ink-2:#a6bacd; --ink-3:#7590ab; --rule:#1e3550;
+  --brand:#7cc0ff; --accent:#efb254; --accent-fill:#ef9f27;
+  --warn-bg:#2a2010; --warn-edge:#e0ab5c; --danger-bg:#2c1414; --danger-edge:#f08a86;
+}}
+:root[data-theme="dark"]{
+  --ground:#0a1727; --surface:#0f2033; --surface-2:#172c42;
+  --ink:#e8eef6; --ink-2:#a6bacd; --ink-3:#7590ab; --rule:#1e3550;
+  --brand:#7cc0ff; --accent:#efb254; --accent-fill:#ef9f27;
+  --warn-bg:#2a2010; --warn-edge:#e0ab5c; --danger-bg:#2c1414; --danger-edge:#f08a86;
+}
+body{background:var(--ground); color:var(--ink); font-family:var(--sans); line-height:1.6}
+h1,h2,h3{font-family:var(--display); letter-spacing:.01em; text-wrap:balance}
+h1{font-size:clamp(1.9rem,4.6vw,2.7rem); line-height:1.06; color:var(--ink)}
+h2{font-size:1.5rem; color:var(--ink)}
+h3{font-size:1.12rem}
+a{color:var(--accent)}
+code,.sha{font-family:var(--mono)}
+
+.pn{margin:0 0 1.4rem;padding:.75rem .9rem;background:var(--surface);border:1px solid var(--rule);border-radius:10px}
+.pn .pn-row{display:flex;flex-wrap:wrap;gap:.4rem .5rem;align-items:center}
+.pn .pn-lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-right:.35rem}
+.pn a,.pn .pn-cur{display:inline-block;font-family:var(--display);font-size:.86rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;padding:.22em .7em;border-radius:999px;border:1px solid var(--rule);color:var(--accent);background:var(--ground)}
+.pn a:hover{border-color:var(--accent)}
+.pn .pn-cur{color:var(--ground);background:var(--accent);border-color:var(--accent)}
+.pn .pn-desc{margin:.45rem 0 0;font-size:.82rem;color:var(--ink-2);max-width:none}
+.pn .pn-legend{margin:.35rem 0 0;font-size:.78rem;color:var(--ink-3);max-width:none}
+.pn .pn-legend b{color:var(--ink-2);font-weight:600}
+/* PAGES-NAV-CSS:end */
+</style>
+
+
+
+<!-- PAGES-NAV:start -->
+<nav class="pn" aria-label="Code3 pages"><div class="pn-row"><span class="pn-lbl">Code3 pages</span><a href="/code3/review-board">Review board</a><a href="/code3/colour-decisions">Colour decisions</a><a href="/code3/field-findings">Field findings</a><a href="/code3/capture-record">Capture record</a><a href="/code3/build-log">Build Log</a><span class="pn-cur">My timeline</span></div><p class="pn-desc"><b>Review board</b>: what changed and how it looks, before and after, and what is waiting for your word · <b>Colour decisions</b>: the three colour choices only you can make · <b>Field findings</b>: what we learned about the backend, the website and the apps that changes what to do next · <b>Capture record</b>: how the app screenshots were taken, every image in order · <b>Build Log</b>: the commit map of everything that has landed · <b>My timeline</b>: my own account of what has been built since June, in plain words, with the hours.</p><p class="pn-legend">Ship state words, the same on every page: <b>local only</b> = on the working machine, not sent anywhere; <b>pushed, not merged</b> = on GitHub as an open pull request, customers see nothing; <b>merged</b> = accepted into the branch, still not live; <b>live</b> = customers see it.</p></nav>
+<!-- PAGES-NAV:end -->
+
+<h1>My timeline: July to August 2026</h1>
+<p class="lede">What I have built for Code3Apps with Claude, and what it cost me in time.
+Every entry links to the pull request, branch or commit it came from, so you can open the
+work instead of taking my word for it.</p>
+
+<div class="stats">
+  <div class="stat"><b>195</b><span>commits I wrote, across 3 repos</span></div>
+  <div class="stat"><b>32</b><span>pull requests opened, 14 merged</span></div>
+  <div class="stat"><b>10</b><span>days of work</span></div>
+  <div class="stat"><b>23</b><span>hours of my own time</span></div>
+</div>
+
+<h2>July <span>(3 days)</span></h2>
+
+<div class="entry"><strong>July 6 and 7: I started writing the work down.</strong> Every session now ends with a
+short summary in plain words, kept in the repo, so what happened is not only in my head. Three
+of those exist so far. The same two days went on setting Claude up to work in our code safely.
+<div class="r"><span class="local">docs/briefs/2026-07-06.html</span><span class="local">local branches, nothing deployed</span></div></div>
+
+<div class="entry"><strong>July 30: the branch our server deploys from was broken, and I had it fixed.</strong> A
+file at the tip of that branch had a syntax error sitting there since June, so the next deploy
+would have failed on its way out. It was fixed and tested on my machine, together with the Rails
+version bump we owe, until the test suite came back clean. It stayed on a local branch and never
+went out on its own.
+<div class="r"><span class="local">fix/contents-controller-syntax, not pushed</span><span class="local">Rails 7.1 lockfile branch</span></div></div>
+
+<h2>August <span>(7 days)</span></h2>
+
+<div class="entry"><strong>I had the customer website gone through end to end.</strong> Security, purchases, quiz
+scoring, the lot. It turned up real problems: paid course content that is not actually locked
+behind a purchase, in-app purchases the server takes on trust, and quiz scores that come out
+wrong because answers get dropped on submit. Ten write- ups, ordered by what to fix first. None
+of it is fixed yet; this was about knowing.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/946">server PR #946, merged</a><span>10 reports kept in the repo</span></div></div>
+
+<div class="entry"><strong>Rules and a safety catch in all three repos.</strong> Each repo now tells Claude how to
+work in it, and a guard blocks any push to a branch that goes live. On the server, merging and
+deploying became two separate steps, so nothing reaches customers unless I say go. Status moved
+to Asana instead of sitting in files nobody opens.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/943">server PR #943, merged</a><a href="https://github.com/Code3Apps/C3suite_server/pull/944">PR #944, merged</a><span>guard tested in all 3 repos</span></div></div>
+
+<div class="entry"><strong>Seven server pull requests, all merged with tests passing.</strong> Everything above
+went in as a pull request someone can read, not a direct push. One test that failed at random
+got tracked down and properly fixed, rather than run again until it passed. Five known security
+warnings in the libraries we depend on are written down as work still to do.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pulls?q=is%3Apr+is%3Amerged">server PRs #943 to #949</a><a href="https://github.com/Code3Apps/C3suite_server/pull/947">PR #947, merged</a></div></div>
+
+<div class="entry"><strong>A purchase bug in two of the apps.</strong> Restore Purchases could unlock a course
+somebody never bought, because the app accepted any earlier purchase instead of the matching
+one. Both apps now check for that exact product, which is what the EMT app already did. Merged,
+so it goes out with the next store builds; customers do not have it yet.
+<div class="r"><a href="https://github.com/Code3Apps/c3app/pull/112">app PR #112, merged</a><a href="https://github.com/Code3Apps/c3app/pull/113">PR #113, merged</a></div></div>
+
+<div class="entry"><strong>What to do about four mobile codebases.</strong> We publish three apps, not four; the
+fourth branch is a leftover nobody ships. Instead of making every fix three times, the plan is
+one codebase with three flavours, rolled out Interview first, then EMT, then Fire, each behind a
+short test list. Decided and written down, not started.
+<div class="r"><span>5 decisions closed on the Asana map</span><span>3 research write-ups</span></div></div>
+
+<div class="entry"><strong>I had a second AI check Claude's work.</strong> Codex went over the merged changes three
+times. It found ten real problems, two of them ways around the guard that is supposed to stop
+accidental pushes to live branches. All ten were fixed and re- checked, and a final sweep of 37
+checks across the three repos came back clean.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/949">server PR #949, merged</a><a href="https://github.com/linzlou82/c3suite-web/pull/4">web PR #4, merged</a><a href="https://github.com/linzlou82/c3suite-web/pull/5">PR #5, merged</a></div></div>
+
+<div class="entry"><strong>Cheaper models doing the routine work.</strong> The strongest model now plans and
+reviews, and smaller ones do the searching and the mechanical edits, each in its own copy of the
+repo so they cannot trip over each other. I have not measured what it saves yet.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/945">server PR #945, merged</a><span>3 helper agents per repo</span></div></div>
+
+<div class="entry"><strong>The website redesign, first pass.</strong> The site got a proper set of building blocks,
+meaning fonts, colours and spacing defined once and used everywhere, and the marketing pages
+were rebuilt on top of them. Eleven commits on a working branch. Nothing a customer can see.
+<div class="r"><a href="https://github.com/linzlou82/c3suite-web/commits/design/phase-1-brand-theme">the restyle branch</a><a href="https://github.com/linzlou82/c3suite-web/pull/7">web PR #7, merged</a></div></div>
+
+<div class="entry"><strong>Three fire courses were showing the wrong price.</strong> The Fire app fills a gap in
+the server's course list with prices written into the app itself, and one of them had drifted to
+the wrong tier. The cause was an admin screen that quietly stopped saving that list. The
+database fix is tested both ways and merged, and it applies itself on the next deploy.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/950">server PR #950, merged</a><span>merged, not live</span></div></div>
+
+<div class="entry"><strong>The redesign got the review it never had.</strong> It had been called finished without
+anyone actually reviewing it, so I had it walked through properly. Three real problems came out:
+buttons that did not line up on the course cards, and a mobile menu that let the page scroll
+behind it and the keyboard wander into the page underneath. Fixing the menu left its own close
+button unreachable, which Codex caught.
+<div class="r"><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, open</a><span>2 review rounds, 1 finding</span></div></div>
+
+<div class="entry"><strong>Restyle finished: new logo, real app screenshots, rebuilt course page.</strong> After I
+called the first attempt generic, the design rules themselves were fixed first, since those
+rules were what produced the look. The logo was redrawn as shapes so it holds at any size, and
+the site got its first favicon and link preview. The drawn phones were swapped for our own App
+Store screenshots and the course page rebuilt. Both pull requests are open.
+<div class="r"><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, open</a><a href="https://github.com/Code3Apps/C3suite_server/pull/951">server PR #951, open</a><a href="https://github.com/linzlou82/c3suite-web/pull/9">web PR #9, open</a></div></div>
+
+<div class="entry"><strong>One set of colours per course family, and app pictures taken from the real
+apps.</strong> Each app paints itself from a record on the server, and those records had drifted
+apart: the same family red in one place, blue in another. It is now one set per family, as a
+database change that can be undone and was tested both ways on a copy of our database. The
+pictures on the site were re-taken from the apps as they run now. All of it is pushed, not
+merged.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, open</a><a href="https://github.com/Code3Apps/c3app/pull/114">app PRs #114 to #117, open</a><a href="https://github.com/linzlou82/c3suite-web/pull/8">re-shot screens in web PR #8</a></div></div>
+
+<div class="entry"><strong>The 18 August work got its review the same day.</strong> A separate Claude
+review went over it in five lanes, with a second agent trying to knock down every finding before
+anything changed. Nine came through, all small, all fixed and pushed the same evening: the colour
+change now replaces a broken colour record instead of stopping the deploy, and the register's
+claims now match the code. The app register copy on main went up as its own pull request. Nothing merged.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, open</a><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, open</a><a href="https://github.com/Code3Apps/c3app/pull/122">app PR #122, open</a></div></div>
+
+<div class="time-box">
+<strong>Time I spent</strong>, hands on: writing the instructions, reading what came
+back, and checking it myself.
+<table>
+  <tr><td>July</td><td>3 days</td><td>3.5 hours</td></tr>
+  <tr><td>August</td><td>7 days</td><td>19.5 hours</td></tr>
+  <tr><td>Total</td><td>10 days</td><td>23 hours</td></tr>
+</table>
+</div>
+
+<footer>
+A living record. The commit count comes from git and covers only the commits I wrote
+(73 backend, 63 website, 59 mobile), including the ones still on my machine that are not
+pushed yet; the colour register alone is one document committed on each app branch, which
+is why the mobile number is high. Anything marked not pushed has nothing to open on
+GitHub yet. Day to day detail is in Asana. Last updated August 19, 2026.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,897 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Code3Apps: The Build Log and Backtracking Index</title>
+<style>
+  /* Code3Apps brand — see .claude/rules/brand.md; tokens from
+     artifacts/code3apps-claude-design-2026-08-05/brand-tokens.json
+     (navy #042C53, gold #EF9F27 / goldDark #BA7517, neutral + semantic sets) */
+  :root {
+    --bg: #ffffff;
+    --ink: #111827;
+    --muted: #4b5563;
+    --faint: #6b7280;
+    --brand: #042c53;
+    --accent: #ef9f27;
+    --accent-ink: #ba7517;
+    --hairline: #e5e7eb;
+    --card: #f9fafb;
+    --chip-bg: #f3f4f6;
+    --chip-ink: #374151;
+    --warn-bg: #fdf3e1;
+    --warn-edge: #ba7517;
+    --danger-bg: #fdecec;
+    --danger-edge: #dc2626;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0b1b2e; --ink: #e7edf5; --muted: #9fb0c3; --faint: #7286a0;
+      --brand: #33c3ff; --accent: #ef9f27; --accent-ink: #f2b04f; --hairline: #1e3350;
+      --card: #10233b; --chip-bg: #162944; --chip-ink: #c3d0df;
+      --warn-bg: #241d0d; --warn-edge: #ef9f27;
+      --danger-bg: #2c1517; --danger-edge: #ef6a6a;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0b1b2e; --ink: #e7edf5; --muted: #9fb0c3; --faint: #7286a0;
+    --brand: #33c3ff; --accent: #ef9f27; --accent-ink: #f2b04f; --hairline: #1e3350;
+    --card: #10233b; --chip-bg: #162944; --chip-ink: #c3d0df;
+    --warn-bg: #241d0d; --warn-edge: #ef9f27;
+    --danger-bg: #2c1517; --danger-edge: #ef6a6a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg); color: var(--ink); margin: 0;
+    font-family: "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, sans-serif;
+    line-height: 1.62; -webkit-text-size-adjust: 100%;
+  }
+  .wrap { max-width: 56rem; margin: 0 auto; padding: 3.5rem 1.25rem 5rem; }
+  .eyebrow { font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--brand); font-weight: 600; margin: 0 0 .9rem; }
+  h1 { font-size: clamp(1.7rem, 4.5vw, 2.3rem); line-height: 1.15; font-weight: 700; letter-spacing: -.015em; margin: 0 0 1rem; text-wrap: balance; }
+  .lede { font-size: 1.02rem; color: var(--muted); max-width: 44rem; margin: 0 0 1.1rem; }
+  .meta { display: flex; flex-wrap: wrap; gap: .45rem 1.4rem; font-size: .8rem; color: var(--faint); font-variant-numeric: tabular-nums; padding: .9rem 0 0; border-top: 1px solid var(--hairline); margin-top: 1.6rem; }
+  .meta strong { color: var(--ink); font-weight: 600; }
+  h2 { font-size: 1.16rem; font-weight: 700; letter-spacing: -.01em; margin: 3.2rem 0 1rem; padding-top: 1.6rem; border-top: 1px solid var(--hairline); text-wrap: balance; }
+  h2 .sec { color: var(--faint); font-weight: 500; font-size: .8rem; letter-spacing: .1em; display: block; margin-bottom: .3rem; text-transform: uppercase; }
+  p { margin: 0 0 1rem; max-width: 46rem; }
+  .quiet { color: var(--muted); }
+  a { color: var(--accent-ink); }
+  code { font-family: var(--mono); font-size: .85em; background: var(--chip-bg); border-radius: 4px; padding: .05em .3em; }
+  .note { background: var(--card); border-radius: 8px; padding: 1rem 1.15rem; font-size: .92rem; color: var(--muted); margin: 0 0 1rem; max-width: 46rem; }
+  .note strong { color: var(--ink); }
+  .warn { background: var(--warn-bg); border-left: 3px solid var(--warn-edge); border-radius: 0 8px 8px 0; padding: .85rem 1.1rem; font-size: .92rem; margin: 0 0 .8rem; max-width: 46rem; }
+  .danger { background: var(--danger-bg); border-left: 3px solid var(--danger-edge); border-radius: 0 8px 8px 0; padding: .85rem 1.1rem; font-size: .92rem; margin: 0 0 .8rem; max-width: 46rem; }
+  .arc { list-style: none; margin: 0 0 1.4rem; padding: 0; display: grid; gap: .65rem; max-width: 46rem; }
+  .arc li { display: grid; grid-template-columns: 7.2rem 1fr; gap: 1rem; font-size: .95rem; }
+  .arc .when { color: var(--brand); font-weight: 600; font-size: .8rem; letter-spacing: .06em; text-transform: uppercase; padding-top: .15rem; }
+  ol.steps { max-width: 46rem; padding-left: 1.2rem; margin: 0 0 1rem; }
+  ol.steps li { margin-bottom: .55rem; font-size: .95rem; }
+  .entry { display: grid; grid-template-columns: 8.5rem 1fr; gap: 1.4rem; padding: 1.7rem 0; border-top: 1px solid var(--hairline); }
+  .entry:first-of-type { border-top: none; }
+  .stamp { text-align: right; }
+  .stamp .ver { display: inline-block; font-family: var(--mono); font-size: .8rem; font-weight: 600; color: var(--brand); border: 1px solid var(--hairline); border-radius: 999px; padding: .12rem .6rem; margin-bottom: .4rem; }
+  .stamp .date { font-size: .78rem; color: var(--faint); line-height: 1.4; font-variant-numeric: tabular-nums; }
+  .entry h3 { font-size: 1.02rem; font-weight: 700; margin: 0 0 .35rem; letter-spacing: -.005em; text-wrap: balance; }
+  .file { font-family: var(--mono); font-size: .72rem; color: var(--faint); margin: 0 0 .8rem; overflow-wrap: anywhere; }
+  .entry p { font-size: .95rem; }
+  .tracewrap { overflow-x: auto; margin-top: .4rem; }
+  table { border-collapse: collapse; font-size: .82rem; min-width: 34rem; width: 100%; }
+  th { text-align: left; font-size: .68rem; letter-spacing: .09em; text-transform: uppercase; color: var(--faint); font-weight: 600; padding: .35rem .8rem .35rem 0; border-bottom: 1px solid var(--hairline); }
+  td { padding: .45rem .8rem .45rem 0; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+  td.c-repo { white-space: nowrap; color: var(--muted); }
+  td.c-branch { font-family: var(--mono); font-size: .76rem; white-space: nowrap; }
+  .sha { font-family: var(--mono); font-size: .76rem; background: var(--chip-bg); color: var(--chip-ink); border-radius: 4px; padding: .06rem .38rem; white-space: nowrap; }
+  .none { color: var(--faint); font-style: italic; }
+  .stamp .badge, .who { display: inline-block; font-size: .66rem; letter-spacing: .07em; text-transform: uppercase; font-weight: 600; border-radius: 4px; padding: .08rem .42rem; white-space: nowrap; }
+  .stamp .badge { margin-top: .4rem; }
+  .b-me, .who-me { background: var(--warn-bg); color: var(--accent-ink); border: 1px solid var(--accent); }
+  .b-team, .who-team { background: var(--chip-bg); color: var(--faint); border: 1px solid var(--hairline); }
+  td.c-who { white-space: nowrap; }
+  .appendix td, #commit-index td { font-variant-numeric: tabular-nums; }
+  .cur { color: var(--accent-ink); font-weight: 700; }
+  #commit-filter {
+    width: 100%; max-width: 30rem; font: inherit; font-size: .95rem;
+    color: var(--ink); background: var(--card); border: 1px solid var(--hairline);
+    border-radius: 8px; padding: .55rem .9rem; margin: 0 0 .35rem;
+  }
+  #commit-filter:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  #filter-count { font-size: .8rem; color: var(--faint); margin: 0 0 .8rem; }
+  #commit-index table { min-width: 54rem; }
+  #commit-index td.c-doc a { text-decoration: none; }
+  footer { margin-top: 3.5rem; padding-top: 1.2rem; border-top: 1px solid var(--hairline); font-size: .8rem; color: var(--faint); }
+  @media (max-width: 40rem) {
+    .entry { grid-template-columns: 1fr; gap: .5rem; }
+    .stamp { text-align: left; display: flex; align-items: baseline; gap: .7rem; }
+    .stamp .ver { margin-bottom: 0; }
+    .arc li { grid-template-columns: 1fr; gap: .1rem; }
+  }
+/* PAGES-NAV-CSS:start */@font-face{font-family:"Barlow SC";font-weight:600;font-display:swap;src:url(data:font/woff2;base64,d09GMgABAAAAABNIAA4AAAAALmgAABLxAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGoEKG45kHCgGYACCdBEICrEUqiYLghoAATYCJAOEIgQgBYQWB4ofG+goE+542DgAoCmvkv0fEjiVwYyF3SsmhIHSrdbbszpnT7SGf44yHCVEt6oYPiUjTGEM4DgOCF0UsehEv5farbC0CR2wOgIs+TvxtI/uW+Ohfr8vT3ffN38WAIMyWRUmlYoCciTM+ACqsAzbrFABpvIIf/rn+W3+ue++B/gIoxEEUZwiKmElOrDrb06MmbXMRL+rSl2VTBtLqLA5MjFJWtqbpPofOvIitiSqbbemqMKlADrhC8j559/buztfeIYDCzCQgD2sszlVb6z8A0pOpqZQlniA/j83v7koxChcxlfvO1mcFlhE7T9wHp9EwzMqOLCUBjpQ+2pAAY7Ff79WafvN63c1s1uT2r8QUtd37LLC9QRIsQWycUl19x968+btcmX7kCY0O0tzwT7sA5ewShyWv4oCBscuFUVCsnARTkZYkfLxfVM1H/BYzFIdvkSCZYaCYWost/s0b+3HEsDRAKsh7WgEkAjgQwD672iGYg6xZAmxJoA4EkMkvCAKAZAgoZBw8ZAkmZAceZACAyEVGiBNWiHt2mGDDYENNwqGgJUCNCDOOQkZ4HhpUw3wkIA2KghGyacHicS46W6oAR8X9TwPXtm+2nUtDaMVAwHhTYMxNbRCCxojAQILksF9GUE4SAI2zNCQ7pZfyNdQD8hjUM9KA9SrMIrsfPtwGAkMMK3NYNFLgPE//Bn/TFjbNbUR64FoxggIwOYdIyTUO1oWAuMxCDIKSOg3DgxHIEbd9hKSQzKy/oD/ra+Dgz/Ca3jK98twEy7D2epxmRuMJ+6sA7WrttS6WlGLPM9hmMYTCEbBkPYWXIcrcDHuh/YcnIYTsBZHMAcBfNiLwQ0kEakAalOea4ZpTBK9+TOzrJ+5/p5H8yUv/zjv5vW8CKe9o2nIfdt35KZcw7wMsABm8RSGcTACBnGTjHTtNcRAoogoILI8p2QQx9EMYRDQriLkhCs+kGLM5RNWBI9gEQQPo7+A79UezqG38DwifQi9XW6/GufjZHTF8yxifch6m+UQL78ntsWGWAVLvsl5kFd5CvIo30N2EV1QjAHCw8SAotQoC/mbxyC3gPA5jMCnkHmZZ7tOp2EkeO44X/O1fIvH3yudbjyyCgBFBVZHMobItiEuFJ3bdFKbWsoYW6QZ8juEn/CLfEmHw7AMP5kf3XjW/OyTboP0aHEwlmQ+jsYpVff3is7VoJXHKodgnXR3TrmlDCMHuszxiOOChdeY+9XWzQKw6YTFRoRHtL6tdkChPBobvNbYAYiNCu2MGZ4gz1KIjLpN8RobN+akWbxk2MOMq24xhZjZVryuk3mWMoNRoxrjQQ2Exw4QIoRFzTqSC05INinycAGOEnYXhQN8nuGMRmAKA4ilWaxtuAInoaW8NxiHQcZq/HteDSsoEqukdWWpYxlaAon7bRkBuchDG7RHV/RGNUZgDMZjTvMATIgmgxDwAwXInswF2Av1YfDtMBdGudXhVbiE78A19w7Mb3rxKMTqyyXMQiN4IYElcTAK9FfQvYB+DwBDtHQPAtlpgY4Kt4sx35CnhiMCc1hIxKQECB6cYBKsRASkEAFEkZCKLiz/gSkoJk/X3f93+nffwb47ro39w/S//adfdG/3qj1yHeh/qhLqv5xHf3E1AHTLn1tUQNnbgjxx6Ci7RJEtjNsnLKTRsE6CaW8ZkkINDphCJkeEBGIlf7z2uXIlC4Dyj1SbP0HczJxIkHf5XnDxU8fVqVIFzBbg0dsPZshHvmyaXOgCex+/7gAwzkSJQ/cBonO3uoeBhOLNR0FsyCjk/U+GBLzG/fYrKmTOXbmVcbgCk9gEO+9fRmN0TiIzbgZC89MFF2YBVhwx+o9+1rc9nnA+eD4EzPs7KjS24xN8qYhE6v7sf+Im4SwlEMsToIE7PZUq7UYyE8dcPLa+uHR4YpiKxaHFEIFFw0QUWjSmSHzpHGQQyGQtia0UdlLZS2MjmUguRzn6GMBNEYkCLvqR6s9VIWf/kSkmV8pTGS8DeSihUEGpklo1X7X81PFXz0eNYM2CNAnRIlQrBHVbB3APILYHjgPjRzA9AqbvQF0SoADI5ih8ZqJSuh2pTMSTtqTYi+ZuB1He36jh3TwlKDq+75kNJjj2HEfBVFNLgytPLOuZrA83G2nkJGaEDJKxhaHXbTx725Emv85WyseyL6Pdi0OBJlBAQH4opKI6WSxCVBB3AZiDMp55ig+2vIGugCF3N+FNhbJTdPI32IAaZlKrmMQQmk/u1uw26qSQN8u3dZrZVLjZ8n8D8ry+u1FBHS8jKlQjUEdc4mo5BmBVl8mt2FbLNefX4lDBeQkp2l+joAnt6s/BF7KNk95vIh0fHbdNH3edXl6cZ34sTntivzzW+bODrLbzkuSaZw96vSkeREKHLkXlVfKC0tkaSqeVor3KtL/YZZ/2inuks4l3WhTS0zyFamlQq7S18wZiIXVbXu1VMU0Tiuy62vssBMuwWN1fDW22hZ1qiCdPc9uDg2bdgg78mqCDkMYhU2SZ7f2I16TmxPSr2r5ohLetED2J1RPPhcAI4TqWxW+DxwULrcN7uN/p1NTItVq/WrIWrYLoHNlG5k2DwDc/c2DHIvvous/Vg8LsPTDCgE6q/7YvaZHF22NbVUyxYSWMENygpgNREmLAreBuVyca4T18A+dTrLpuWOK+UnSdxwSu53Os94yv+miKB77rSU5DYk6cPedk41uoa872XJOYu9p0uDkeN6q9mtnYDNYmL6Eccrw+BpS+jMLNLgDtkZlmu2H8nGdrXtovGnmKKDQgNTJpv+ry7lh5kn8Ly07n8nHAkuv0JeOqMornjAm2rHhwJ7AtPSzTEsOTWnfDcQlGWPkuD2k1s1EDgSqItQchCoipNkFDEwrDvGis3uGIG8ZyRLCR1+4e+lpz1NIhHXy+oYbIIKYuYLEdnVApfHt7YhvL2LTa1p10vs47tIkuran2nwJ9WF8j2ar0zVAPT9Su6fh6nvpQSvElb27NnW4v6OELLARs6oRXZS/ICktNiIyIjwn1lPCLYi2t3Q2DGQvetLE5v3MMr++wDSxxt6/A5MWB7Src2f258r1rXroa2O7vB5uwC1/fVBHLUkWk6giSSNbBhsNNlXmKvFX7gEtUKeVHUQKwKqsK3oD/zJeuu6oO9tRTVMdE6c47uuqd7Rw9eJxEwN2rpWPjGHgXIMHZ5XSpjeDRma7xqxJAV4ACi8eB84vFvn5FkfyITbAf0kTxcv5FEfxI/3cepdBvU0nU25SKZWqJapkCtk/F5udFKYr3DtBc9Jv4rVRYWtcXOTlxOHJqIDNw/D+5Yj1ZuU0F12d6rT5s+GbPD0319l6qel4cenimc/RPB9KbzTjKpHYFucsdVuQFn08kf6WUw5HDdaUUj9pyDyJZdBHbrZLr6lrBdWPrmf7WW6cEQzxDPrguZMsU8cr0BF+VPVaaL0/W5GtTMipS+yVTlL10koswTitjF1JUKe5fkZxsuWOJ1IeiouRSF3GhCF4ulVIK02YJRYl3Dv/1WPTXDXKavzVKM9lx/qgYoYUSp8ZgGCgCP0apqoX4iVCSxYc00av+MN+gE5rQdaIAXx50qD1oDodDUQ6CiFvOlydviJuVarY7KLRQo03XJ/O0cR4qnziTmLKslOyKAVTyq8R1EVIBRS2fKHNHxX4nyIwuE4nKROJSsahVpIoupV7XZTEEPsvMK6XwPcFqZlkWHTvcP3A4HVOekZJclkHr6v1DKui4sqxUsf5clFrspI464yQ5GKVSqRVRhyXwv3/swFTbH1Tw0owcdbzEge3B4VA6pcr5NK2pnLid5XQuCsL/qt/6Z3LACgvH2OjclKT80t9YmKxGKp0hCwHupZyweyEKsrNaeD/m63DjvwqPV/yoGA47YtmiNoRn/Ihptp52T87EJE7OkNGFwDiPWrTGWivvmySMZUBldKtI9Mxl2/fhCCYXECw6zESnK7EgWXQCrQsohc4wf+nyzevoeGaMr7ZEZxIG8lMDfKNKdSblJjptaaVtOtq/T4SrEh+q/vkPDM6eoA1KJGi2B83X8u3sPHz5tAeHnagL9oWmuIUmaYHXWAJpeyu3NebdP6HloXil7CvLgaGlsPqDmqIs7goc4dPlpVQAVUo9mfzrk+WVvylz0wweW8E1DbkiZVCSWRp6vRaJGyUyrz62nhLzoTEzbkDVjSyhMNNxFWyD7Y8CCj20QUkEzfai+b5sW1u2L5/24rCTtMF+cPkVnbTfEcPmaVy2iMv16ARz2ePqxuUGt4nd/0qtheZSXcyMPR6TB3Emvh6vc9blBa+VsmdMvlUmidX3WnV37ztYLFwv4D9n2X/LHHp0Z94Kmubb/7H7PKmTLsjcPJ3LFnN5IV2+DEoyMpoknUMWOLkLXa0FzuZDs0fsoUsm+jXgIBKYGQ1DwSAWjyFu6GwcYRQqDvQOQxstdGy8iMJxheMffgJxSEeipUPRAR33nEicQOEk/2QtazlsRhJpKwkWZbVqCneRFRXgTrJKd4rCSb7JFlhAVuk4Vc9wtNsVdsIZV1gamgqBTurUObOPgZyoUPcEikgfEYWTfJMtsJCcJCks7lg9BC3giqrCvYORZncWbzja5gR5Y5l6k8mEDlUl1+UiQaoijUXSUqKeTh0JoYEJMIcCTRAYKFC1KEK2A8IaaXQurIqfvmYnRGEUpmMDFpW4RVL4x3PhvuaCRFwYnBPgQnqlKJxUMNlaKwhZPKGJjQwuAB+DHq3xD86jxPRqFE7yT9aZ1cKyX9EzHC3UrE9cPAHZUKm1FEJ4wPwAuhhFQDRUamE8RHodF04qmGytFYQsaqA+gA5FQmURsroiaSmRGYNJ5RhpKYSooFXJdQgqKosKV5C0hNSzGCRIGxMM7gXPsNYcSARIC2GGo3Geq0FM/HSDjGkwZ8N6r39R3b/3nEWuZ3BvvRna29tYMGRlEtW/RKrGPN3KH394b7cZTOOtP/8/86jD+OX/7p/2d0dwLgObQW7E/XyWtBpu8FVZaLAGjX0n4VNuex73qBB1XixPGMxGEbxXRtR1CJ9axihzr9pzANiz6p8hxNjgcT4NupEmhoFfKFeH45D1Va7fwJ5mZSf98El4dFcbBLt7/g7Bqu7B5Xwelw0WQVrGKTNpQRvicYIs8Zc0wNmO2nhc5uB2kDJjC9qow7QBlhU1n9OQhfLVRhucoaFm1Y5chdHK5kD6tluiYRnN5rTGtAYNPYdK3Xe/CjU1pszU8XtyC9h58i6dIIfOyPNDFKWmxlxmRNY/3xHeLQNxDQt4PbRcvwPEyqo7rU8HTJNHVxqc7Sz16idVKDU1hsyA6L0aQql0TrI5TRnvCSM7F3KI45JHGEAqXVrQez2iDbC8RbMlAYa6qOe1Tyx3ZgxAfjLvyMDersry/S9kmPEXnSD/HZ3fXupv/0f+31VqCIjrnxke75Ru05CXxcSvAZ/N/s73wcm73Tvf0zXkExyYIQAC/Mw7jDjvPkIeV9/aY1x/Lbvg89isepKLOIWo0xfwcxyu8MY3KU55/j0LOkezRLkentoProzP4Nlz8p7dzDveLvD0VRau0n0z3nLv9eV9Q9m7c+xkYW9ps+VO0FWALA6VfAnwhk8DmE+tB11NnjWYdxy8PfML8+PfYQMC7tGEsgIT8sgDrwwWlcLQMAFwb3vzxUiIp4sJPNcXY0nGpcn4Ygpf1WKGAD7MO2wH12tir04Q7+ZGeg3KJTflxksjV3muDXBZrD2ZVgKNAZKrqLlVuhLVCo4SpkZxcITGtcU8w6CBKs6S0pAu0v1aMSUvPhQCXvsHy5BGI3e/NAFpjTLNqqyJBIPi9aHE6xMV2/jKOu3TIWXT9MRiKgpK/sQySlCyi+ScQnGtiqDotXGkZi8Dp48b5aDbdGvjmssOUTRuVsSsV3F1gCuYmzhdlHijO8LjpfZeKv+u7wGRQMBcwohEFGIgJmIhE0QjNuIgLuIhU3gTZrllzoIlK9Zs2LJLnj0+h1QJCDkSEXMi4cyFlKs+3ArInYwHOU9evCkoC0lFzYdv0fnxFyBQkGAhQoUJFyGSBoKYokTrS0snRqy4EtyKeAkSSytJshSp0qTLkClLthy58sopX4H/9NNfoQGK6CuoWIlSZQYqV6FSlWo1atWp19C9aNSkWYtWbdoNmqQrIeEoMNmj/JSL99TiYILPW0GIiMvmGXIkSJEhdDMCPn/M6esabhh3AoSIuCxvFRnX5Z2ZrmD/aoei4+MegRQRYuW6yE0PyaGZH1PENQPBQE5DSJEntkokR6NlVw1EBRl1uGeAYzsfGBlc/0/QclGFv5eCdC4okiRMlHgZ5EmSJku4bHXjuJMgTNTleavJuj7v7L00tLeAMGmixEmSP2tMZrJEyVMkTPysMnmTJkyW/NkivM/G4U/SJtiIkEHUR5EalStl8l8NbazS/P1ypbASHhGrqyeCN2W7Zp77NJtNG7fF/Po7xmjrblhkaZz7kV8TBeLHfmS1xyOKCA==) format("woff2")}
+
+:root{
+  --ground:#fff; --surface:#f5f8fb; --surface-2:#eaf0f6;
+  --ink:#0c1929; --ink-2:#40566e; --ink-3:#6b8199; --rule:#dae3ec;
+  --brand:#042c53; --accent:#ba7517; --accent-fill:#ef9f27;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --sans:"Avenir Next",Avenir,"Segoe UI",system-ui,-apple-system,sans-serif;
+  --display:"Barlow SC","Barlow Semi Condensed",Impact,"Arial Narrow",sans-serif;
+  /* the two pages' own token names, mapped onto the shared palette */
+  --bg:var(--ground); --card:var(--surface); --chip-bg:var(--surface-2);
+  --muted:var(--ink-2); --faint:var(--ink-3); --hairline:var(--rule);
+  --accent-ink:var(--accent); --chip-ink:var(--ink-2);
+  --warn-bg:#fbf1e0; --warn-edge:#8a5a12; --danger-bg:#fbeceb; --danger-edge:#96302f;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0a1727; --surface:#0f2033; --surface-2:#172c42;
+  --ink:#e8eef6; --ink-2:#a6bacd; --ink-3:#7590ab; --rule:#1e3550;
+  --brand:#7cc0ff; --accent:#efb254; --accent-fill:#ef9f27;
+  --warn-bg:#2a2010; --warn-edge:#e0ab5c; --danger-bg:#2c1414; --danger-edge:#f08a86;
+}}
+:root[data-theme="dark"]{
+  --ground:#0a1727; --surface:#0f2033; --surface-2:#172c42;
+  --ink:#e8eef6; --ink-2:#a6bacd; --ink-3:#7590ab; --rule:#1e3550;
+  --brand:#7cc0ff; --accent:#efb254; --accent-fill:#ef9f27;
+  --warn-bg:#2a2010; --warn-edge:#e0ab5c; --danger-bg:#2c1414; --danger-edge:#f08a86;
+}
+body{background:var(--ground); color:var(--ink); font-family:var(--sans); line-height:1.6}
+h1,h2,h3{font-family:var(--display); letter-spacing:.01em; text-wrap:balance}
+h1{font-size:clamp(1.9rem,4.6vw,2.7rem); line-height:1.06; color:var(--ink)}
+h2{font-size:1.5rem; color:var(--ink)}
+h3{font-size:1.12rem}
+a{color:var(--accent)}
+code,.sha{font-family:var(--mono)}
+
+.pn{margin:0 0 1.4rem;padding:.75rem .9rem;background:var(--surface);border:1px solid var(--rule);border-radius:10px}
+.pn .pn-row{display:flex;flex-wrap:wrap;gap:.4rem .5rem;align-items:center}
+.pn .pn-lbl{font-family:var(--mono);font-size:.62rem;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-3);margin-right:.35rem}
+.pn a,.pn .pn-cur{display:inline-block;font-family:var(--display);font-size:.86rem;letter-spacing:.05em;text-transform:uppercase;text-decoration:none;padding:.22em .7em;border-radius:999px;border:1px solid var(--rule);color:var(--accent);background:var(--ground)}
+.pn a:hover{border-color:var(--accent)}
+.pn .pn-cur{color:var(--ground);background:var(--accent);border-color:var(--accent)}
+.pn .pn-desc{margin:.45rem 0 0;font-size:.82rem;color:var(--ink-2);max-width:none}
+.pn .pn-legend{margin:.35rem 0 0;font-size:.78rem;color:var(--ink-3);max-width:none}
+.pn .pn-legend b{color:var(--ink-2);font-weight:600}
+/* PAGES-NAV-CSS:end */
+</style>
+</head>
+<body>
+<div class="wrap">
+<!-- PAGES-NAV:start -->
+<nav class="pn" aria-label="Code3 pages"><div class="pn-row"><span class="pn-lbl">Code3 pages</span><a href="/code3/review-board">Review board</a><a href="/code3/colour-decisions">Colour decisions</a><a href="/code3/field-findings">Field findings</a><a href="/code3/capture-record">Capture record</a><span class="pn-cur">Build Log</span><a href="/code3/my-timeline">My timeline</a></div><p class="pn-desc"><b>Review board</b>: what changed and how it looks, before and after, and what is waiting for your word · <b>Colour decisions</b>: the three colour choices only you can make · <b>Field findings</b>: what we learned about the backend, the website and the apps that changes what to do next · <b>Capture record</b>: how the app screenshots were taken, every image in order · <b>Build Log</b>: the commit map of everything that has landed · <b>My timeline</b>: my own account of what has been built since June, in plain words, with the hours.</p><p class="pn-legend">Ship state words, the same on every page: <b>local only</b> = on the working machine, not sent anywhere; <b>pushed, not merged</b> = on GitHub as an open pull request, customers see nothing; <b>merged</b> = accepted into the branch, still not live; <b>live</b> = customers see it.</p></nav>
+<!-- PAGES-NAV:end -->
+  <header>
+    <p class="eyebrow">Code3Apps · Internal record &amp; backtracking index</p>
+    <h1>The Build Log: every working session, mapped to the code it produced</h1>
+    <p class="lede">From late June to early August, each working session ended with a written handoff note (the v13 to v34 series); this page lines all 26 documents up as one timeline. The handoff-note practice ended at v34 — since then, sessions append their landed work here directly, as dated <em>work entries</em> (w1 onward) in the same shape: the story in plain words, with every mapped commit indexed. Below the timeline are a <a href="#backtracking">backtracking guide</a> and a <a href="#index">filterable index of every mapped commit</a>, so checking or undoing a change starts here. The original documents stay on the maintainer's machine.</p>
+    <div class="meta">
+      <span><strong>26</strong> documents + <strong>6</strong> work entries</span>
+      <span><strong>Jun 26 – Aug 18</strong>, 2026</span>
+      <span><strong>162</strong> verified commits</span>
+      <span><strong>68</strong> of them mine</span>
+      <span><strong>3</strong> repositories</span>
+    </div>
+  </header>
+
+  <h2><span class="sec">Before you read</span>How to use this page</h2>
+  <p>Each timeline entry has two layers. The first paragraph is the story — readable without any technical background. The <em>code trace</em> table underneath is for whoever maintains the code: <span class="quiet">repository · branch · commit</span>. Every commit reference was verified against the repositories (v13–v34 on August 11, 2026; work entries on the day they were added) — none is copied from a document or a report unchecked. A row saying <em>no commit found</em> means the document describes work that never became a commit (the reason is stated); <em>n/a</em> means the item was never a code change at all (app-store submissions, account changes, decisions, database content edits).</p>
+  <p><strong>Whose commits these are.</strong> Every commit is marked by the author recorded in git: <span class="who who-me">mine</span> for the ones I authored, <span class="who who-team">team</span> for the development team's. 58 of the 152 mapped commits are mine: the whole work-entry series (w1 onward), which is the work I have directed since 11 August, plus one earlier commit in v13. Each timeline entry carries the same mark, and typing <code>mine</code> into the index filter below shows only my commits.</p>
+  <div class="note"><strong>Passwords are deliberately left out.</strong> Several of the original documents contain live credentials. This page never repeats them — entries say <em>[credential — see doc vNN]</em>, and the value lives only in that document.</div>
+
+  <h2 id="backtracking"><span class="sec">Backtracking</span>How to undo a change — and what it costs per repo</h2>
+  <p>The four-step path: <strong>(1)</strong> find the change in the <a href="#index">commit index</a> below (filter by keyword, SHA, branch, or doc version) → <strong>(2)</strong> open the linked doc entry for the story and its sibling commits → <strong>(3)</strong> <code>git revert &lt;sha&gt;</code> on the commit's home branch → <strong>(4)</strong> ship the revert through that repo's own path, which is where the real cost lives:</p>
+  <div class="danger"><strong>C3suite_server — a push to <code>production-build</code> deploys live immediately.</strong> CI is configured to skip that branch, so nothing tests a revert on its way out. The tracked push guard blocks accidental pushes; a deliberate one needs <code>ALLOW_PROD_PUSH=1</code> in front of the command. Prefer branch → PR → merge, exactly like the fixes in v33/v34 did (PR #940, #942).</div>
+  <div class="danger"><strong>c3suite-web — a push to <code>main</code> publishes the live website within minutes</strong> (AWS Amplify rebuilds on every push; no CI, no approval step). The only undo is another push. Same guard, same <code>ALLOW_PROD_PUSH=1</code> override. And two things that look dead are load-bearing: the <code>/api/*</code> rewrite (shipped Android builds depend on it — see v15) and the middleware's login behavior. Reverting either breaks customers.</div>
+  <div class="warn"><strong>c3app — a push deploys nothing, but a shipped build cannot be un-shipped.</strong> Store builds in customers' hands are immutable; a mobile "rollback" means revert on the product branch → rebuild → resubmit → days of store review. Corollary: the <code>API::V1</code> request/response shapes those builds call are frozen — a server-side revert that changes v1 behavior is itself a breaking change for the field.</div>
+  <div class="warn"><strong>Fixes on c3app usually land in triplets.</strong> One feature or fix = three near-identical commits, one per product branch (see v14, v20, v24, v25). Reverting one branch's copy leaves the other two live — the index's description column names the siblings; revert all three or none.</div>
+
+  <h2><span class="sec">Orientation</span>The summer in four movements</h2>
+  <ul class="arc">
+    <li><span class="when">Late June</span><span>The new website went live on the main domain (June 25 cutover), the back-office server needed emergency recovery, and the fallout — broken mobile purchases — was patched.</span></li>
+    <li><span class="when">Early July</span><span>The mobile apps came back to life: modernized to React Native 0.76, on TestFlight for the first time ever, and a string of launch crashes hunted down. Google's new memory requirement proved unfixable on 0.76 — forcing a bigger upgrade.</span></li>
+    <li><span class="when">Late July</span><span>The React Native 0.86 upgrade was built, made Google-compliant, its purchase flow verified on real devices, and rolled out to all three Android apps in production — clearing Google's August 31 billing deadline.</span></li>
+    <li><span class="when">August</span><span>The iPhone apps got the same upgrade, the three separate codebases began merging into one, the deploy pipeline was hardened after an outage, and user-facing purchase and quiz bugs were fixed.</span></li>
+  </ul>
+  <div class="warn"><strong>v15 (June 29) silently dropped ~89% of v14's content</strong> — the whole platform reference vanished and only returned in v21. If a fact seems to have disappeared between versions, check the last complete version, not just the previous one.</div>
+  <div class="warn"><strong>v20 (July 4) was a thin diff-only doc</strong>, which cost a full day of re-discovery and prompted the standing rule (v21 §0): every handoff note must be comprehensive and self-sufficient.</div>
+
+  <h2><span class="sec">The record</span>Timeline, document by document</h2>
+
+  <div class="entry" id="v13">
+    <div class="stamp"><span class="ver">v13</span><div class="date">June 26<br>Session 12</div><span class="badge b-me">1 of 8 mine</span></div>
+    <div>
+      <h3>Rails emergency recovery; admin panel fully working</h3>
+      <p class="file">C3suite_PassOn_June2026_updated_v13.docx</p>
+      <p>After the June 25 website cutover, the back-office (Rails) server had to be rescued and the admin panel brought fully back to working order. This version is the comprehensive platform reference of its era — and it flags that some server fixes were made <em>directly on the production machine</em>, never committed.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">c38334fe</span></td><td>VariousUpgrades (June 20 — the upgrade wave preceding the recovery)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">50eb7f64</span> <span class="sha">5912e34b</span></td><td>Deploy-pipeline recovery: actions/checkout v4; target production runner</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">f44e9bdb</span></td><td>Resizable columns on manage-users table (admin panel)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">main</td><td><span class="sha">698e51d</span> <span class="sha">5019b48</span></td><td>Admin panel nav link; FixAdminPanel</td></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">no commit — changed directly on EC2</td><td>web.Dockerfile fixes; a fresh deploy would rebuild from the old file (flagged in the doc)</td></tr>
+      </table></div>
+      <p class="quiet" style="font-size:.82rem; margin-top:.7rem">Later archaeology: <span class="sha">e4022dcb</span> (June 25, production-build, “Update contents_controller.rb”) was afterwards identified as leaving the deploy branch's tip broken; a revert exists on the local branch <span class="sha">fix/contents-controller-syntax</span> (<span class="sha">916e2467</span>).</p>
+    </div>
+  </div>
+
+  <div class="entry" id="v14">
+    <div class="stamp"><span class="ver">v14</span><div class="date">June 27–28<br>Session 14</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>Android build environment; backend address fixed on every branch</h3>
+      <p class="file">C3suite_PassOn_June2026_updated_v14.docx</p>
+      <p>The Android build environment was set up, the apps' backend address was corrected on every product branch (they still pointed at the old pre-cutover URL), and the Play Store listings' privacy-policy links were fixed.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">00cf280</span></td><td rowspan="3">Fix API URL and add store field to Android IAP (same fix, three branches)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">a632cbe</span></td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">5e695e6</span></td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">main</td><td><span class="sha">34a56d3</span></td><td>privacy policy</td></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">n/a</td><td>Play Console privacy-URL updates (store console change)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v15">
+    <div class="stamp"><span class="ver">v15</span><div class="date">June 29<br>Session 15</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>Broken Android purchasing fixed; three apps submitted to Google Play</h3>
+      <p class="file">C3suite_PassOn_June2026_v15.docx · duplicate: v15(1).docx</p>
+      <p>Android purchasing — broken since the cutover because shipped apps called the old domain — was fixed by adding a pass-through on the website that forwards <em>/api/*</em> calls to the real backend. The Android signing password was recovered <em>[credential — see doc v15]</em>, a Play-review test account was set up <em>[test-account credential — see doc v15]</em>, Google's new "16 KB memory page" requirement was worked around by patching the built app packages, and all three Android apps were submitted (v179–v181). <strong>Document history:</strong> this version dropped ~89% of v14's content; it only returned in v21. The two v15 files differ by one credential line — the later save is canonical.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">main</td><td><span class="sha">f53f794</span></td><td>Proxy /api/* to api.code3apps.com — fix Android IAP after domain cutover. <strong>Still load-bearing: do not revert while pre-cutover builds are in the field.</strong></td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">interview-prep</td><td><span class="sha">079c54f</span></td><td>Merge PR #106 — interview-prep IAP purchase integration</td></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">no commit found</td><td>Keystore-password correction in gradle.properties (3 branches) — formalized July 12, see v25</td></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">no commit found</td><td>Python ELF alignment patch script — run locally on built AABs, never committed</td></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">n/a</td><td>Play submissions: Fire v181/3.81 · EMT v179/3.79 · Interview v180/3.80</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="rn076">
+    <div class="stamp"><span class="ver">RN 0.76</span><div class="date">July 1<br>standalone</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>The modernization begins: React Native 0.76 running on the simulator</h3>
+      <p class="file">RN Upgrade 0.76 — Session Handoff (July 1 2026).docx</p>
+      <p>The big framework upgrade began on its own branch: React Native lifted from its ~2023 version to 0.76.9, and the app ran again after several startup crashes were fixed (a payments library crashing at launch, an outdated tab component, a missing config plugin). An App Store rating prompt was also built. The doc flags temporary test code that had to be removed before shipping.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">a019acd</span></td><td>chore: RN upgrade prep 0.72.4 → 0.76.9</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">141ccac</span></td><td>docs: RN 0.76 upgrade handoff notes (this doc's repo twin)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">b0ce1d5</span></td><td>fix: rename async-storage package</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v16">
+    <div class="stamp"><span class="ver">v16</span><div class="date">July 1<br>Sessions 14–16</div></div>
+    <div>
+      <h3>Consolidation of three sessions; canonical repo path corrected</h3>
+      <p class="file">C3suite_PassOn_July2026_v16.docx</p>
+      <p>A consolidation of the previous three sessions into one document; corrects the canonical mobile-repo path and folds the upgrade status in. No new code of its own — its code trace is the RN 0.76 entry above.</p>
+    </div>
+  </div>
+
+  <div class="entry" id="v17">
+    <div class="stamp"><span class="ver">v17</span><div class="date">July 2<br>Session 17</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>First-ever TestFlight upload</h3>
+      <p class="file">C3suite_PassOn_July2026_v17.docx</p>
+      <p>The rating prompt was finalized, reading screens gained landscape rotation, and — a first for the company — an iPhone build (Firefighter Interview Prep) was uploaded to TestFlight, Apple's beta channel.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">389d0ac</span></td><td>Session 17: rating modal final, orientation-locker rotation, Podfile symlink fix</td></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">n/a</td><td>TestFlight upload (store event)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v18">
+    <div class="stamp"><span class="ver">v18</span><div class="date">July 3<br>Session 18a</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>The upgrade becomes the product: merged to all three apps</h3>
+      <p class="file">C3suite_PassOn_July2026_v18.docx</p>
+      <p>The upgrade branch was merged into all three product branches — the moment the modernized code became the product code — and all three apps reached TestFlight, meeting Google's July 11 Data Safety deadline.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">aae7b0f</span></td><td>Pre-merge polish (junk cleanup, encryption flag)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">5ad418a</span></td><td>Merge feature/rn-upgrade-0.76 → interview</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">77bd460</span></td><td>Merge interview → fire</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">97ba088</span></td><td>Merge interview → emt</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire / emt</td><td><span class="sha">d97acf3</span> <span class="sha">06d6f24</span> <span class="sha">150797c</span> <span class="sha">884b207</span> <span class="sha">bca3b6c</span></td><td>Podfile.lock regens, patch regen, junk cleanup, lockfile sync</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v19">
+    <div class="stamp"><span class="ver">v19</span><div class="date">July 4 am<br>Session 18b</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>Overnight device-testing marathon: four defects fixed, build 5 up</h3>
+      <p class="file">C3suite_PassOn_July2026_v19.docx</p>
+      <p>First real-device testing found four defects; an overnight session fixed them: a launch crash on Fire Exam Prep, an invisible back button in portrait, a duplicated "delete account" button on EMS, and the EMS home-screen name was shortened. All three apps re-uploaded as build 5.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">0279158</span></td><td>Duplicate delete-account, back-button offset, EMS display name</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">797ab70</span></td><td>Portrait back button; 3.81 (5)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">a28b280</span></td><td>Portrait back button + regenerated patch; 3.80 (5)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">e5d898b</span></td><td>Bump EMS to 3.80 (5)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v20">
+    <div class="stamp"><span class="ver">v20</span><div class="date">July 4 pm<br>Session 19</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>The real iPad bug found; build 6 — and the doc that taught a lesson</h3>
+      <p class="file">C3suite_PassOn_July2026_v20.docx</p>
+      <p>The <em>real</em> cause of the iPad header problem: screen dimensions captured once at startup and never updated after rotation. That, keyboard avoidance on login, an auto-hiding banner, a shuffle audit, and a saved-state safeguard went out as build 6. This doc lists its own commit hashes — all six verified. It was also the "thin diff-only doc" that v21 banned.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commits</th><th>What they are</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">eaef23e</span> <span class="sha">8b80e85</span></td><td rowspan="3">Per branch: rotation-header + keyboard + banner fixes / redux-persist safeguard + build 6</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">e72e2fa</span> <span class="sha">240b1de</span></td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">e3777b3</span> <span class="sha">29d9bd4</span></td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v21">
+    <div class="stamp"><span class="ver">v21</span><div class="date">July 6<br>Jul 5–6 marathon</div></div>
+    <div>
+      <h3>Why builds kept failing: the environment, not the code</h3>
+      <p class="file">C3suite_PassOn_July2026_v21.docx</p>
+      <p>A two-day investigation found the causes of unpredictable iPhone build failures were environmental: the build folder lived in an iCloud-synced location that corrupted dependencies, and building while the AI-workspace folder connection was active caused deadlocks. New standing rules: build from a plain local folder, disconnect before native builds, and <strong>every handoff note must be comprehensive</strong> (this version restored the platform reference lost since v15).</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">no commits</td><td>Environment and process findings only (the repos have no commits July 5–6)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v22">
+    <div class="stamp"><span class="ver">v22</span><div class="date">July 9</div></div>
+    <div>
+      <h3>The lost-features mystery solved: a clone that stopped listening</h3>
+      <p class="file">C3suite_PassOn_July2026_v22.docx</p>
+      <p>Features that "never made it" into some apps were actually committed and pushed — but the local build clone had silently forked off the shared repository and was never pulling. The fix was re-pointing the clone; a permanent Git-hygiene rulebook (single source of truth) was added.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">no commit found</td><td>The fix was clone/remote surgery, not new commits</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v23">
+    <div class="stamp"><span class="ver">v23</span><div class="date">July 10</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>Rebuilt on 0.76.9 — and crashing at launch; first layer fixed</h3>
+      <p class="file">C3suite_PassOn_July2026_v23.docx</p>
+      <p>All three iPhone apps were rebuilt from the reconciled code — and crashed at launch (the first real-device builds on the new architecture). One of two crash layers was fixed: screens were loaded through an index file that resolved to nothing under the new bundler behavior.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">eef0205</span></td><td rowspan="2">Launch-crash fix: import screens directly in root.js</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">bebcf64</span></td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire / emt / interview</td><td><span class="sha">a46cf60</span> <span class="sha">75a701f</span> <span class="sha">08d51fc</span></td><td>Build bumps: 3.81 (7) / 3.80 (8) / 3.80 (8)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v24">
+    <div class="stamp"><span class="ver">v24</span><div class="date">July 11</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>Launch crash killed for good; all three at 3.81</h3>
+      <p class="file">C3suite_PassOn_July2026_v24.docx</p>
+      <p>The launch crash was fully diagnosed (second layer: a broken compatibility patch on the tab component), the crashing Progress tab was removed outright, login and settings layouts fixed, and all three apps rebuilt at 3.81 and uploaded. iPhone side effectively done; attention turned to Android.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commits</th><th>What they are</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">abd4889</span></td><td>Barrel-import crash fix (EMT's copy)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt / interview / fire</td><td><span class="sha">4f959c7</span> <span class="sha">68fe298</span> <span class="sha">beb17f6</span></td><td>Repair scrollable-tab-view patch (migrate to pager-view)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire / interview / emt</td><td><span class="sha">e04cc7e</span> <span class="sha">d0e01db</span> <span class="sha">a5e1f62</span></td><td>Remove Progress tab; fix login &amp; settings layout</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt / interview / fire</td><td><span class="sha">8be8ad6</span> <span class="sha">8e3b845</span> <span class="sha">6f16e68</span></td><td>Bumps to 3.81</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v25">
+    <div class="stamp"><span class="ver">v25</span><div class="date">July 12</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>Android catches up — and a hard limit is proven</h3>
+      <p class="file">C3suite_PassOn_July2026_v25(1).docx (canonical) · earlier save: v25.docx</p>
+      <p>Android was brought up on the modern architecture for the first time, a half-finished dependency migration was completed, the signing password moved out of the repository <em>[credential — see doc v25]</em>, and all three apps produced signed release packages. The critical discovery: Google's 16 KB requirement <strong>cannot</strong> be fully met on RN 0.76.9 — which set the next mission: upgrade to RN 0.86.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commits</th><th>What they are</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire / emt / interview</td><td><span class="sha">0040ed9</span> <span class="sha">5da4120</span> <span class="sha">8114ba8</span></td><td>NDK r27 for 16 KB; bumps 182/3.82 · 180/3.80 · 181/3.81</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt / fire / interview</td><td><span class="sha">313e4e8</span> <span class="sha">a790947</span> <span class="sha">6d98b05</span></td><td>New-Arch on 0.76.9: autolinking, gesture-handler pin, keystore pw → ~/.gradle</td></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">n/a</td><td>16 KB impossibility finding + RN 0.86 decision (analysis: §17, §18)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v26">
+    <div class="stamp"><span class="ver">v26</span><div class="date">July 13</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>RN 0.86 answers its make-or-break question on day one</h3>
+      <p class="file">C3suite_PassOn_July2026_v26.docx</p>
+      <p>The 0.86 upgrade started on its own branch and immediately proved the point of the whole effort: Android builds successfully <em>and</em> the package is fully 16 KB-compliant (all 48 native libraries aligned). Navigation migrated to v7.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commits</th><th>What they are</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">87cb205</span> <span class="sha">a6a8506</span> <span class="sha">944b9cb</span> <span class="sha">f78593d</span></td><td>WIP deps + Gradle 9.3.1 · green build + 16 KB-compliant · react-navigation v7 · cleanup</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v27">
+    <div class="stamp"><span class="ver">v27</span><div class="date">July 14</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>Emergency: the live Fire app was locking users out</h3>
+      <p class="file">C3suite_PassOn_July2026_v27.docx</p>
+      <p>Emergency work on the <strong>live</strong> apps: Fire Exam Prep was locking every user out with a forced-update loop (a malformed version string) — fixed and shipped as 3.82 with expedited review. Firefighter Interview Prep's App Store rejection (missing Restore Purchases + metadata) was fixed and resubmitted as 3.81 (2).</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">a2fe9f6</span></td><td>Forced-update fix + 3.82 (10)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">48641b9</span> <span class="sha">3ea4c24</span></td><td>Restore Purchases + update-check fix, 3.81 (2); Podfile.lock pin</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v28">
+    <div class="stamp"><span class="ver">v28</span><div class="date">July 16</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>0.86 runs functionally on a real phone for the first time</h3>
+      <p class="file">C3suite_PassOn_July2026_v28.docx</p>
+      <p>Five startup and runtime crashes were resolved (state-store init, modal library, leftover debug tooling, an abandoned action-sheet library replaced, dead Progress screen dropped) and the purchase library was rewritten for its new v15 API. Separately, EMT 3.82 (2) went to Apple and Interview 3.81 was confirmed live.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">fae2765</span></td><td>The whole session in one commit (17 files): saga pin, modal patch, Flipper removal, iap 13→15 Nitro rewrite</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">f9a6fd8</span> <span class="sha">e9d9037</span></td><td>EMT fast-follow: restore purchase + bump, 3.82 (2) (July 15)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v29">
+    <div class="stamp"><span class="ver">v29</span><div class="date">July 19</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>The Android make-or-break closes: real money verified end to end</h3>
+      <p class="file">C3suite_PassOn_July2026_v29.docx</p>
+      <p>A <strong>real purchase and a real restore were verified on a physical device</strong> against Google's internal-testing track, with the backend actually granting access. The purchase flow was hardened — Android finally got a Restore button, access is granted before Google is told the sale is final, double-purchases guarded — two UI defects fixed, and builds 181/182 shipped to the internal track.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">93bb48b</span></td><td>The session commit: +184 lines in the Android purchase flow (Restore button, grant ordering, pending guard), settings scroll, banner fix</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v30">
+    <div class="stamp"><span class="ver">v30</span><div class="date">July 22</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>0.86 spreads to all three apps; the billing deadline is beatable</h3>
+      <p class="file">C3suite_PassOn_July2026_v30.docx</p>
+      <p>The upgrade spread from the pilot app to Fire and EMT on their own branches, and the purchase/restore flow was re-verified on a new Pixel 8. All three Android apps now carried Google Play Billing 9.1.0 — the version that clears Google's August 31, 2026 deadline — plus 16 KB compliance.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commits</th><th>What they are</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">b70cc6d</span> <span class="sha">33ae55c</span></td><td>Interview catch-up; shared 0.86 fixes</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-fire</td><td><span class="sha">4f27482</span> <span class="sha">3bc1361</span> <span class="sha">61c2266</span> <span class="sha">1a3d0e5</span></td><td>Fire product identity + IAP fix; 183/3.82; build.gradle follow-up (Jul 23)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-emt</td><td><span class="sha">33a2112</span></td><td>0.86 upgrade for EMT</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v31">
+    <div class="stamp"><span class="ver">v31</span><div class="date">July 27</div></div>
+    <div>
+      <h3>To production on Google Play — and 1,601 questions made honest</h3>
+      <p class="file">C3suite_PassOn_July2026_v31.docx</p>
+      <p>Two fronts. <strong>Shipping:</strong> all three Android apps were promoted from internal testing to production as a staged rollout — once fully ramped, the August 31 billing deadline is cleared. <strong>Content quality:</strong> the Essentials Fire Exam Prep I &amp; II question bank was overhauled — ~1,601 questions had give-away wrong-answer options rewritten; two other products were audited and found clean.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">n/a</td><td>Play production promotion (store console event)</td></tr>
+        <tr><td class="c-repo">—</td><td class="c-branch">—</td><td class="none">no code commit</td><td>Quiz remediation = production database content edits; the method survives as the §24 playbook in the doc. <strong>Backtracking note: these edits have no git history — the doc's playbook is the only record.</strong></td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v32">
+    <div class="stamp"><span class="ver">v32</span><div class="date">August 1</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>The iPhone apps get their turn: version 4.0 on TestFlight</h3>
+      <p class="file">C3suite_PassOn_August2026_v32.docx</p>
+      <p>The iPhone apps got the 0.86 upgrade — a real native migration, with the app's startup layer rewritten in Swift — rebuilt as version 4.0, device-tested including purchases, and uploaded to TestFlight for all three apps. Three forward-looking artifacts were authored: a plan to collapse the three per-app codebases into one (§25), a feature backlog (§26), and Amazon Appstore as the next store (§27).</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commits</th><th>What they are</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">5253748</span></td><td>iOS native-migration base (July 29)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-fire</td><td><span class="sha">50d1073</span></td><td>Fire: Swift AppDelegate migration, identity, TestFlight 4.0</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-emt</td><td><span class="sha">d9d470c</span> <span class="sha">70b148b</span></td><td>EMT branch upgrade; Podfile.lock sync + icon + identity for 4.0</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v33">
+    <div class="stamp"><span class="ver">v33</span><div class="date">August 4</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>One codebase, three apps — and a same-day production bug fix</h3>
+      <p class="file">C3suite_PassOn_August2026_v33.docx</p>
+      <p>The consolidation plan became real code: a new branch where one codebase builds all three apps by picking a "flavor" at build time. Device-verified for Fire and EMS on Android; not yet in stores. Separately, a production backend bug was found and fixed the same day: the comprehensive quiz errored when any question was missing — the strict lookup was made lenient, merged as PR #940, and deployed. Device-testing findings were catalogued in the repo (ROADMAP.md).</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commits</th><th>What they are</th></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">34eeca5</span> <span class="sha">a05fc61</span> <span class="sha">e187f98</span></td><td>Consolidation Phases 1 → 4 (flavor config, Android flavors, iOS identity patching, CI verify)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">4bcd461</span></td><td>Favorite-tap crash guard + "No questions available" empty state</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">fix/comprehensive-quiz-404</td><td><span class="sha">edada320</span></td><td>Question.find → Question.where (lenient lookup)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">ff600cbb</span></td><td>Merge PR #940 (deployed to production)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="v34">
+    <div class="stamp"><span class="ver">v34</span><div class="date">August 5<br>current</div><span class="badge b-team">team</span></div>
+    <div>
+      <h3>Hardening after the outage; two user-facing bugs verified fixed</h3>
+      <p class="file">C3suite_PassOn_August2026_v34.docx</p>
+      <p>The deploy pipeline gained a syntax check that would have prevented the August 4 outage (a bad file took the site down; incident written up as §31), plus a fix for a recurring deploy-runner failure — merged as PR #942, deploy #220 green. Two mobile bugs were fixed and verified on the Pixel 8: purchases users already owned now unlock immediately (BUG-1), and the comprehensive quiz no longer jumps to Results on first tap (BUG-4). Flashcards got FRONT/BACK labels. A passwordless email sign-in backend was scaffolded (not shipped — needs rate limiting and the mobile entry screen).</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">be51b0e8</span></td><td>“site crash” — the August 4 outage-day emergency fix</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">harden-deploy-syntax-gate</td><td><span class="sha">686902b3</span></td><td>Ruby syntax gate + clean:false in deploy.staging.yml</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">0eec9343</span></td><td>Merge PR #942 (deploy run #220, live)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">5b94534</span> <span class="sha">c1cdbf8</span> <span class="sha">0320729</span></td><td>BUG-1 already-owned unlock · BUG-4 quiz first-tap · FEAT-3 flashcard FRONT/BACK</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">feat/magic-link-auth2</td><td><span class="sha">15b69c4a</span></td><td>Magic-link backend scaffold — pushed, no pull request; continued Aug 10 (<span class="sha">63606511</span> <span class="sha">033bd627</span>)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="untitled">
+    <div class="stamp"><span class="ver">note</span><div class="date">August 5<br>standalone</div></div>
+    <div>
+      <h3>Untitled document — a device-test run sheet, not a handoff note</h3>
+      <p class="file">Untitled document.docx</p>
+      <p>A step-by-step run sheet for verifying the BUG-1 purchase fix on the Pixel 8: environment setup, connecting the phone, building the right flavor, the exact reproduction, and the regression checks. Procedural only — it verifies the v34 fixes (<span class="sha">5b94534</span>, <span class="sha">c1cdbf8</span>).</p>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:1.6rem"><strong>The handoff notes end at v34 (August 5, 2026) — the timeline does not.</strong> The written-note practice stopped there; from here on, sessions record their landed work directly as the dated work entries below, in the same shape and under the same verification rules.</div>
+
+  <div class="entry" id="w1">
+    <div class="stamp"><span class="ver">w1</span><div class="date">August 11–12<br>work entry</div><span class="badge b-me">mine</span></div>
+    <div>
+      <h3>The working agreement: rules, push guards, and an independent review in all three repos</h3>
+      <p>Every repository got written working rules for coding agents and a guard that blocks accidental pushes to the branches that deploy or ship. Merging was separated from deploying on the backend (work merges into <code>release</code>, which never deploys; a deliberate promote step is the only path to production), and Asana became the system of record for status. A model-tiering setup was added so expensive AI review stays where it matters and routine digging runs on cheaper models. An independent review (three rounds) found ten real problems, including two ways the push guard could be bypassed — all fixed and re-tested. On mobile, a purchase bug was fixed in two apps: "Restore Purchases" could grant a course the customer never bought; both now match strictly, as the EMT app already did (<span class="sha">f9a6fd8</span>). The mobile consolidation was researched and decided on the Asana map (three published apps, not four; single-codebase flavors is the direction; cutover order set). The other developers' consolidation work continued upstream on <code>consolidation/flavors</code> — those commits are theirs and in flight, so they are not mapped here.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">06c6560e</span></td><td>Merge PR #943 — agent rules, push guard, learnings log, rollback-safe deploy</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">3c5be72b</span></td><td>Merge PR #945 — model-tiered delegates + worktree provisioning</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">3938f1a9</span> <span class="sha">cbf64717</span> <span class="sha">0eeb3065</span> <span class="sha">76b4317a</span></td><td>Merges #944, #946–#948 — handoff rewrite, web-audit docs preserved, learnings, founder brief</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">95b7762d</span></td><td>Merge PR #949 — push-guard hardening after the three-round independent review</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">temp-main</td><td><span class="sha">c58f289</span> <span class="sha">e61fc40</span> <span class="sha">d5f8a97</span> <span class="sha">02c6df4</span></td><td>PRs target temp-main while main is frozen · model-tiered delegates · guard hardening (PRs #4, #5)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">0da2c85</span> <span class="sha">b160e5d</span> <span class="sha">40cc415</span> <span class="sha">7ada064</span> <span class="sha">c3adc29</span> <span class="sha">a2976c2</span></td><td>Style-contract rules · port-fix and sync-learnings skills · model-tiered delegates · guard hardening</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">b49acef</span> <span class="sha">dfe34e3</span></td><td>Merge PR #112 — Restore Purchases strict product match (sibling of #113 and EMT's <span class="sha">f9a6fd8</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">fc7ac1c</span> <span class="sha">dec52da</span></td><td>Merge PR #113 — the same strict-match fix, second app of the triplet</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="w2">
+    <div class="stamp"><span class="ver">w2</span><div class="date">August 13<br>work entry</div><span class="badge b-me">mine</span></div>
+    <div>
+      <h3>Stale fire-course pricing traced to its root; the website restyle begins</h3>
+      <p>The Fire app shows three newer courses with values hardcoded into the app because the server's bundle list was never updated — and one now carries the wrong price tier for customers. The root cause: the admin flow that should write that list is silently disabled in the code, so every course added since only half-registered. The fix went in as a tested, reversible database migration, merged to <code>release</code>; it applies itself with the next promote to production, after which the hardcoded values come out of the app. Separately, the website restyle started in earnest: a designer agent (styling only, inside the brand contract, never touching purchase or login logic) laid the design-system foundation and restyled the marketing pages on a working branch — in review, not merged, customers see nothing yet.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">0a5de804</span> <span class="sha">8a4cac2c</span></td><td>Merge PR #950 — Bundle 6 fire-IAPs data migration (merged, not live)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">temp-main</td><td><span class="sha">cf35ae2</span></td><td>Merge PR #7 — the designer agent definition</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">7fc033c</span> … <span class="sha">262aa67</span></td><td>10 commits — design-system foundation, then home, products, about, nav/footer, modals restyled (pushed, not merged)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="w3">
+    <div class="stamp"><span class="ver">w3</span><div class="date">August 17<br>work entry</div><span class="badge b-me">mine</span></div>
+    <div>
+      <h3>The website restyle gets the review it never had, and goes up as a pull request</h3>
+      <p>The restyle branch had been marked complete on August 13, but its own done-condition — a pull request into the integration branch — was never met: an earlier pull request (#6) was opened and closed without merging. So the branch was treated as unreviewed and taken through a full pass. It was first brought up to date with the integration branch, which had moved on by three merges. Three genuine defects came out of the walk-through, each confirmed by measuring the page rather than by eye. The product cards' buttons did not line up, because the rule meant to pin them to the bottom of each card was inert — the card never filled the space it was given, so the spacer had nothing to expand into. The mobile menu had neither of the two safeguards its own specification requires: the page behind it kept scrolling, and keyboard focus wandered out of the open menu into the page underneath. Fixing that trapped focus so tightly that the menu's own close button fell outside the trap, leaving anyone who cannot press Escape with no way out except following a link off the page; an independent review by Codex caught that, and it was fixed by widening the trap to include the button. The second review round returned clean. Two contract gaps were deliberately left rather than quietly fixed: the sales page keeps its narrower layout instead of the specified wide two-column one, and the site-wide default text color shifted with the new neutral palette, which reaches logged-in pages that were outside this pass. The branch is pushed and open as pull request #8 against the integration branch; nothing is merged, and merging it would still publish nothing while the live branch is frozen.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">e73e482</span></td><td>Merge temp-main into the branch (designer agent, guard hardening, PR-base rule)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">a21fec7</span></td><td>ProductCard's bottom-pinned CTA made to actually pin (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">011bf3e</span></td><td>Mobile menu given the scroll lock and focus trap its spec requires (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">99fcb16</span></td><td>Menu close control moved inside the focus trap — Codex round 1, P2 (pushed, not merged)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+
+  <div class="entry" id="w4">
+    <div class="stamp"><span class="ver">w4</span><div class="date">August 17–18<br>work entry</div><span class="badge b-me">mine</span></div>
+    <div>
+      <h3>The website restyle is finished: a redrawn logo, real app screens, and a rebuilt product page: pushed, reviewed, not merged</h3>
+      <p>The 17 August handoff left four open threads on the restyle branch, and this session closed them. The logo first: the old mark was a shield outline with a serif "3" typed as text, so it depended on whatever font a device happened to have and read as clip art. It was redrawn as pure geometry: a navy tile, a bold gold Maltese cross faceted like an enamel badge, and a numeral drawn as a shape, chosen from three rendered candidates at every size the site actually uses, from a 16-pixel browser tab to a 1024-pixel app icon. The site also gained its first favicon, home-screen icon and link-preview image, and the master files for the mobile apps and store listings were committed for later; the apps themselves were deliberately left alone, since replacing their product-specific icons is a product decision. The hero art, which the handoff had marked blocked on assets, turned out not to be: the three shipped apps' App Store listings publish real screenshots, so nine of those replaced the hand-drawn phone mockups, and the mobile hero got a device where it had none. The product page was rebuilt to the layout the design contract had specified all along: one wide container, the price and purchase card as a sticky column, three real screens, and the description restyled with a "read more" control, with the buttons doing exactly what they did before. Dark mode was closed as a decision (light only, by the founder) and every page was proved pixel-identical under a dark operating-system preference. An independent Codex review ran a fresh three-round cycle over the whole branch against its real base: two findings, both in the new "read more" control, both fixed and re-verified in a browser; the third round was clean. The founder reviewed a before-and-after board and approved the push. Both branches are pushed and their pull requests open, the website one updated in place, a small server one for the admin sidebar logo and favicon files, and nothing is merged; customers see nothing until the live branch unfreezes.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">97d1a8f</span></td><td>Redrawn mark as pure geometry; favicon, apple-touch and Open Graph set; brand masters; DESIGN.md contract updates (pushed, not merged, PR #8)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">3b4ffa5</span></td><td>Real app screens replace the drawn device art; product page rebuilt with sticky price card (pushed, not merged, PR #8)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">a19deb0</span></td><td>Codex cycle 2, round 1 fix: description clip re-measures on resize (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">eb5ebc3</span></td><td>Codex cycle 2, round 2 fix: "Show less" kept while expanded; round 3 clean (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">d8f4acc</span></td><td>Three learnings logged, incl. the cross-repo 15-minute presigned product image URL (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">brand/mark-and-favicons-2026-08</td><td><span class="sha">b31772c1</span></td><td>Admin sidebar logo replaced; real favicon files over the zero-byte placeholders (pushed, not merged, PR #951 into release)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">brand/mark-and-favicons-2026-08</td><td><span class="sha">e78d86a7</span></td><td>Cross-repo learning copy: presigned product image URL (pushed, not merged, PR #951)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="entry" id="w5">
+    <div class="stamp"><span class="ver">w5</span><div class="date">August 18<br>work entry</div><span class="badge b-me">mine</span></div>
+    <div>
+      <h3>One colour set per product family, the last app screens brought onto it, and real app screenshots for the website</h3>
+      <p>Two things were true of the colours at the start of the evening: every app paints itself from a record on the server, and those records disagreed with themselves. The server keeps two colour stores, one the apps read (per bundle) and one the website reads (per product); the same family could be red in one and blue in the other, five products still carried the untouched cyan default, and one had a pink background. The fix gives each family a single set of eight values, built only from colours that family already uses, and writes it into both stores as a reversible data migration. No family's primary colour moves, so nothing a customer holds changes shade except one thing: the small row-description text in the EMS and Interview apps goes from cyan to the grey the Fire app already shows. The migration was proved on a local copy of the production database engine seeded with the live records: forward wrote every after value for 3 bundles and 19 products, backward restored every before value, forward again changed nothing more, and empty or oddly keyed records were handled rather than skipped silently. In the apps, the last few screens that still read the built-in palette were changed to read the bundle theme like the other sixty-two, once per product branch; the EMT branch carries one extra file the others do not. The website's Fire and EMS device pictures were re-shot from the three apps running in the simulator, signed in against a local copy of the backend seeded from the live public API with one test customer, so the library, quiz and results screens show real attempts and real chapters instead of store art from 2020. Alongside that, a brand and theme register was written into every repository, seven copies of the same document: every colour, where it is stored, and which surface reads it. The independent review did not happen: every attempt on every branch stopped at the Codex usage limit, which resets on 20 August, so nothing below counts as reviewed. Everything in this entry was pushed on 18 August, after the fact and before the review: it is <strong>pushed, not merged</strong>, open as pull requests #952 and #953 on the server, #8 and #9 on the website, and #114 to #121 on the apps, with the mobile <code>main</code> copy pushed directly. Nothing is merged and no customer sees anything until it is.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">0ebde42e</span></td><td>One colour set per family written into both theme stores: reversible data migration and the record by record value table (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">7e3b3673</span> <span class="sha">52f17252</span></td><td>HANDOFF gains the pending migration and how to verify it after the next promote; theme-fix doc punctuation (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">61db8fea</span></td><td>Branch head: three learnings, including the local MySQL 5.6 rig recipe (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">docs/brand-register</td><td><span class="sha">0e60ac65</span> <span class="sha">0f9b966f</span></td><td>7 commits: the register as found, then the codex-review base correction (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">fe6314a</span></td><td>Six re-shot Fire and EMS screens in public/screens/ with their provenance README, on top of PR #8's pushed head <span class="sha">d8f4acc</span> (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">docs/brand-register</td><td><span class="sha">9711678</span> <span class="sha">8a1e812</span></td><td>8 commits: the register, the DESIGN.md shared-palette correction, logo candidate D, a learning, the codex-review base correction (pushed, not merged)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">47d4e73</span> <span class="sha">1541f0c</span></td><td>6 commits: the register overview, then two learnings (iOS ships the system font; the Xcode 26 build and screenshot recipe) (pushed directly to main, no pull request: merged, not live)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-fire</td><td><span class="sha">024f253</span></td><td>The last static-palette screens read the bundle theme (quartet: <span class="sha">f7f1163</span>, <span class="sha">d1bbd48</span>, <span class="sha">8e81a95</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-emt</td><td><span class="sha">f7f1163</span> <span class="sha">f87b6f8</span></td><td>The same fix, plus the one flashcard style file only this branch carries (quartet: <span class="sha">024f253</span>, <span class="sha">d1bbd48</span>, <span class="sha">8e81a95</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-fip</td><td><span class="sha">d1bbd48</span></td><td>The same fix (quartet: <span class="sha">024f253</span>, <span class="sha">f7f1163</span>, <span class="sha">8e81a95</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-ip</td><td><span class="sha">8e81a95</span></td><td>The same fix, five files (this branch has no force-update alert) (quartet: <span class="sha">024f253</span>, <span class="sha">f7f1163</span>, <span class="sha">d1bbd48</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">four register branches</td><td><span class="sha">eb9eeda</span> <span class="sha">4568b30</span> <span class="sha">251fb3c</span> <span class="sha">a1e60f6</span></td><td>The register branch per product, 5 commits per branch, heads shown: <code>docs/brand-register-emt</code>, <code>-fire</code>, <code>-fip</code>, <code>-ip</code>, open as pull requests #118 to #121 into the four product branches (pushed, not merged)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+
+  <div class="entry" id="w6">
+    <div class="stamp"><span class="ver">w6</span><div class="date">August 18<br>work entry</div><span class="badge b-me">mine</span></div>
+    <div>
+      <h3>The evening's work gets the review it was pushed without: nine findings, all fixed the same night</h3>
+      <p>Everything in the entry above went up before anyone had checked it, because the usual independent reviewer was at its usage limit until 20 August. So a different independent review ran the same evening: a separate Claude review, not the agent that wrote the work, over five lanes at once, the colour migration, the mobile theme fix, the website restyle, the brand and theme register, and the six founder-facing pages. Every finding it raised was handed to a second agent whose only job was to knock it down, so nothing was acted on until it had survived a challenge. Nine findings survived, all of them inside the pull requests, none in anything a customer can reach. Three were in the migration: a colour record that is not a key-value map would have stopped the whole migration instead of being replaced, the rewritten keys did not keep the spelling style the apps already read, and the EMT primary colour was a literal repeated in several places rather than one named constant. One was in the website learnings note, which said the homepage never caches the product list when in fact it caches it for 600 seconds. Five were in the register: a wrong count of EMT screens, a wrong claim about the font the apps use, a wrong list of what reads the website colour store, a wrong claim about which keys are read, and one app whose bundle was missing from the table. All nine were fixed and pushed the same evening. The migration was then re-proved end to end on the local copy of the production database engine, forward, backward and forward again, with the same result as the first run. The mobile theme fix and the server logo pull request came back clean. The six founder pages were corrected against the repositories. The same register corrections for the mobile <code>main</code> branch went up last, as their own branch and pull request #122, so every piece of the night is <strong>pushed, not merged</strong>. Nothing is merged, no customer sees anything, and the usual reviewer still has its own pass to make when its limit lifts on 20 August.</p>
+      <div class="tracewrap"><table>
+        <tr><th>Repo</th><th>Branch</th><th>Commit</th><th>What it is</th></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">7796fb8b</span></td><td>Migration fixes: non-map colour records replaced instead of stopping the run, key spelling kept as the apps read it, the EMT primary as one named constant (pushed, not merged, PR #952)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">docs/brand-register</td><td><span class="sha">8313d64a</span></td><td>Register: four claims corrected against the code (pushed, not merged, PR #953)</td></tr>
+        <tr><td class="c-repo">C3suite_server</td><td class="c-branch">brand/mark-and-favicons-2026-08</td><td><span class="sha">6fb749ff</span></td><td>Learnings: the presigned-URL entry matched to the website copy word for word (pushed, not merged, PR #951)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">54d368b</span></td><td>Learnings: the homepage caches the product list for 600 seconds, not never (pushed, not merged, PR #8)</td></tr>
+        <tr><td class="c-repo">c3suite-web</td><td class="c-branch">docs/brand-register</td><td><span class="sha">802472f</span></td><td>Register: the same four claims corrected (pushed, not merged, PR #9)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-emt</td><td><span class="sha">5005642</span></td><td>Register corrections, pull request #118 (pushed, not merged; siblings: <span class="sha">eb2d103</span>, <span class="sha">455e03f</span>, <span class="sha">65ca910</span>, and the local <span class="sha">ba47083</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-fire</td><td><span class="sha">eb2d103</span></td><td>The same corrections, pull request #119 (pushed, not merged; siblings: <span class="sha">5005642</span>, <span class="sha">455e03f</span>, <span class="sha">65ca910</span>, and the local <span class="sha">ba47083</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-fip</td><td><span class="sha">455e03f</span></td><td>The same corrections, pull request #120 (pushed, not merged; siblings: <span class="sha">5005642</span>, <span class="sha">eb2d103</span>, <span class="sha">65ca910</span>, and the local <span class="sha">ba47083</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-ip</td><td><span class="sha">65ca910</span></td><td>The same corrections, pull request #121 (pushed, not merged; siblings: <span class="sha">5005642</span>, <span class="sha">eb2d103</span>, <span class="sha">455e03f</span>, and the local <span class="sha">ba47083</span>)</td></tr>
+        <tr><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-main</td><td><span class="sha">ba47083</span></td><td>The same corrections for the <code>main</code> copy, pull request #122 into <code>main</code> (pushed, not merged; siblings: <span class="sha">5005642</span>, <span class="sha">eb2d103</span>, <span class="sha">455e03f</span>, <span class="sha">65ca910</span>)</td></tr>
+      </table></div>
+    </div>
+  </div>
+
+  <h2 id="index"><span class="sec">Backtracking</span>Commit index — every mapped commit, filterable</h2>
+  <p class="quiet" style="font-size:.92rem">Type anything — a SHA fragment, a branch, a keyword ("IAP", "crash", "keystore"), or a doc version ("v27") — to filter. The doc column links back to the entry that tells the story around the commit.</p>
+  <input id="commit-filter" type="search" placeholder="Filter 162 commits — e.g. “mine”, “restore”, “fire-exam”, “v25”, “w6”, “93bb48b”" aria-label="Filter commits">
+  <p id="filter-count">162 commits shown</p>
+  <div class="tracewrap" id="commit-index"><table>
+    <thead><tr><th>Date</th><th>Repo</th><th>Branch</th><th>SHA</th><th>Who</th><th>Doc</th><th>What it is</th></tr></thead>
+    <tbody>
+      <tr><td>06-20</td><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">c38334fe</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v13">v13</a></td><td>VariousUpgrades — the upgrade wave preceding the recovery</td></tr>
+      <tr><td>06-20</td><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">50eb7f64</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v13">v13</a></td><td>Fix: actions/checkout v4 for Node 24</td></tr>
+      <tr><td>06-21</td><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">5912e34b</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v13">v13</a></td><td>Target production runner for deploy job</td></tr>
+      <tr><td>06-22</td><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">f44e9bdb</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v13">v13</a></td><td>Resizable columns on manage-users table (admin panel)</td></tr>
+      <tr><td>06-25</td><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">e4022dcb</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v13">v13</a></td><td>Update contents_controller.rb — later identified as breaking the deploy-branch tip</td></tr>
+      <tr><td>06-25</td><td class="c-repo">c3suite-web</td><td class="c-branch">main</td><td><span class="sha">698e51d</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v13">v13</a></td><td>Admin panel link in nav for admin users</td></tr>
+      <tr><td>06-26</td><td class="c-repo">c3suite-web</td><td class="c-branch">main</td><td><span class="sha">5019b48</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v13">v13</a></td><td>FixAdminPanel</td></tr>
+      <tr><td>06-27</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">00cf280</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v14">v14</a></td><td>Fix API URL + store field in Android IAP (triplet: a632cbe, 5e695e6)</td></tr>
+      <tr><td>06-27</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">a632cbe</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v14">v14</a></td><td>Fix API URL + store field in Android IAP (triplet: 00cf280, 5e695e6)</td></tr>
+      <tr><td>06-27</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">5e695e6</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v14">v14</a></td><td>Fix API URL + store field in Android IAP (triplet: 00cf280, a632cbe)</td></tr>
+      <tr><td>06-27</td><td class="c-repo">c3suite-web</td><td class="c-branch">main</td><td><span class="sha">34a56d3</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v14">v14</a></td><td>Privacy policy page</td></tr>
+      <tr><td>06-29</td><td class="c-repo">c3suite-web</td><td class="c-branch">main</td><td><span class="sha">f53f794</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v15">v15</a></td><td>Proxy /api/* to api.code3apps.com — Android IAP fix. LOAD-BEARING: shipped builds depend on it</td></tr>
+      <tr><td>06-29</td><td class="c-repo">c3app</td><td class="c-branch">interview-prep</td><td><span class="sha">079c54f</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v15">v15</a></td><td>Merge PR #106 — interview-prep IAP purchase integration</td></tr>
+      <tr><td>06-30</td><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">a019acd</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#rn076">RN 0.76</a></td><td>RN upgrade prep 0.72.4 → 0.76.9</td></tr>
+      <tr><td>06-30</td><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">141ccac</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#rn076">RN 0.76</a></td><td>RN 0.76 upgrade handoff notes (docs)</td></tr>
+      <tr><td>06-30</td><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">b0ce1d5</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#rn076">RN 0.76</a></td><td>Rename async-storage to @react-native-async-storage/async-storage</td></tr>
+      <tr><td>07-02</td><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">389d0ac</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v17">v17</a></td><td>Session 17: rating modal final, orientation-locker rotation, Podfile symlink fix</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">feature/rn-upgrade-0.76</td><td><span class="sha">aae7b0f</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>Junk cleanup + ITSAppUsesNonExemptEncryption=false (pre-merge polish)</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">5ad418a</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>MERGE: feature/rn-upgrade-0.76 → interview (the 0.76 landing)</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">77bd460</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>MERGE: interview → fire (the 0.76 landing)</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">97ba088</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>MERGE: interview → emt (the 0.76 landing)</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">d97acf3</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>Regenerate Podfile.lock for RN 0.76</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">06d6f24</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>Regenerate Podfile.lock for RN 0.76 (EMT)</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">150797c</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>Regenerate scrollable-tab-view patch; remove dead viewpager require</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">bca3b6c</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>Sync lockfiles after npm install</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">884b207</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v18">v18</a></td><td>Remove macOS ' 2' duplicate junk files</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">0279158</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v19">v19</a></td><td>Duplicate delete-account button, portrait back-button offset, EMS display name</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">797ab70</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v19">v19</a></td><td>Portrait back button; 3.81 (5)</td></tr>
+      <tr><td>07-03</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">a28b280</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v19">v19</a></td><td>Portrait back button + regenerated patch; 3.80 (5)</td></tr>
+      <tr><td>07-04</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">e5d898b</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v19">v19</a></td><td>Bump EMS to 3.80 (5)</td></tr>
+      <tr><td>07-04</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">eaef23e</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v20">v20</a></td><td>iPad rotation headers, keyboard, banner auto-hide (triplet: e72e2fa, e3777b3)</td></tr>
+      <tr><td>07-04</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">e72e2fa</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v20">v20</a></td><td>iPad rotation headers, keyboard, banner auto-hide (triplet: eaef23e, e3777b3)</td></tr>
+      <tr><td>07-04</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">e3777b3</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v20">v20</a></td><td>iPad rotation headers, keyboard, banner auto-hide (triplet: eaef23e, e72e2fa)</td></tr>
+      <tr><td>07-04</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">8b80e85</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v20">v20</a></td><td>redux-persist version+migrate safeguard; build 6 (triplet: 240b1de, 29d9bd4)</td></tr>
+      <tr><td>07-04</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">240b1de</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v20">v20</a></td><td>redux-persist version+migrate safeguard; build 6 (triplet: 8b80e85, 29d9bd4)</td></tr>
+      <tr><td>07-04</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">29d9bd4</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v20">v20</a></td><td>redux-persist version+migrate safeguard; build 6 (triplet: 8b80e85, 240b1de)</td></tr>
+      <tr><td>07-06</td><td class="c-repo">C3suite_server</td><td class="c-branch">fix/contents-controller-syntax (local)</td><td><span class="sha">916e2467</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#v13">v13</a></td><td>Revert of e4022dcb — exists locally, not on the deploy branch</td></tr>
+      <tr><td>07-10</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">eef0205</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v23">v23</a></td><td>Launch-crash fix: import screens directly in root.js (siblings: bebcf64, abd4889)</td></tr>
+      <tr><td>07-10</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">bebcf64</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v23">v23</a></td><td>Launch-crash fix: barrel imports (siblings: eef0205, abd4889)</td></tr>
+      <tr><td>07-10</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">a46cf60</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v23">v23</a></td><td>Bump Fire to 3.81 (7)</td></tr>
+      <tr><td>07-10</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">75a701f</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v23">v23</a></td><td>Bump EMS to 3.80 (8)</td></tr>
+      <tr><td>07-10</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">08d51fc</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v23">v23</a></td><td>Bump Interview to 3.80 (8)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">abd4889</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Launch-crash fix: barrel imports, EMT's copy (siblings: eef0205, bebcf64)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">4f959c7</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Repair scrollable-tab-view patch → pager-view (triplet: 68fe298, beb17f6)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">68fe298</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Repair scrollable-tab-view patch → pager-view (triplet: 4f959c7, beb17f6)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">beb17f6</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Repair scrollable-tab-view patch → pager-view (triplet: 4f959c7, 68fe298)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">e04cc7e</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Remove Progress tab; login &amp; settings layout (triplet: d0e01db, a5e1f62)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">d0e01db</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Remove Progress tab; login &amp; settings layout (triplet: e04cc7e, a5e1f62)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">a5e1f62</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Remove Progress tab; login &amp; settings layout (triplet: e04cc7e, d0e01db)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">8be8ad6</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Bump EMS to 3.81 (1)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">8e3b845</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Bump Interview to 3.81 (1)</td></tr>
+      <tr><td>07-11</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">6f16e68</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v24">v24</a></td><td>Bump Fire to 3.81 (8)</td></tr>
+      <tr><td>07-12</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">0040ed9</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v25">v25</a></td><td>NDK r27 for 16 KB; Fire 182/3.82 (triplet: 5da4120, 8114ba8)</td></tr>
+      <tr><td>07-12</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">5da4120</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v25">v25</a></td><td>NDK r27 for 16 KB; EMT 180/3.80 (triplet: 0040ed9, 8114ba8)</td></tr>
+      <tr><td>07-12</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">8114ba8</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v25">v25</a></td><td>NDK r27 for 16 KB; Interview 181/3.81 (triplet: 0040ed9, 5da4120)</td></tr>
+      <tr><td>07-12</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">313e4e8</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v25">v25</a></td><td>New-Arch on 0.76.9: autolinking, gesture-handler pin, keystore pw → ~/.gradle (triplet: a790947, 6d98b05)</td></tr>
+      <tr><td>07-12</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">a790947</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v25">v25</a></td><td>New-Arch on 0.76.9 (triplet: 313e4e8, 6d98b05)</td></tr>
+      <tr><td>07-12</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">6d98b05</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v25">v25</a></td><td>New-Arch on 0.76.9 (triplet: 313e4e8, a790947)</td></tr>
+      <tr><td>07-13</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">87cb205</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v26">v26</a></td><td>WIP RN 0.86: deps, Android root gradle, Gradle 9.3.1, Kotlin entry points</td></tr>
+      <tr><td>07-13</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">a6a8506</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v26">v26</a></td><td>0.86 Android green + 16 KB-compliant: nitro-modules for iap15, bridgeless entry points</td></tr>
+      <tr><td>07-13</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">944b9cb</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v26">v26</a></td><td>react-navigation v7 API migration</td></tr>
+      <tr><td>07-13</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">f78593d</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v26">v26</a></td><td>Remove disposable build log + 16 KB check script</td></tr>
+      <tr><td>07-14</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">a2fe9f6</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v27">v27</a></td><td>EMERGENCY: Fire forced-update lockout fix; 3.82 (10)</td></tr>
+      <tr><td>07-14</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">48641b9</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v27">v27</a></td><td>Interview: Restore Purchases, update-check + store link fix, dismissible modal; 3.81 (2)</td></tr>
+      <tr><td>07-14</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">3ea4c24</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v27">v27</a></td><td>Regenerate Podfile.lock (pin gesture-handler 2.21.0)</td></tr>
+      <tr><td>07-15</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">f9a6fd8</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v28">v28</a></td><td>EMT: version bump + restore purchase</td></tr>
+      <tr><td>07-15</td><td class="c-repo">c3app</td><td class="c-branch">emt-exam-prep</td><td><span class="sha">e9d9037</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v28">v28</a></td><td>EMT: Versionupdate; 3.82 (2)</td></tr>
+      <tr><td>07-16</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">fae2765</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v28">v28</a></td><td>0.86 first functional device run (17 files): saga CJS pin, modal patch, Flipper removal, iap 13→15 Nitro rewrite</td></tr>
+      <tr><td>07-19</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">93bb48b</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v29">v29</a></td><td>Android IAP P0 close: Restore button, grant-before-acknowledge fix, pending guard; settings scroll, banner fix</td></tr>
+      <tr><td>07-22</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">b70cc6d</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v30">v30</a></td><td>Interview catch-up on 0.86</td></tr>
+      <tr><td>07-22</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-fire</td><td><span class="sha">4f27482</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v30">v30</a></td><td>Fire 0.86 product identity (first pass; superseded same day by 3bc1361)</td></tr>
+      <tr><td>07-22</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-fire</td><td><span class="sha">3bc1361</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v30">v30</a></td><td>Fire 0.86 identity: applicationId, slug, icons, Fire IAP SKUs, store URLs; 183/3.82</td></tr>
+      <tr><td>07-22</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-fire</td><td><span class="sha">61c2266</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v30">v30</a></td><td>IAPFireExamFix</td></tr>
+      <tr><td>07-22</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">33ae55c</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v30">v30</a></td><td>0.86 shared fixes ("0.86commit")</td></tr>
+      <tr><td>07-22</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-emt</td><td><span class="sha">33a2112</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v30">v30</a></td><td>0.86 upgrade for EMT</td></tr>
+      <tr><td>07-23</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-fire</td><td><span class="sha">1a3d0e5</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v30">v30</a></td><td>Update build.gradle (follow-up)</td></tr>
+      <tr><td>07-29</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86</td><td><span class="sha">5253748</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v32">v32</a></td><td>iOS 0.86 native-migration base ("0.86Upgrade")</td></tr>
+      <tr><td>07-30</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-fire</td><td><span class="sha">50d1073</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v32">v32</a></td><td>Fire 0.86 iOS: Swift AppDelegate, bundle id/version/icon identity; TestFlight 4.0</td></tr>
+      <tr><td>07-30</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-emt</td><td><span class="sha">d9d470c</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v32">v32</a></td><td>EMT branch upgrade for 0.86 iOS</td></tr>
+      <tr><td>07-30</td><td class="c-repo">c3app</td><td class="c-branch">upgrade/rn-0.86-emt</td><td><span class="sha">70b148b</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v32">v32</a></td><td>EMT 0.86: Podfile.lock sync, EMS icon, iOS identity for TestFlight 4.0</td></tr>
+      <tr><td>08-02</td><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">34eeca5</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v33">v33</a></td><td>Consolidation Phase 1: flavor config system</td></tr>
+      <tr><td>08-02</td><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">a05fc61</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v33">v33</a></td><td>Consolidation Phase 2: Android product flavors</td></tr>
+      <tr><td>08-02</td><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">e187f98</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v33">v33</a></td><td>Consolidation Phases 2–4: iOS identity patching, guardrails, CI verify</td></tr>
+      <tr><td>08-03</td><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">4bcd461</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v33">v33</a></td><td>Favorite-tap crash guard + "No questions available" empty state</td></tr>
+      <tr><td>08-04</td><td class="c-repo">C3suite_server</td><td class="c-branch">fix/comprehensive-quiz-404</td><td><span class="sha">edada320</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v33">v33</a></td><td>Comprehensive-quiz 404 fix: Question.find → Question.where</td></tr>
+      <tr><td>08-04</td><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">ff600cbb</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v33">v33</a></td><td>MERGE PR #940 → deployed to production</td></tr>
+      <tr><td>08-04</td><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">be51b0e8</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>"site crash" — August 4 outage-day emergency fix</td></tr>
+      <tr><td>08-05</td><td class="c-repo">C3suite_server</td><td class="c-branch">harden-deploy-syntax-gate</td><td><span class="sha">686902b3</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>Ruby syntax gate + clean:false in deploy.staging.yml</td></tr>
+      <tr><td>08-05</td><td class="c-repo">C3suite_server</td><td class="c-branch">production-build</td><td><span class="sha">0eec9343</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>MERGE PR #942 → deploy run #220 green, live</td></tr>
+      <tr><td>08-05</td><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">5b94534</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>BUG-1: already-owned IAP unlocks immediately</td></tr>
+      <tr><td>08-05</td><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">c1cdbf8</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>BUG-4: comprehensive quiz first-tap fix ("ComprehensiveFix")</td></tr>
+      <tr><td>08-05</td><td class="c-repo">c3app</td><td class="c-branch">consolidation/flavors</td><td><span class="sha">0320729</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>FEAT-3: flashcard FRONT/BACK labels + gated bookmark</td></tr>
+      <tr><td>08-05</td><td class="c-repo">C3suite_server</td><td class="c-branch">feat/magic-link-auth2</td><td><span class="sha">15b69c4a</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>Magic-link backend scaffold (pushed, no pull request)</td></tr>
+      <tr><td>08-10</td><td class="c-repo">C3suite_server</td><td class="c-branch">feat/magic-link-auth2</td><td><span class="sha">63606511</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>Magic-link: rack_attack rate limit (post-doc continuation, pushed, no pull request)</td></tr>
+      <tr><td>08-10</td><td class="c-repo">C3suite_server</td><td class="c-branch">feat/magic-link-auth2</td><td><span class="sha">033bd627</span></td><td class="c-who"><span class="who who-team">team</span></td><td class="c-doc"><a href="#v34">v34</a></td><td>Magic-link: products_controller update (post-doc continuation, pushed, no pull request)</td></tr>
+      <tr><td>08-11</td><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">0da2c85</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Style contract applied to the rule files; flavor-generation doc cleanup</td></tr>
+      <tr><td>08-11</td><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">b160e5d</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>port-fix and sync-learnings skills</td></tr>
+      <tr><td>08-12</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">06c6560e</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #943 — agent rules, push guard, learnings log, rollback-safe deploy</td></tr>
+      <tr><td>08-12</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">3938f1a9</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #944 — HANDOFF rewritten to post-merge state</td></tr>
+      <tr><td>08-12</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">3c5be72b</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #945 — model-tiered delegates + worktree provisioning</td></tr>
+      <tr><td>08-12</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">cbf64717</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #946 — web-audit docs preserved from the closed #941</td></tr>
+      <tr><td>08-12</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">0eeb3065</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #947 — handoff and learnings updates</td></tr>
+      <tr><td>08-12</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">76b4317a</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #948 — founder brief, June to August</td></tr>
+      <tr><td>08-12</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">95b7762d</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #949 — push-guard hardening after the three-round independent review</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3suite-web</td><td class="c-branch">temp-main</td><td><span class="sha">c58f289</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #3 — pull requests target temp-main while main is frozen</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3suite-web</td><td class="c-branch">temp-main</td><td><span class="sha">e61fc40</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge design/marketing-direction — model-tiered delegates and skill wiring</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3suite-web</td><td class="c-branch">temp-main</td><td><span class="sha">d5f8a97</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #4 — push-guard hardening (sed fallback, quoted-refspec stripping)</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3suite-web</td><td class="c-branch">temp-main</td><td><span class="sha">02c6df4</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #5 — portable ERE in the guard's no-jq fallback</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">40cc415</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Model-tiered delegates (SHARED-BLOCK model-tiering copy)</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">7ada064</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>port-fix and sync-learnings wired to the mechanic/explorer delegates</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">c3adc29</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Push-guard hardening: sed fallback without jq, quoted-refspec stripping</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">a2976c2</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Portable ERE in the guard's no-jq fallback</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">b49acef</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #112 — Restore Purchases strict product match (sibling: #113, EMT f9a6fd8)</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3app</td><td class="c-branch">fire-exam-prep</td><td><span class="sha">dfe34e3</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Restore only this product's transaction; drop the latest-transaction fallback</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">fc7ac1c</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Merge PR #113 — the strict-match fix, second app of the triplet</td></tr>
+      <tr><td>08-12</td><td class="c-repo">c3app</td><td class="c-branch">firefighter-interview-prep</td><td><span class="sha">dec52da</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w1">w1</a></td><td>Restore only this product's transaction; drop the latest-transaction fallback</td></tr>
+      <tr><td>08-13</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">8a4cac2c</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w2">w2</a></td><td>Bundle 6 fire-IAPs data migration (products 70/72/73)</td></tr>
+      <tr><td>08-13</td><td class="c-repo">C3suite_server</td><td class="c-branch">release</td><td><span class="sha">0a5de804</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w2">w2</a></td><td>Merge PR #950 — the migration lands on release (merged, not live)</td></tr>
+      <tr><td>08-13</td><td class="c-repo">c3suite-web</td><td class="c-branch">temp-main</td><td><span class="sha">cf35ae2</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w2">w2</a></td><td>Merge PR #7 — the designer agent definition</td></tr>
+      <tr><td>08-13</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">7fc033c</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w2">w2</a></td><td>Design-system foundation: fonts, tokens, primitives (first of 10, pushed, not merged)</td></tr>
+      <tr><td>08-13</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">262aa67</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w2">w2</a></td><td>Branch head: marketing surfaces restyled (last of 10, pushed, not merged)</td></tr>
+      <tr><td>08-17</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">e73e482</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w3">w3</a></td><td>Merge temp-main into the restyle branch (pushed, not merged)</td></tr>
+      <tr><td>08-17</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">a21fec7</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w3">w3</a></td><td>ProductCard bottom-pinned CTA actually pins (pushed, not merged)</td></tr>
+      <tr><td>08-17</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">011bf3e</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w3">w3</a></td><td>Mobile menu scroll lock and focus trap (pushed, not merged)</td></tr>
+      <tr><td>08-17</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">99fcb16</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w3">w3</a></td><td>Menu close control inside the focus trap — Codex round 1, P2 (pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">97d1a8f</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w4">w4</a></td><td>Redrawn mark, favicon/OG set, brand masters, DESIGN.md updates (pushed, not merged, PR #8)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">3b4ffa5</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w4">w4</a></td><td>Real app screens replace drawn device art; product page rebuilt (pushed, not merged, PR #8)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">a19deb0</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w4">w4</a></td><td>Codex cycle 2 round 1: description clip re-measures on resize (pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">eb5ebc3</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w4">w4</a></td><td>Codex cycle 2 round 2: "Show less" kept while expanded (pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">d8f4acc</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w4">w4</a></td><td>Learnings: store screenshots, generic-verdict insight, presigned image URL (pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">brand/mark-and-favicons-2026-08</td><td><span class="sha">b31772c1</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w4">w4</a></td><td>Admin sidebar logo + real favicon files (pushed, not merged, PR #951 into release)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">brand/mark-and-favicons-2026-08</td><td><span class="sha">e78d86a7</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w4">w4</a></td><td>Cross-repo learning copy: presigned product image URL (pushed, not merged, PR #951)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">0ebde42e</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>One colour set per family in both theme stores: reversible data migration and value table (pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">7e3b3673</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>HANDOFF: the pending family-theme migration and how to verify it after a promote (pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">52f17252</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Theme-fix doc: plain punctuation (pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">61db8fea</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Branch head: three learnings, incl. the local MySQL 5.6 rig recipe (pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">docs/brand-register</td><td><span class="sha">0e60ac65</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Brand and theme register as found (first of 7, pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">docs/brand-register</td><td><span class="sha">0f9b966f</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Branch head: codex-review base is release (last of 7, pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">fe6314a</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Six re-shot Fire and EMS screens in public/screens/ (pushed, not merged, on top of PR #8's d8f4acc)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">docs/brand-register</td><td><span class="sha">9711678</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Register plus the DESIGN.md shared-palette correction (first of 8, pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">docs/brand-register</td><td><span class="sha">8a1e812</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Branch head: codex-review base is temp-main (last of 8, pushed, not merged)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">47d4e73</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Register overview on main (first of 6, pushed directly to main, no pull request: merged, not live)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">main</td><td><span class="sha">1541f0c</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Branch head: two learnings, iOS system font and the Xcode 26 recipe (last of 6, pushed directly to main, no pull request: merged, not live)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-fire</td><td><span class="sha">024f253</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Last static-palette screens read the bundle theme (quartet: f7f1163, d1bbd48, 8e81a95)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-emt</td><td><span class="sha">f7f1163</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>The same fix, EMT's copy (quartet: 024f253, d1bbd48, 8e81a95)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-emt</td><td><span class="sha">f87b6f8</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Branch head: the flashcard style file only this branch carries</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-fip</td><td><span class="sha">d1bbd48</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>The same fix, interview's copy (quartet: 024f253, f7f1163, 8e81a95)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">fix/theme-context-static-consumers-ip</td><td><span class="sha">8e81a95</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>The same fix, five files, no force-update alert here (quartet: 024f253, f7f1163, d1bbd48)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-emt</td><td><span class="sha">eb9eeda</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Register branch head of 5, pull request #118 into emt-exam-prep (pushed, not merged; siblings: 4568b30, 251fb3c, a1e60f6)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-fire</td><td><span class="sha">4568b30</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Register branch head of 5, pull request #119 into fire-exam-prep (pushed, not merged; siblings: eb9eeda, 251fb3c, a1e60f6)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-fip</td><td><span class="sha">251fb3c</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Register branch head of 5, pull request #120 into firefighter-interview-prep (pushed, not merged; siblings: eb9eeda, 4568b30, a1e60f6)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-ip</td><td><span class="sha">a1e60f6</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w5">w5</a></td><td>Register branch head of 5, pull request #121 into interview-prep (pushed, not merged; siblings: eb9eeda, 4568b30, 251fb3c)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">fix/family-theme-colors-2026-08</td><td><span class="sha">7796fb8b</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Migration review fixes: non-map colour records, key spelling, EMT primary as a named constant (pushed, not merged, PR #952)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">docs/brand-register</td><td><span class="sha">8313d64a</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Register: four claims corrected against the code (pushed, not merged, PR #953)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">C3suite_server</td><td class="c-branch">brand/mark-and-favicons-2026-08</td><td><span class="sha">6fb749ff</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Learnings: presigned-URL entry matched to the website copy (pushed, not merged, PR #951)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">design/phase-1-brand-theme</td><td><span class="sha">54d368b</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Learnings: the homepage caches the product list for 600 seconds (pushed, not merged, PR #8)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3suite-web</td><td class="c-branch">docs/brand-register</td><td><span class="sha">802472f</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Register: the same four claims corrected (pushed, not merged, PR #9)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-emt</td><td><span class="sha">5005642</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Register corrections, PR #118 (pushed, not merged; siblings: eb2d103, 455e03f, 65ca910, local ba47083)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-fire</td><td><span class="sha">eb2d103</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Register corrections, PR #119 (pushed, not merged; siblings: 5005642, 455e03f, 65ca910, local ba47083)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-fip</td><td><span class="sha">455e03f</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Register corrections, PR #120 (pushed, not merged; siblings: 5005642, eb2d103, 65ca910, local ba47083)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-ip</td><td><span class="sha">65ca910</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>Register corrections, PR #121 (pushed, not merged; siblings: 5005642, eb2d103, 455e03f, local ba47083)</td></tr>
+      <tr><td>08-18</td><td class="c-repo">c3app</td><td class="c-branch">docs/brand-register-main</td><td><span class="sha">ba47083</span></td><td class="c-who"><span class="who who-me">mine</span></td><td class="c-doc"><a href="#w6">w6</a></td><td>The same corrections for the main copy, pull request #122 (pushed, not merged; siblings: 5005642, eb2d103, 455e03f, 65ca910)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2><span class="sec">Maintenance</span>How this page stays current</h2>
+  <p class="quiet" style="font-size:.92rem">This page (<code>docs/index.html</code>) is the maintained source of truth; the shared artifact is republished from it. The workspace rule at <code>.claude/rules/passon-timeline.md</code> instructs coding-agent sessions on both entry sources. <strong>Work entries</strong> (the norm since v34): when a session lands a milestone, it appends a dated entry here — story paragraph, code-trace table, commit-index rows, counts bumped — under the same verification rules (every hash checked with <code>git cat-file -e</code>, branch via <code>git branch -r --contains</code>, unmatched work marked <em>no commit found</em>, never a guessed hash). <strong>Handoff notes</strong> (rare now — one arrives only if the user shares it): convert to HTML in <code>docs/passon/</code>, then entry, index rows, and appendix row as before. The converted docs in <code>passon/</code> are verbatim — they contain the credentials this page redacts, so they stay local and are never published.</p>
+
+  <h2><span class="sec">Appendix A</span>Every file accounted for — 26 of 26</h2>
+  <div class="tracewrap appendix"><table>
+    <tr><th>#</th><th>File</th><th>Doc date</th><th>Size</th><th>Disposition</th></tr>
+    <tr><td>1</td><td>C3suite_PassOn_June2026_updated_v13.docx</td><td>Jun 26</td><td>49 KB</td><td>superseded by v14</td></tr>
+    <tr><td>2</td><td>C3suite_PassOn_June2026_updated_v14.docx</td><td>Jun 27–28</td><td>56 KB</td><td>superseded by v15 (which dropped ~89% of it — restored in v21)</td></tr>
+    <tr><td>3</td><td>C3suite_PassOn_June2026_v15(1).docx</td><td>Jun 29 16:04</td><td>14 KB</td><td>duplicate — earlier save of v15</td></tr>
+    <tr><td>4</td><td>C3suite_PassOn_June2026_v15.docx</td><td>Jun 29 18:59</td><td>15 KB</td><td><strong>canonical v15</strong>; superseded by v16</td></tr>
+    <tr><td>5</td><td>RN Upgrade 0.76 — Session Handoff (July 1 2026).docx</td><td>Jul 1</td><td>13 KB</td><td>standalone; folded into v16/v21</td></tr>
+    <tr><td>6</td><td>C3suite_PassOn_July2026_v16.docx</td><td>Jul 1</td><td>18 KB</td><td>superseded by v17</td></tr>
+    <tr><td>7</td><td>C3suite_PassOn_July2026_v17.docx</td><td>Jul 2</td><td>18 KB</td><td>superseded by v18</td></tr>
+    <tr><td>8</td><td>C3suite_PassOn_July2026_v18.docx</td><td>Jul 3</td><td>17 KB</td><td>superseded by v19</td></tr>
+    <tr><td>9</td><td>C3suite_PassOn_July2026_v19.docx</td><td>Jul 4 am</td><td>13 KB</td><td>superseded by v20</td></tr>
+    <tr><td>10</td><td>C3suite_PassOn_July2026_v20.docx</td><td>Jul 4 pm</td><td>13 KB</td><td>superseded by v21 (the "thin doc" that prompted the comprehensiveness rule)</td></tr>
+    <tr><td>11</td><td>C3suite_PassOn_July2026_v21.docx</td><td>Jul 6</td><td>23 KB</td><td>superseded by v22</td></tr>
+    <tr><td>12</td><td>C3suite_PassOn_July2026_v22.docx</td><td>Jul 9</td><td>22 KB</td><td>superseded by v23</td></tr>
+    <tr><td>13</td><td>C3suite_PassOn_July2026_v23.docx</td><td>Jul 10</td><td>19 KB</td><td>superseded by v24</td></tr>
+    <tr><td>14</td><td>C3suite_PassOn_July2026_v24.docx</td><td>Jul 11</td><td>22 KB</td><td>superseded by v25</td></tr>
+    <tr><td>15</td><td>C3suite_PassOn_July2026_v25.docx</td><td>Jul 12 14:15</td><td>240 KB</td><td>duplicate — earlier save of v25</td></tr>
+    <tr><td>16</td><td>C3suite_PassOn_July2026_v25(1).docx</td><td>Jul 12 14:39</td><td>240 KB</td><td><strong>canonical v25</strong> (later, expanded save); superseded by v26</td></tr>
+    <tr><td>17</td><td>C3suite_PassOn_July2026_v26.docx</td><td>Jul 13</td><td>235 KB</td><td>superseded by v27</td></tr>
+    <tr><td>18</td><td>C3suite_PassOn_July2026_v27.docx</td><td>Jul 14</td><td>27 KB</td><td>superseded by v28</td></tr>
+    <tr><td>19</td><td>C3suite_PassOn_July2026_v28.docx</td><td>Jul 16</td><td>27 KB</td><td>superseded by v29</td></tr>
+    <tr><td>20</td><td>C3suite_PassOn_July2026_v29.docx</td><td>Jul 19</td><td>251 KB</td><td>superseded by v30</td></tr>
+    <tr><td>21</td><td>C3suite_PassOn_July2026_v30.docx</td><td>Jul 22</td><td>247 KB</td><td>superseded by v31</td></tr>
+    <tr><td>22</td><td>C3suite_PassOn_July2026_v31.docx</td><td>Jul 27</td><td>246 KB</td><td>superseded by v32</td></tr>
+    <tr><td>23</td><td>C3suite_PassOn_August2026_v32.docx</td><td>Aug 1</td><td>248 KB</td><td>superseded by v33</td></tr>
+    <tr><td>24</td><td>C3suite_PassOn_August2026_v33.docx</td><td>Aug 4</td><td>257 KB</td><td>superseded by v34</td></tr>
+    <tr><td>25</td><td>Untitled document.docx</td><td>Aug 5 20:18</td><td>217 KB</td><td>standalone — device-test run sheet for v34's BUG-1 fix</td></tr>
+    <tr><td>26</td><td>C3suite_PassOn_August2026_v34.docx</td><td>Aug 5 21:06</td><td>407 KB</td><td class="cur">CURRENT</td></tr>
+  </table></div>
+  <p class="quiet" style="font-size:.85rem; margin-top:.8rem">All 26 files extracted cleanly; no extraction failures.</p>
+
+  <h2><span class="sec">Appendix B</span>Verification</h2>
+  <p class="quiet" style="font-size:.92rem">Every commit hash on this page was taken from the repositories' own history (v13–v34 fetched August 11, 2026; work entries verified the day they were added), never transcribed from a document or a report unverified — including the six hashes v20 quotes about itself, which match the repository exactly. Branch attribution used <code>git branch -r --contains</code>; where a commit is reachable from several branches, the listed branch is its home branch. Re-verify any hash with <code>git cat-file -e &lt;sha&gt;</code> in the named repo.</p>
+
+  <footer>Maintained record · current through w6 (August 18, 2026) · page last updated August 19, 2026 · source of truth: this file (<code>docs/index.html</code>) · originals: <code>Claude Docs/*.docx</code> · upkeep rule: <code>.claude/rules/passon-timeline.md</code></footer>
+</div>
+<script>
+(function () {
+  var input = document.getElementById('commit-filter');
+  var count = document.getElementById('filter-count');
+  var rows = Array.prototype.slice.call(document.querySelectorAll('#commit-index tbody tr'));
+  function apply() {
+    var q = input.value.trim().toLowerCase();
+    var shown = 0;
+    rows.forEach(function (r) {
+      var hit = !q || r.textContent.toLowerCase().indexOf(q) !== -1;
+      r.style.display = hit ? '' : 'none';
+      if (hit) shown++;
+    });
+    count.textContent = shown + ' of ' + rows.length + ' commits shown' + (q ? ' for “' + input.value.trim() + '”' : '');
+  }
+  input.addEventListener('input', apply);
+  apply();
+})();
+</script>
+</body>
+</html>
