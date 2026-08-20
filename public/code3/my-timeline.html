@@ -112,9 +112,9 @@ Every entry links to the pull request, branch or commit it came from, so you can
 work instead of taking my word for it.</p>
 
 <div class="stats">
-  <div class="stat"><b>203</b><span>commits I wrote, across 3 repos</span></div>
-  <div class="stat"><b>33</b><span>pull requests opened, 14 merged</span></div>
-  <div class="stat"><b>12</b><span>days of work</span></div>
+  <div class="stat"><b>228</b><span>commits I wrote, across 3 repos</span></div>
+  <div class="stat"><b>39</b><span>pull requests opened, 26 merged</span></div>
+  <div class="stat"><b>13</b><span>days of work</span></div>
   <div class="stat"><b>26</b><span>hours of my own time</span></div>
 </div>
 
@@ -132,7 +132,7 @@ version bump we owe, until the test suite came back clean. It stayed on a local 
 went out on its own.
 <div class="r"><span class="local">fix/contents-controller-syntax, not pushed</span><span class="local">Rails 7.1 lockfile branch</span></div></div>
 
-<h2>August <span>(9 days)</span></h2>
+<h2>August <span>(10 days)</span></h2>
 
 <div class="entry"><strong>I had the customer website gone through end to end.</strong> Security, purchases, quiz
 scoring, the lot. It turned up real problems: paid course content that is not actually locked
@@ -192,67 +192,92 @@ anyone actually reviewing it, so I had it walked through properly. Three real pr
 buttons that did not line up on the course cards, and a mobile menu that let the page scroll
 behind it and the keyboard wander into the page underneath. Fixing the menu left its own close
 button unreachable, which Codex caught.
-<div class="r"><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, open</a><span>2 review rounds, 1 finding</span></div></div>
+<div class="r"><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, merged</a><span>2 review rounds, 1 finding</span></div></div>
 
 <div class="entry"><strong>Restyle finished: new logo, real app screenshots, rebuilt course page.</strong> After I
 called the first attempt generic, the design rules themselves were fixed first, since those
 rules were what produced the look. The logo was redrawn as shapes so it holds at any size, and
 the site got its first favicon and link preview. The drawn phones were swapped for our own App
-Store screenshots and the course page rebuilt. Both pull requests are open.
-<div class="r"><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, open</a><a href="https://github.com/Code3Apps/C3suite_server/pull/951">server PR #951, open</a><a href="https://github.com/linzlou82/c3suite-web/pull/9">web PR #9, open</a></div></div>
+Store screenshots and the course page rebuilt. Both are merged now.
+<div class="r"><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, merged</a><a href="https://github.com/Code3Apps/C3suite_server/pull/951">server PR #951, merged</a><a href="https://github.com/linzlou82/c3suite-web/pull/9">web PR #9, merged</a></div></div>
 
 <div class="entry"><strong>One set of colours per course family, and app pictures taken from the real
 apps.</strong> Each app paints itself from a record on the server, and those records had drifted
 apart: the same family red in one place, blue in another. It is now one set per family, as a
-database change that can be undone and was tested both ways on a copy of our database. The
-pictures on the site were re-taken from the apps as they run now. All of it is pushed, not
-merged.
-<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, open</a><a href="https://github.com/Code3Apps/c3app/pull/114">app PRs #114 to #117, open</a><a href="https://github.com/linzlou82/c3suite-web/pull/8">re-shot screens in web PR #8</a></div></div>
+database change that can be undone, tested both ways on a copy of our database. Site pictures
+re-taken from the apps as they run. Server and website merged; the four app requests still open.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, merged</a><a href="https://github.com/Code3Apps/c3app/pull/114">app PRs #114 to #117, open</a><a href="https://github.com/linzlou82/c3suite-web/pull/8">re-shot screens in web PR #8</a></div></div>
 
 <div class="entry"><strong>The 18 August work got its review the same day.</strong> A separate Claude
 review went over it in five lanes, with a second agent trying to knock down every finding before
 anything changed. Nine came through, all small, all fixed and pushed the same evening: the colour
 change now replaces a broken colour record instead of stopping the deploy, and the register's
-claims now match the code. The app register copy on main went up as its own pull request. Nothing merged.
-<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, open</a><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, open</a><a href="https://github.com/Code3Apps/c3app/pull/122">app PR #122, open</a></div></div>
+claims now match the code. The app register copy on main went up as its own pull request, since merged.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, merged</a><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, merged</a><a href="https://github.com/Code3Apps/c3app/pull/122">app PR #122, merged</a></div></div>
 
 <div class="entry"><strong>The second reviewer got its turn at last, and found nothing.</strong> The
 reviewer locked out on 18 August came back a day early and read the colour change and all four app
 changes against their real branches. Five reads, nothing to fix. I had the app changes read line by
 line first as well, to be sure no screen can draw itself before its colours arrive. The last copy of
 the colour register went onto the app's main branch, so all seven match.
-<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, open</a><a href="https://github.com/Code3Apps/c3app/pull/114">app PRs #114 to #117, open</a><a href="https://github.com/Code3Apps/c3app/commit/96bed75328203269e36f316e2c540a6f860e6d41">register on app main</a></div></div>
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/952">server PR #952, merged</a><a href="https://github.com/Code3Apps/c3app/pull/114">app PRs #114 to #117, open</a><a href="https://github.com/Code3Apps/c3app/commit/96bed75328203269e36f316e2c540a6f860e6d41">register on app main</a></div></div>
 
 <div class="entry"><strong>The first of the three big security problems has a fix, on my machine only.</strong> In-app
 purchases could be forged: three requests and any account got any course free, for good. The fix refuses
-a purchase receipt already used by another account or another course. It sits behind a switch and only
-writes to the log for now, so no real customer restoring a purchase is turned away before we have read a
-week of those lines. Still on my machine, not pushed.
-<div class="r"><span class="local">fix/iap-transaction-id-guard, not pushed</span></div></div>
+a receipt already used by another account or course, and sits behind a switch that only writes to the log,
+so no real customer restoring a purchase is turned away before we have read a week of those lines. Merged.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/956">server PR #956, merged</a></div></div>
 
 <div class="entry"><strong>A broken bar in the app was nearly published on the website.</strong> On the
 quiz and results screens the coloured header stops short and steps in at both sides. It has been
 there since 2020 and has nothing to do with the missing brand font, which turns out to be absent on
 both phones, not just iPhone. Fixed on all four apps, and the six website screenshots re-shot from
-the fixed build. Screenshots pushed, apps still on my machine, live with the next store build.
-<div class="r"><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, open</a><span class="local">four app branches, not pushed</span></div></div>
+the fixed build. Screenshots pushed; the app fix is merged on the shared branch, live with the next store build.
+<div class="r"><a href="https://github.com/linzlou82/c3suite-web/pull/8">web PR #8, merged</a><a href="https://github.com/Code3Apps/c3app/branches/all?query=quiz-header-band">four app branches, pushed, no pull request</a></div></div>
+
+<div class="entry"><strong>August 20: the unmerged pile is cleared, and the purchase fix got picked apart.</strong> The
+backend, website and app all took their waiting work. A fix another developer put straight onto the deploy
+branch was pulled back onto ours, so the next deploy cannot undo it. A second AI went over the purchase fix
+and found four ways around its new limit and one way to forge its audit log; all five are fixed and tested.
+Nothing is live yet.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/956">backend PR #956, merged</a><a href="https://github.com/Code3Apps/C3suite_server/pull/955">backend PR #955, merged</a><a href="https://github.com/linzlou82/c3suite-web/pull/8">website PR #8, merged</a><a href="https://github.com/Code3Apps/c3app/pull/122">app PR #122, merged</a></div></div>
+
+<div class="entry"><strong>August 20: the deploy safety fix we thought had shipped in August never did.</strong> A
+second AI checked the whole merged result and put its confidence at 97 per cent, finding one more way to
+fake a purchase log. Reading the handoff against the code turned up worse: the pull request titled
+rollback-safe deploy merged the paperwork, not the deploy. Our server still wipes itself before checking
+the replacement starts. The real fix is written and reviewed, now pushed, not merged.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/958">backend PR #958, merged</a><a href="https://github.com/Code3Apps/C3suite_server/pull/957">PR #957, merged</a><a href="https://github.com/Code3Apps/C3suite_server/pull/959">the deploy fix, merged the next day</a></div></div>
+
+<div class="entry"><strong>August 21: the deploy fix is in, and a check that would have lied got caught.</strong> Our
+server used to delete itself before checking the new version starts, so a bad deploy meant no way back.
+The rewrite is now merged after 218 tests passed. A second AI reading it found the health check would
+accept a redirect as proof the site was alive, and that cancelling a deploy skipped the automatic undo.
+Both fixed. It goes live on the next deploy, and a database backup comes first.
+<div class="r"><a href="https://github.com/Code3Apps/C3suite_server/pull/959">backend PR #959, merged</a><a href="https://github.com/Code3Apps/C3suite_server/pull/960">backend PR #960, merged</a></div></div>
+
+<div class="entry"><strong>August 21: the redesigned site is now something you can click through.</strong>
+Screenshots only go so far, so the new design is running as a real site at code3.emerssive.com, on my
+own hosting. It reads from the live backend, so what you see is real, but it is kept out of Google and
+the customer site is untouched. Nothing about code3apps.com changed.
+<div class="r"><a href="https://code3.emerssive.com">code3.emerssive.com, live</a><span>code3apps.com unchanged</span></div></div>
 
 <div class="time-box">
 <strong>Time I spent</strong>, hands on: writing the instructions, reading what came
 back, and checking it myself.
 <table>
   <tr><td>July</td><td>3 days</td><td>3.5 hours</td></tr>
-  <tr><td>August</td><td>9 days</td><td>22.5 hours</td></tr>
-  <tr><td>Total</td><td>12 days</td><td>26 hours</td></tr>
+  <tr><td>August</td><td>10 days</td><td>22.5 hours</td></tr>
+  <tr><td>Total</td><td>13 days</td><td>26 hours</td></tr>
 </table>
 </div>
 
 <footer>
 A living record. The commit count comes from git and covers only the commits I wrote
-(74 backend, 64 website, 65 mobile), including the ones still on my machine that are not
+(93 backend, 66 website, 69 mobile), including the ones still on my machine that are not
 pushed yet; the colour register alone is one document committed on each app branch, which
 is why the mobile number is high. Anything marked not pushed has nothing to open on
-GitHub yet. Day to day detail is in Asana. Last updated August 20, 2026.
+GitHub yet. Day to day detail is in Asana. Last updated August 21, 2026.
 </footer>
 
 </body>

@@ -54,6 +54,11 @@ a.c h2{font-family:var(--display);font-size:1.15rem;margin:0 0 .25rem;color:var(
 a.c p{margin:0;font-size:.9rem;color:var(--ink-2)}
 .legend{margin-top:2rem;padding:.9rem 1.05rem;background:var(--surface);border:1px solid var(--rule);border-radius:10px;font-size:.82rem;color:var(--ink-3)}
 .legend b{color:var(--ink-2)}
+a.live{display:block;text-decoration:none;color:inherit;margin:1.6rem 0 0;padding:1.1rem 1.25rem;background:var(--surface);border-left:3px solid var(--accent-fill);border-radius:0 10px 10px 0}
+a.live:hover{background:var(--surface-2)}
+a.live .lbl{font-family:var(--mono);font-size:.66rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+a.live h2{font-family:var(--display);font-size:1.25rem;margin:.2rem 0 .25rem;color:var(--accent)}
+a.live p{margin:0;font-size:.9rem;color:var(--ink-2);max-width:60ch}
 footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--rule);font-size:.8rem;color:var(--ink-3)}
 </style>
 </head>
@@ -63,6 +68,13 @@ footer{margin-top:2.6rem;padding-top:1rem;border-top:1px solid var(--rule);font-
 <h1>Code3 pages</h1>
 <p class="lede">The working record: what changed, what it looks like, what was learned, and
 every commit behind it. Written for the founders, in plain words.</p>
+<a class="live" href="https://code3.emerssive.com">
+<span class="lbl">Now ready to click through</span>
+<h2>The redesigned website</h2>
+<p>The new design running as a real site rather than screenshots: the new logo, the real
+app screens, the rebuilt course pages. Anyone with the link can open it, it is kept out
+of Google, and code3apps.com itself is unchanged.</p>
+</a>
 <div class="grid">
 <a class="c" href="/code3/review-board"><h2>Review board</h2><p>what changed and how it looks, before and after, and what is waiting for your word</p></a>
 <a class="c" href="/code3/colour-decisions"><h2>Colour decisions</h2><p>the three colour choices only you can make</p></a>
@@ -73,7 +85,7 @@ every commit behind it. Written for the founders, in plain words.</p>
 </div>
 <p class="legend">Ship state words, the same on every page: <b>local only</b> = on the working machine, not sent anywhere; <b>pushed, not merged</b> = on GitHub as an open pull request, customers see nothing; <b>merged</b> = accepted into the branch, still not live; <b>live</b> = customers see it.</p>
 <footer>Rebuilt from the sources in <code>docs/pages-src/</code> and deployed with the website.
-Last exported 20 August 2026.</footer>
+Last exported 21 August 2026.</footer>
 </div>
 </body>
 </html>
