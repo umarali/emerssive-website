@@ -4,9 +4,8 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
+      // Allow crawlers to read the Code3 pages' noindex meta tags.
       allow: "/",
-      // The Code3Apps working record is reachable by link, not through search.
-      disallow: "/code3",
     },
     sitemap: "https://emerssive.com/sitemap.xml",
   };
