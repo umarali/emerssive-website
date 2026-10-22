@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<title>Authentic Ventures Website Launch: Work Summary &amp; Quotation</title>
+<title>Authentic Ventures: Work Summary &amp; Quotation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -81,7 +81,32 @@
   .footer { margin-top: 56px; padding-top: 18px; border-top: 1px solid var(--line);
             color: var(--muted); font-size: 13.5px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px; }
 
+  .tabs { display: flex; border-bottom: 1px solid var(--line); margin: -24px 0 44px; }
+  .tab {
+    flex: 1; display: block; padding: 0 12px 14px 0; margin-bottom: -1px;
+    border-bottom: 2px solid transparent; color: var(--muted); text-decoration: none;
+  }
+  .tab .tab-date { display: block; font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+  .tab .tab-title { display: block; font-size: 14.5px; font-weight: 500; margin-top: 2px; }
+  .tab:hover { color: var(--ink); }
+  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+  .tab .tab-status { display: block; font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+  .tab[aria-selected="true"] .tab-title { font-weight: 600; }
+  .tab:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+  .sources { margin: 10px 0 0; padding-left: 18px; color: var(--muted); font-size: 13.5px; }
+  .sources li { margin: 3px 0; }
+  .sources a { color: var(--muted); text-underline-offset: 2px; }
+  .sources a:hover { color: var(--ink); }
+
+  .evidence { display: grid; gap: 14px; margin: 18px 0 0; }
+  .evidence img { display: block; max-width: 100%; height: auto; border: 1px solid var(--line); }
+  .evidence .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .evidence .pair img { width: 100%; }
+  @media (max-width: 560px) { .evidence .pair { grid-template-columns: 1fr; } }
+
   @media print {
+    .tabs { display: none; }
     .page { padding: 24px 0; max-width: 100%; }
     body { font-size: 13px; }
     .price-box .amount { font-size: 28px; }
@@ -96,9 +121,121 @@
     <span class="doc-type">Work Summary &amp; Quotation</span>
   </header>
 
+  <nav class="tabs" role="tablist" aria-label="Engagements">
+    <a class="tab" role="tab" id="tab-oct-2026" href="#oct-2026" aria-controls="panel-oct-2026" aria-selected="true">
+      <span class="tab-date">October 2026</span>
+      <span class="tab-title">Security fix and site repairs</span>
+      <span class="tab-status">Awaiting approval</span>
+    </a>
+    <a class="tab" role="tab" id="tab-jul-2026" href="#jul-2026" aria-controls="panel-jul-2026" aria-selected="false" tabindex="-1">
+      <span class="tab-date">July 2026</span>
+      <span class="tab-title">Website launch</span>
+      <span class="tab-status">Completed · Paid</span>
+    </a>
+  </nav>
+
+  <section class="panel" role="tabpanel" id="panel-oct-2026" aria-labelledby="tab-oct-2026">
+
+  <h1>Security Fix and Site Repairs</h1>
+  <p class="meta">Prepared for Authentic Ventures</p>
+  <p class="meta">Umar Ali · October 22, 2026 · authentic-ventures.com</p>
+  <p class="meta">Status: Awaiting approval · Rate: $48/hour</p>
+
+  <hr class="rule">
+
+  <h2>Why this work is needed</h2>
+
+  <h3><span class="n">01</span>Critical PHP security flaw (PHP2Shell)</h3>
+  <p>PHP is the programming language and server technology WordPress is built on, so it runs behind every WordPress site, including AV's. On October&nbsp;20, 2026, details of two critical flaws in PHP leaked online before a fix was released. The flaws let an attacker take over the web server, including the site's files and database. PHP released fixed versions on October&nbsp;21 and urged all users to update immediately. Cloudways, the company that hosts the AV website, is rolling the patch out across its servers, but it needs to be confirmed on the AV site. OpenAI, whose AI models helped find the flaws, called them one of the most severe bugs in open source software in recent memory. The NSA, CISA and other national cyber agencies have also urged everyone running PHP to update. Attackers were already scanning for vulnerable sites before the fix came out.</p>
+  <ul class="sources">
+    <li><a href="https://www.php.net/archive/2026.php" target="_blank" rel="noopener">PHP release notes</a></li>
+    <li><a href="https://status.cloudways.com/incidents/xxjt802wwhpk" target="_blank" rel="noopener">Cloudways status</a></li>
+    <li><a href="https://x.com/gdb/status/2112921529650688312" target="_blank" rel="noopener">Greg Brockman, OpenAI President, on X</a></li>
+    <li><a href="https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4630238/nsa-advisory-critical-patches-recommended-for-php-vulnerabilities/" target="_blank" rel="noopener">NSA advisory</a></li>
+    <li><a href="https://www.cisa.gov/news-events/alerts/2026/10/21/critical-vulnerabilities-php-require-immediate-patching" target="_blank" rel="noopener">CISA alert</a></li>
+  </ul>
+  <div class="evidence">
+    <a href="https://www.php.net/archive/2026.php" target="_blank" rel="noopener"><img src="/work/authentic-ventures/php-8-5-12-release.png" width="865" height="344" loading="lazy" alt="PHP 8.5.12 release notice, 21 Oct 2026: a security release fixing two critical vulnerabilities, with all PHP 8.5 users urged to update immediately."></a>
+    <div class="pair">
+      <a href="https://status.cloudways.com/incidents/xxjt802wwhpk" target="_blank" rel="noopener"><img src="/work/authentic-ventures/cloudways-incident.png" width="648" height="683" loading="lazy" alt="Cloudways incident report, 22 Oct 2026: the PHP security patch is being rolled out to hosted applications."></a>
+      <a href="https://x.com/gdb/status/2112921529650688312" target="_blank" rel="noopener"><img src="/work/authentic-ventures/gdb-php2shell-post.png" width="446" height="422" loading="lazy" alt="Post by Greg Brockman on X describing php2shell as one of the most severe bugs in open source software found in recent memory."></a>
+    </div>
+    <a href="https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/4630238/nsa-advisory-critical-patches-recommended-for-php-vulnerabilities/" target="_blank" rel="noopener"><img src="/work/authentic-ventures/nsa-advisory.png" width="1274" height="488" loading="lazy" alt="NSA advisory, 21 Oct 2026: critical patches recommended for the PHP vulnerabilities nicknamed PHP2Shell."></a>
+  </div>
+
+  <h3><span class="n">02</span>Vulnerability alerts from Cloudways (weekly since September 27)</h3>
+  <p>Cloudways' vulnerability detection system has flagged the AV site every week since September&nbsp;27, on September&nbsp;27 and October&nbsp;5, 12 and 19, saying it has security vulnerabilities that need immediate attention. These need to be reviewed and fixed alongside the PHP update.</p>
+  <div class="evidence">
+    <img src="/work/authentic-ventures/cloudways-vulnerability-alerts.png" width="893" height="711" loading="lazy" alt="Cloudways notifications: Vulnerability Detection Alerts for the Authentic Ventures site on 27 September and 5, 12 and 19 October 2026.">
+  </div>
+
+  <h3><span class="n">03</span>Plugins failing to update (reported September 22–23)</h3>
+  <p>WordPress has repeatedly emailed AV that some plugins failed to update. Lindsay forwarded the notice to Bri on September&nbsp;22, and Bri raised it with me on September&nbsp;23. Plugins that don't update can leave known security holes open.</p>
+
+  <h3><span class="n">04</span>Broken page appearing intermittently (reported September 18)</h3>
+  <p>Bri reported that the site sometimes loads as a broken page.</p>
+
+  <hr class="rule">
+
+  <h2>Scope of work</h2>
+
+  <table>
+    <tr><th>Work</th><th class="num">Hours (estimate)</th><th class="num">Amount</th></tr>
+    <tr><td>Backup, PHP security update and verification</td><td class="num">1.5</td><td class="num">$72.00</td></tr>
+    <tr><td>Review and fix the vulnerabilities Cloudways flagged, and pending updates</td><td class="num">2.0</td><td class="num">$96.00</td></tr>
+    <tr><td>Diagnose and fix plugin update failures</td><td class="num">1.5</td><td class="num">$72.00</td></tr>
+    <tr><td>Diagnose and fix intermittent broken page</td><td class="num">1.0</td><td class="num">$48.00</td></tr>
+    <tr><td>Full-site testing after changes</td><td class="num">1.0</td><td class="num">$48.00</td></tr>
+    <tr class="total"><td>Total (quoted)</td><td class="num">7.0</td><td class="num">$336.00</td></tr>
+  </table>
+  <p class="tl-note">Price: $336 fixed, based on 7 hours at $48/hour.</p>
+
+  <hr class="rule">
+
+  <h2>Completed work</h2>
+
+  <table>
+    <tr><th>Date</th><th>Work</th><th class="num">Hours</th><th class="num">Amount</th></tr>
+    <tr><td style="white-space: nowrap">Sep 15, 2026</td><td>Ran the old site and captured screenshots for the SEC exam, shared with Bri</td><td class="num">0.5</td><td class="num">$24.00</td></tr>
+  </table>
+
+  <hr class="rule">
+
+  <h2>Hosting costs paid on AV's behalf</h2>
+
+  <p>The Cloudways hosting account is in my name and paid with my card. The invoice sent on July&nbsp;30 has already been reimbursed. These are the invoices since then:</p>
+
+  <table>
+    <tr><th>Cloudways invoice</th><th>Billed</th><th class="num">Amount</th></tr>
+    <tr><td>July 2026</td><td>Aug 1</td><td class="num">$5.73</td></tr>
+    <tr><td>August 2026</td><td>Sep 1</td><td class="num">$14.50</td></tr>
+    <tr><td>September 2026</td><td>Oct 1</td><td class="num">$14.50</td></tr>
+    <tr><td>October 2026</td><td>Nov 1 (estimate)</td><td class="num">$14.50</td></tr>
+    <tr><td>Subtotal</td><td></td><td class="num">$49.23</td></tr>
+    <tr class="gratis"><td>Less: one month's hosting, already paid by AV</td><td></td><td class="num">&minus;$14.00</td></tr>
+    <tr class="total"><td>Total</td><td></td><td class="num">$35.23</td></tr>
+  </table>
+
+  <hr class="rule">
+
+  <h2>Summary</h2>
+
+  <table>
+    <tr><th>Item</th><th class="num">Amount</th></tr>
+    <tr><td>Completed work (SEC exam screenshots)</td><td class="num">$24.00</td></tr>
+    <tr><td>Hosting reimbursement</td><td class="num">$35.23</td></tr>
+    <tr class="total"><td>Due now</td><td class="num">$59.23</td></tr>
+    <tr class="gratis"><td>Security fix and site repairs (on approval)</td><td class="num">$336.00</td></tr>
+  </table>
+
+  </section>
+
+  <section class="panel" role="tabpanel" id="panel-jul-2026" aria-labelledby="tab-jul-2026">
+
   <h1>New Website: From Agency Handover to Live Launch</h1>
   <p class="meta">Prepared for Authentic Ventures</p>
   <p class="meta">Umar Ali · July 2026 · authentic-ventures.com</p>
+  <p class="meta">Status: Completed · Paid in full</p>
 
   <p class="intro">The new WordPress site went from agency handover on July&nbsp;15 to live at authentic-ventures.com on July&nbsp;22. This page explains the work in plain terms and gives one fixed price for the complete engagement.</p>
 
@@ -111,7 +248,7 @@
   <div class="tl-row"><span class="tl-date">July 18–19</span><span class="tl-work">Launch-readiness audit, fixes rehearsed on a replica, launch plan written.</span><span class="tl-hours">2.5</span></div>
   <div class="tl-row"><span class="tl-date">July 20–21</span><span class="tl-work">Contact form rebuilt and verified, search and social fixes, titles finalized.</span><span class="tl-hours">3.5</span></div>
   <div class="tl-row"><span class="tl-date">July 22</span><span class="tl-work">Production launch after business hours, every check passed.</span><span class="tl-hours">2.5</span></div>
-  <div class="tl-row"><span class="tl-date">After launch</span><span class="tl-work">Post-launch wrap-up, confirmed as each item completes.</span><span class="tl-hours">1.0</span></div>
+  <div class="tl-row"><span class="tl-date">After launch</span><span class="tl-work">Post-launch wrap-up, completed.</span><span class="tl-hours">1.0</span></div>
   <div class="tl-row"><span class="tl-date">Throughout</span><span class="tl-work">Handover and launch management across both teams.</span><span class="tl-hours">1.0</span></div>
   <p class="tl-note">16.5 hours in total. 3.5 of those are at no charge (detailed below), leaving 13.0 billed.</p>
 
@@ -149,8 +286,8 @@
   <h3><span class="n">08</span>Handover, access and security cleanup</h3>
   <p>Removed the agency's footer credit link and leftover development files, closed their remaining administrator access in favor of a scoped editor login for their SEO review, issued fresh credentials for the Authentic Ventures team, and pointed the site's admin email at info@authentic-ventures.com. Only the firm and I hold administrator access now.</p>
 
-  <h3><span class="n">09</span>Post-launch wrap-up: in progress</h3>
-  <p>Part of the fixed price, confirmed as each item completes: monitoring and rechecking the live site through the days after launch, Google Search Console registration and sitemap submission, search descriptions for the remaining inner pages, switching the form sender to info@authentic-ventures.com once the Google Workspace steps are complete, shutting down the previous hosting so its billing stops, and arranging retirement of the agency's development copy so nothing competes with the live site in search.</p>
+  <h3><span class="n">09</span>Post-launch wrap-up: completed</h3>
+  <p>Part of the fixed price, now complete: monitored and rechecked the live site through the days after launch, registered the site with Google Search Console and submitted the sitemap, wrote search descriptions for the remaining inner pages, switched the form sender to info@authentic-ventures.com once the Google Workspace steps were complete, shut down the previous hosting so its billing stopped, and arranged retirement of the agency's development copy so nothing competes with the live site in search.</p>
 
   <hr class="rule">
 
@@ -173,12 +310,14 @@
   <div class="price-box">
     <span class="label">Fixed price, complete engagement</span>
     <span class="amount">$624</span>
-    <span class="terms">13 hours at $48/hour · fixed.</span>
+    <span class="terms">13 hours at $48/hour · fixed · paid in full.</span>
   </div>
 
   <div class="note-block">
     <b>About the no-charge lines.</b> The migration configuration issue came from my own deployment step, so restoring it isn't billed. Managing the handover and launch is part of how I work. Page titles and search descriptions sat within the original build scope, so that overlap isn't billed either.
   </div>
+
+  </section>
 
   <footer class="footer">
     <span>Umar Ali · aliumar.me@gmail.com</span>
@@ -186,5 +325,41 @@
   </footer>
 
 </div>
+<script>
+  // Tabs follow the URL hash (#oct-2026, #jul-2026) so a tab can be linked from an email.
+  // The panels carry "panel-" ids so the browser doesn't jump past the tab bar on load.
+  (function () {
+    var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+    var names = tabs.map(function (t) { return t.getAttribute('href').slice(1); });
+
+    function show(name) {
+      if (names.indexOf(name) === -1) name = names[0];
+      tabs.forEach(function (tab, i) {
+        var active = names[i] === name;
+        tab.setAttribute('aria-selected', active ? 'true' : 'false');
+        tab.setAttribute('tabindex', active ? '0' : '-1');
+        document.getElementById(tab.getAttribute('aria-controls')).hidden = !active;
+      });
+      return name;
+    }
+
+    tabs.forEach(function (tab, i) {
+      tab.addEventListener('click', function (e) {
+        e.preventDefault();
+        history.replaceState(null, '', '#' + show(names[i]));
+      });
+      tab.addEventListener('keydown', function (e) {
+        var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if (!step) return;
+        var next = tabs[(i + step + tabs.length) % tabs.length];
+        next.focus();
+        next.click();
+      });
+    });
+
+    window.addEventListener('hashchange', function () { show(location.hash.slice(1)); });
+    show(location.hash.slice(1));
+  })();
+</script>
 </body>
 </html>
