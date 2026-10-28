@@ -125,7 +125,7 @@
     <a class="tab" role="tab" id="tab-oct-2026" href="#oct-2026" aria-controls="panel-oct-2026" aria-selected="true">
       <span class="tab-date">October 2026</span>
       <span class="tab-title">Security fix and site repairs</span>
-      <span class="tab-status">Awaiting approval</span>
+      <span class="tab-status">Completed · October 27, 2026</span>
     </a>
     <a class="tab" role="tab" id="tab-jul-2026" href="#jul-2026" aria-controls="panel-jul-2026" aria-selected="false" tabindex="-1">
       <span class="tab-date">July 2026</span>
@@ -139,7 +139,7 @@
   <h1>Security Fix and Site Repairs</h1>
   <p class="meta">Prepared for Authentic Ventures</p>
   <p class="meta">Umar Ali · October 22, 2026 · authentic-ventures.com</p>
-  <p class="meta">Status: Awaiting approval · Rate: $48/hour</p>
+  <p class="meta">Status: Completed – October 27, 2026 · Rate: $48/hour</p>
 
   <hr class="rule">
 
@@ -192,6 +192,89 @@
 
   <hr class="rule">
 
+  <h2>Before and after</h2>
+
+  <h3>Backup</h3>
+  <div class="evidence">
+    <a href="/work/av/oct-2026/backup.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/backup.png" width="1600" height="1089" loading="lazy" alt="Cloudways backup list showing an on-demand backup on October 23, 2026 at 20:18 UTC, alongside the daily automatic backups."></a>
+  </div>
+  <p class="tl-note">On-demand backup taken October 23, 20:18 UTC, before any changes.</p>
+
+  <h3>Security scan</h3>
+  <div class="evidence">
+    <div class="pair">
+      <a href="/work/av/oct-2026/scan-before.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/scan-before.png" width="910" height="2178" loading="lazy" alt="Before: Cloudways security scan on October 23 listing WordPress 7.0, Gravity Forms, Breeze and two unused plugins as insecure."></a>
+      <a href="/work/av/oct-2026/scan-after.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/scan-after.png" width="1600" height="2659" loading="lazy" alt="After: Cloudways security scan on October 26 with every item marked secure."></a>
+    </div>
+  </div>
+  <p class="tl-note">Security scan: 5 insecure items on October 23, 0 on October 26.</p>
+
+  <h3>Automatic security updates</h3>
+  <div class="evidence">
+    <div class="pair">
+      <a href="/work/av/oct-2026/site-health-before.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/site-health-before.png" width="1600" height="933" loading="lazy" alt="Before: WordPress Site Health critical issue, background security updates blocked."></a>
+      <a href="/work/av/oct-2026/site-health-after.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/site-health-after.png" loading="lazy" alt="After: WordPress Site Health with the background updates issue resolved."></a>
+    </div>
+    <div class="pair">
+      <a href="/work/av/oct-2026/wpconfig-before.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/wpconfig-before.png" width="1160" height="106" loading="lazy" alt="Before: site configuration with automatic core updates set to false."></a>
+      <a href="/work/av/oct-2026/wpconfig-after.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/wpconfig-after.png" width="1160" height="118" loading="lazy" alt="After: site configuration with automatic security and maintenance updates turned on."></a>
+    </div>
+  </div>
+  <p class="tl-note">Automatic security updates were switched off; now turned back on.</p>
+
+  <h3>WordPress and plugin updates</h3>
+  <div class="evidence">
+    <div class="pair">
+      <a href="/work/av/oct-2026/updates-before.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/updates-before.png" width="1600" height="1313" loading="lazy" alt="Before: WordPress updates screen with a plugin and two themes waiting to be updated."></a>
+      <a href="/work/av/oct-2026/updates-after.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/updates-after.png" loading="lazy" alt="After: WordPress updates screen showing the site is up to date and receives automatic security releases."></a>
+    </div>
+  </div>
+  <p class="tl-note">WordPress 7.0 to 7.1.3; Gravity Forms, Breeze and other plugins updated.</p>
+
+  <h3>PHP security patch</h3>
+  <div class="evidence">
+    <a href="/work/av/oct-2026/php.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/php.png" width="1168" height="151" loading="lazy" alt="Server output showing PHP 8.2.35, built October 21, 2026."></a>
+  </div>
+  <p class="tl-note">Server runs PHP 8.2.35, the patched release from October 21.</p>
+
+  <h3>Firewall</h3>
+  <div class="evidence">
+    <a href="/work/av/oct-2026/firewall.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/firewall.png" width="897" height="847" loading="lazy" alt="Cloudways firewall incidents between October 10 and 22, each marked high severity and blocked."></a>
+  </div>
+  <p class="tl-note">12 attack attempts between October 10 and 22, all blocked.</p>
+
+  <h3>Website email</h3>
+  <div class="evidence">
+    <a href="/work/av/oct-2026/email.png" target="_blank" rel="noopener"><img src="/work/av/oct-2026/email.png" width="1120" height="750" loading="lazy" alt="Contact form notification sent from Authentic Ventures, info@authentic-ventures.com."></a>
+  </div>
+  <p class="tl-note">Website enquiries now sent from info@authentic-ventures.com.</p>
+
+  <hr class="rule">
+
+  <h2>Testing</h2>
+
+  <ul class="findings">
+    <li>All pages load with no errors.</li>
+    <li>The 404 (page not found) page works.</li>
+    <li>http and www addresses redirect to https.</li>
+    <li>The mobile layout fits the screen.</li>
+    <li>The contact form checks required fields and delivers enquiries.</li>
+    <li>Search engines are allowed to index the site.</li>
+    <li>The sitemap loads.</li>
+    <li>The homepage loaded 10 times with no missing files.</li>
+  </ul>
+
+  <hr class="rule">
+
+  <h2>Still open (not part of this job)</h2>
+
+  <ul class="findings">
+    <li>Advanced Custom Fields PRO needs a license key before it can be updated.</li>
+    <li>The hosting transfer is waiting on AV's paid Cloudways account.</li>
+  </ul>
+
+  <hr class="rule">
+
   <h2>Completed work</h2>
 
   <table>
@@ -215,6 +298,7 @@
     <tr class="gratis"><td>Less: one month's hosting, already paid by AV</td><td></td><td class="num">&minus;$14.00</td></tr>
     <tr class="total"><td>Total</td><td></td><td class="num">$35.23</td></tr>
   </table>
+  <p class="tl-note">Hosting from November&nbsp;1 up to the transfer date will be added once it is known.</p>
 
   <hr class="rule">
 
@@ -222,11 +306,13 @@
 
   <table>
     <tr><th>Item</th><th class="num">Amount</th></tr>
+    <tr><td>Security fix and site repairs (fixed price)</td><td class="num">$336.00</td></tr>
     <tr><td>Completed work (SEC exam screenshots)</td><td class="num">$24.00</td></tr>
-    <tr><td>Hosting reimbursement</td><td class="num">$35.23</td></tr>
-    <tr class="total"><td>Due now</td><td class="num">$59.23</td></tr>
-    <tr class="gratis"><td>Security fix and site repairs (on approval)</td><td class="num">$336.00</td></tr>
+    <tr><td>Hosting reimbursement (July–October, less $14.00 already paid)</td><td class="num">$35.23</td></tr>
+    <tr class="total"><td>Total now due</td><td class="num">$395.23</td></tr>
   </table>
+
+  <div class="note-block"><b>Optional next steps:</b> page speed improvements and page title cleanup, available as a separate small job.</div>
 
   </section>
 
