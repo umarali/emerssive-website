@@ -1,46 +1,55 @@
+import Link from "next/link";
+
 export function ProblemFirst() {
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white border-b border-gray-100">
-      <div className="max-w-5xl mx-auto">
-        {/* Section eyebrow — consistent with site-wide label style */}
-        <p className="text-sm text-primary font-medium uppercase tracking-wide mb-3">
-          How we work
-        </p>
-
-        {/* Editorial split */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mt-10">
-          {/* Left: Pull quote */}
-          <div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-text leading-tight mb-6">
-              Problem first.<br />AI/software second.
-            </h2>
-            <div className="w-10 h-0.5 bg-accent rounded-full" />
-          </div>
-
-          {/* Right: Supporting text */}
-          <div className="space-y-8 pt-1">
-            <div className="pl-5 border-l-2 border-gray-200">
-              <p className="text-base text-text-light leading-relaxed">
-                We do not start with tools, trends, or generic AI demos. We start
-                with <strong className="text-text font-semibold">the work that is slowing your business down.</strong>
-              </p>
-            </div>
-            <div className="pl-5 border-l-2 border-gray-200">
-              <p className="text-base text-text-light leading-relaxed">
-                Inside Emerssive, we use the same approach ourselves — simplify
-                the workflow, eliminate the manual work that should not exist, and
-                use AI only where it improves real output.
-              </p>
-            </div>
-            <div className="pl-5 border-l-2 border-gray-200">
-              <p className="text-base text-text-light leading-relaxed">
-                That is the same lens we bring to every client — whether we are
-                building an AI shopping agent, modernizing a legacy platform, or
-                turning a product idea into production software.
-              </p>
-            </div>
-          </div>
+    <section
+      id="approach"
+      className="scroll-mt-24 border-b border-secondary-dark bg-white px-4 py-20 sm:px-6 lg:px-8"
+    >
+      <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_1.2fr] lg:gap-20">
+        <div>
+          <p className="mb-3 text-sm font-semibold text-primary-dark">
+            How we work
+          </p>
+          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            Start with the problem.
+            <br />
+            Define the next step.
+          </h2>
+          <p className="mt-5 max-w-md leading-7 text-text-light">
+            A useful first conversation connects your business goal to the
+            systems, people and constraints behind it.
+          </p>
+          <Link
+            href="/consultation"
+            className="mt-6 inline-block text-sm font-semibold text-primary-dark underline underline-offset-4"
+          >
+            Tell us what needs to change
+          </Link>
         </div>
+        <ol className="divide-y divide-secondary-dark">
+          {[
+            [
+              "Understand the work",
+              "Bring the workflow, product idea or platform issue. We discuss what happens today and where it gets stuck.",
+            ],
+            [
+              "Define a useful scope",
+              "Identify the users, integrations and constraints. Agree what a first milestone should demonstrate before expanding the build.",
+            ],
+            [
+              "Build, review and refine",
+              "Review working software against the agreed scope. Use what we learn to decide the next milestone.",
+            ],
+          ].map(([title, detail]) => (
+            <li key={title} className="py-6 first:pt-0">
+              <h3 className="text-lg font-bold">{title}</h3>
+              <p className="mt-2 max-w-xl text-sm leading-7 text-text-light">
+                {detail}
+              </p>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );

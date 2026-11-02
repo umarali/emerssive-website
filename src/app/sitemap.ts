@@ -6,12 +6,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/consultation",
     "/services/generative-ai",
     "/services/web-mobile",
+    "/work/qodex",
+    "/work/frontline-education",
+    "/work/code3apps",
+    "/privacy",
+    "/terms",
   ];
 
   return routes.map((route) => ({
     url: `https://emerssive.com${route}`,
     lastModified: new Date(),
-    changeFrequency: route === "" || route === "/consultation" ? "weekly" : "monthly",
+    changeFrequency:
+      route === "" || route === "/consultation" ? "weekly" : "monthly",
     priority: route === "" ? 1 : route === "/consultation" ? 0.9 : 0.8,
   }));
 }

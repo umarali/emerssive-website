@@ -50,16 +50,16 @@ export function CustomerLogos() {
   const [hoveredLogo, setHoveredLogo] = useState<string | null>(null);
 
   return (
-    <section className="py-16 bg-white">
+    <section className="py-12 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12">
+        <div className="text-center mb-8">
           <h2 className="text-3xl text-text mb-4">
-            Trusted by Industry Leaders
+            Selected project experience
           </h2>
           <p className="text-base text-text-light max-w-2xl mx-auto">
-            We&apos;ve built for startups, PE-backed companies, and platforms
-            serving Fortune 500 clients.
+            Software work across education, finance, developer tools and
+            commerce.
           </p>
         </div>
 
@@ -68,16 +68,16 @@ export function CustomerLogos() {
           {customerLogos.map((customer) => (
             <div
               key={customer.name}
-              className="group relative flex items-center justify-center p-6 bg-secondary rounded-lg border border-secondary-dark/10 hover:border-transparent transition-all duration-300 hover:shadow-md"
+              className="group relative flex items-center justify-center p-4 bg-secondary rounded-lg border border-secondary-dark/10 hover:border-transparent transition-all duration-300 hover:shadow-md"
               onMouseEnter={() => setHoveredLogo(customer.name)}
               onMouseLeave={() => setHoveredLogo(null)}
             >
-              <div className="relative w-full h-40 flex items-center justify-center">
+              <div className="relative w-full h-16 flex items-center justify-center">
                 <Image
                   src={customer.logo}
                   alt={customer.alt}
-                  width={280}
-                  height={160}
+                  width={160}
+                  height={64}
                   className={`object-contain transition-all duration-300 ${
                     hoveredLogo === customer.name
                       ? "filter brightness-0" // Makes logo black on hover
@@ -92,13 +92,6 @@ export function CustomerLogos() {
             </div>
           ))}
         </div>
-
-        {/* Trust Indicator */}
-        {/* <div className="text-center mt-12">
-          <p className="text-base text-text-light">
-            <span className="font-semibold text-primary">100+</span> happy clients including affiliates and acquisitions of Fortune 500 companies
-          </p>
-        </div> */}
       </div>
     </section>
   );

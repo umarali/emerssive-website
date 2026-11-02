@@ -39,6 +39,17 @@ function getCalendarUrl(route: ReturnType<typeof deriveConsultationRoute>) {
 }
 
 export async function POST(request: Request) {
+  const webhookUrl = process.env.CONSULTATION_WEBHOOK_URL;
+  if (!webhookUrl) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error:
+          "Online intake is unavailable. Please book through our consultation page or email contact@emerssive.com.",
+      },
+      { status: 503 },
+    );
+  }
   try {
     const formData = await request.formData();
     const attachment = getAttachment(formData);
@@ -73,73 +84,54 @@ export async function POST(request: Request) {
 
     const route = deriveConsultationRoute(values);
     const redirectUrl = getCalendarUrl(route);
-    const webhookUrl = process.env.CONSULTATION_WEBHOOK_URL;
 
-    if (webhookUrl) {
-      const outbound = new FormData();
+    const outbound = new FormData();
 
-      for (const [key, value] of formData.entries()) {
-        if (typeof value === "string") {
-          outbound.append(key, value);
-        } else if (value instanceof File && value.size > 0) {
-          outbound.append(key, value, value.name);
-        }
+    for (const [key, value] of formData.entries()) {
+      if (typeof value === "string") {
+        outbound.append(key, value);
+      } else if (value instanceof File && value.size > 0) {
+        outbound.append(key, value, value.name);
       }
-
-      outbound.append("route", route);
-      outbound.append("submittedAt", new Date().toISOString());
-      outbound.append("redirectUrl", redirectUrl);
-
-      const webhookHeaders = process.env.CONSULTATION_WEBHOOK_BEARER_TOKEN
-        ? {
-            Authorization: `Bearer ${process.env.CONSULTATION_WEBHOOK_BEARER_TOKEN}`,
-          }
-        : undefined;
-
-      const webhookResponse = await fetch(webhookUrl, {
-        method: "POST",
-        headers: webhookHeaders,
-        body: outbound,
-        cache: "no-store",
-      });
-
-      if (!webhookResponse.ok) {
-        return NextResponse.json(
-          {
-            ok: false,
-            error:
-              "We saved your intake locally, but couldn't forward it to the configured destination.",
-          },
-          { status: 502 },
-        );
-      }
-
-      return NextResponse.json({
-        ok: true,
-        message: "Thanks. Your details are on their way to the right team.",
-        mode: "webhook",
-        redirectUrl,
-        route,
-      });
     }
 
-    console.info("Consultation submission received without webhook:", {
-      ...values,
-      route,
-      attachmentName: attachment?.name ?? null,
-      attachmentSize: attachment?.size ?? null,
+    outbound.append("route", route);
+    outbound.append("submittedAt", new Date().toISOString());
+    outbound.append("redirectUrl", redirectUrl);
+
+    const webhookHeaders = process.env.CONSULTATION_WEBHOOK_BEARER_TOKEN
+      ? {
+          Authorization: `Bearer ${process.env.CONSULTATION_WEBHOOK_BEARER_TOKEN}`,
+        }
+      : undefined;
+
+    const webhookResponse = await fetch(webhookUrl, {
+      method: "POST",
+      headers: webhookHeaders,
+      body: outbound,
+      cache: "no-store",
     });
+
+    if (!webhookResponse.ok) {
+      return NextResponse.json(
+        {
+          ok: false,
+          error:
+            "We couldn't deliver your enquiry. Please try again or email contact@emerssive.com.",
+        },
+        { status: 502 },
+      );
+    }
 
     return NextResponse.json({
       ok: true,
-      message:
-        "Thanks. Your request has been captured and is ready for calendar handoff.",
-      mode: "local",
+      message: "Thanks. Your details are on their way to the right team.",
+      mode: "webhook",
       redirectUrl,
       route,
     });
-  } catch (error) {
-    console.error("Consultation submission failed:", error);
+  } catch {
+    console.error("Consultation submission failed.");
     return NextResponse.json(
       {
         ok: false,
