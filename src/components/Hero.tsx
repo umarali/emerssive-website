@@ -1,107 +1,134 @@
-import Image from "next/image";
-import Link from "next/link";
-import { CONSULTATION_ENTRY_PATH } from "@/lib/consultation";
+"use client";
+
+import { useState, useEffect } from "react";
 
 export function Hero() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
+
   return (
-    <section className="border-b border-secondary-dark bg-white px-4 pb-16 pt-32 sm:px-6 lg:px-8 lg:pb-24 lg:pt-40">
-      <div className="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-20">
-        <div>
-          <p className="mb-5 text-sm font-semibold tracking-wide text-primary-dark">
-            AI, web and mobile development
-          </p>
-          <h1 className="max-w-3xl text-4xl font-bold leading-[1.12] tracking-tight text-text sm:text-5xl lg:text-6xl">
-            Software that moves
-            <br className="hidden sm:block" />{" "}
-            <span className="text-primary-dark">your business forward.</span>
-          </h1>
-          <p className="mt-6 max-w-xl text-lg leading-8 text-text-light">
-            Automate a workflow, build a product, or improve the platform you
-            already run. Emerssive helps you turn the problem into working
-            software.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <Link
-              href={CONSULTATION_ENTRY_PATH}
-              className="inline-flex items-center justify-center rounded-full bg-primary-dark px-7 py-3.5 text-sm font-semibold text-white hover:bg-primary"
+    <section className="relative min-h-screen flex items-center pt-20 pb-24 sm:pb-20 bg-secondary">
+      <div
+        className="w-full px-4 sm:px-6 lg:px-0"
+        style={{
+          paddingLeft: "max(1rem, calc(50vw - 610px))",
+          paddingRight: "max(1rem, calc(50vw - 610px))",
+        }}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 items-center">
+          {/* Left: Copy - Takes 2 columns */}
+          <div className="lg:col-span-2">
+            {/* Pre-heading */}
+            <div
+              className={`transition-all duration-700 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
             >
-              Talk about your project
-            </Link>
-            <Link
-              href="#case-studies"
-              className="inline-flex items-center justify-center rounded-full border border-secondary-dark px-7 py-3.5 text-sm font-semibold text-text hover:bg-secondary"
-            >
-              Explore our work{" "}
-              <span aria-hidden="true" className="ml-2">
-                ↓
+              <span className="inline-block px-4 py-2 bg-primary/10 text-primary text-xs sm:text-sm font-medium rounded-full mb-6">
+                Welcome to Emerssive
               </span>
-            </Link>
+            </div>
+
+            {/* Main Heading */}
+            <h1
+              className={`text-4xl sm:text-5xl lg:text-6xl text-text mb-6 leading-tight transition-all duration-700 ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-2"
+              }`}
+            >
+              We build the AI and software
+              <span className="text-accent"> your business actually needs.</span>
+            </h1>
+
+            {/* Subheadline */}
+            <p
+              className={`text-lg text-text-light max-w-2xl mb-8 transition-all duration-700 ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-2"
+              }`}
+            >
+              We help growing teams turn messy workflows, unused data, and
+              outdated platforms into working systems that ship in weeks —
+              not months.
+            </p>
+
+            {/* CTAs */}
+            <div
+              className={`flex flex-col sm:flex-row gap-4 mb-6 transition-all duration-700 ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-2"
+              }`}
+            >
+              <a
+                href="https://calendar.app.google/U3z2GqSza9Fhch8e9"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center bg-gradient-to-r from-primary to-primary-dark text-secondary-light px-6 py-3 rounded-full text-sm font-semibold hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5 hover:scale-[1.02]"
+              >
+                Book a 30-minute strategy call →
+              </a>
+              <a
+                href="#case-studies"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-gray-300 text-text text-sm hover:bg-gray-50 transition-colors"
+              >
+                See case studies ↓
+              </a>
+            </div>
+
+            {/* Trust Indicator */}
+            <div
+              className={`transition-all duration-700 ${
+                isVisible
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 translate-y-2"
+              }`}
+            >
+              <p className="text-primary font-medium text-sm">
+                Trusted by 100+ clients including companies serving and
+                acquired by Fortune 500 firms
+              </p>
+            </div>
           </div>
-          <p className="mt-4 text-sm leading-6 text-text-light">
-            Start with your goals, existing systems and constraints.
-          </p>
+
+          {/* Right: Proof metrics */}
+          <div
+            className={`relative transition-all duration-700 ${
+              isVisible
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-2"
+            }`}
+          >
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 px-8 py-7">
+              <p className="text-xs font-semibold uppercase tracking-widest text-text-light mb-5">
+                You&apos;re in the right place if:
+              </p>
+              <div className="divide-y divide-gray-100">
+                <div className="flex items-start gap-3 pb-4">
+                  <span className="text-primary font-bold text-sm flex-shrink-0 mt-0.5">✓</span>
+                  <span className="text-sm text-text leading-relaxed">Your team does work that should not be manual</span>
+                </div>
+                <div className="flex items-start gap-3 py-4">
+                  <span className="text-primary font-bold text-sm flex-shrink-0 mt-0.5">✓</span>
+                  <span className="text-sm text-text leading-relaxed">You have a product idea but no engineering team</span>
+                </div>
+                <div className="flex items-start gap-3 pt-4">
+                  <span className="text-primary font-bold text-sm flex-shrink-0 mt-0.5">✓</span>
+                  <span className="text-sm text-text leading-relaxed">Your platform can&apos;t keep up with your growth</span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <aside
-          aria-label="Selected project experience"
-          className="rounded-2xl border border-secondary-dark bg-secondary p-6 sm:p-8"
-        >
-          <p className="mb-6 text-sm font-semibold text-text">
-            Built for real operating challenges
-          </p>
-          <ul className="divide-y divide-secondary-dark">
-            {[
-              {
-                name: "Qodex.ai",
-                logo: "qodexai",
-                detail: "AI agents for API discovery and test generation",
-                href: "/work/qodex",
-              },
-              {
-                name: "Frontline Education",
-                logo: "frontline-education",
-                detail: "Frontend modernization and API integration",
-                href: "/work/frontline-education",
-              },
-              {
-                name: "Code3Apps",
-                logo: null,
-                detail: "A shared mobile codebase and content platform",
-                href: "/work/code3apps",
-              },
-            ].map((project) => (
-              <li key={project.name} className="py-5 first:pt-0 last:pb-0">
-                <Link
-                  href={project.href}
-                  className="group flex items-start gap-4 rounded-md"
-                >
-                  <div className="flex h-12 w-20 flex-none items-center justify-center rounded-lg border border-secondary-dark bg-white p-2">
-                    {project.logo ? (
-                      <Image
-                        src={`/assets/customers/${project.logo}-removebg-preview.png`}
-                        alt=""
-                        width={80}
-                        height={40}
-                        className="max-h-9 w-auto object-contain"
-                      />
-                    ) : (
-                      <span className="font-roboto text-sm font-bold text-primary-dark">
-                        Code3
-                      </span>
-                    )}
-                  </div>
-                  <div>
-                    <h2 className="text-base font-bold text-text group-hover:text-primary-dark">
-                      {project.name} <span aria-hidden="true">↗</span>
-                    </h2>
-                    <p className="mt-1 text-sm leading-6 text-text-light">
-                      {project.detail}
-                    </p>
-                  </div>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </aside>
+      </div>
+
+      {/* Background decoration */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl opacity-30" />
+        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl opacity-30" />
       </div>
     </section>
   );

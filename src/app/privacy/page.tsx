@@ -42,6 +42,12 @@ export default function PrivacyPage() {
                   information you choose to send us by email.
                 </li>
                 <li>
+                  Consultation form: first and last name, company, role,
+                  business email, optional phone number, headcount, annual
+                  revenue range, project stage, budget, timeline, problem
+                  summary and any supporting file you choose to upload.
+                </li>
+                <li>
                   Bookings: the name, contact details, appointment time and
                   other information you provide through our Google Calendar
                   booking page.
@@ -59,11 +65,13 @@ export default function PrivacyPage() {
                 this notice.
               </p>
               <p>
-                The consultation page links to booking and email. It does not
-                ask you to upload files or submit an intake form to a website
-                database. Please avoid sending sensitive personal information,
-                passwords or confidential customer records in an initial
-                enquiry.
+                The consultation form sends information to our website server.
+                When a delivery destination is configured, the server forwards
+                the submission and any uploaded file to that destination.
+                Otherwise, submitted text and file details can be recorded in
+                hosting logs. Please avoid sending sensitive personal
+                information, passwords or confidential customer records in an
+                initial enquiry.
               </p>
             </>
           ),
@@ -156,9 +164,9 @@ export default function PrivacyPage() {
                 scheduling services used for those interactions.
               </p>
               <p>
-                Earlier form submissions may also remain in hosting logs or a
-                delivery service used at the time. We have not established
-                whether any such historical records exist.
+                Consultation submissions can be held in hosting logs or a
+                configured delivery service. Logging the name and size of an
+                uploaded file does not mean its contents have been stored.
               </p>
               <p>
                 No fixed retention period has been set for enquiry

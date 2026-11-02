@@ -18,14 +18,14 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://emerssive.com"),
   title: "Emerssive | AI & Software Development Agency",
   description:
-    "AI agents, web applications and mobile products. Explore Emerssive Solutions project work and discuss your next build.",
+    "Ship your AI product in weeks. Custom AI agents, web apps, and mobile solutions for startups and enterprises.",
   keywords:
     "ai development agency, custom ai solutions, software development, generative ai consulting, ai agents, web development, mobile development",
   authors: [{ name: "Emerssive" }],
   openGraph: {
     title: "Emerssive | AI & Software Development Agency",
     description:
-      "AI agents, web applications and mobile products. Explore Emerssive Solutions project work and discuss your next build.",
+      "Ship your AI product in weeks. Custom AI agents, web apps, and mobile solutions for startups and enterprises.",
     type: "website",
     url: "https://emerssive.com",
   },
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Emerssive | AI & Software Development Agency",
     description:
-      "AI agents, web applications and mobile products by Emerssive Solutions.",
+      "Ship your AI product in weeks. Custom AI agents, web apps, and mobile solutions.",
   },
   alternates: {
     canonical: "https://emerssive.com",

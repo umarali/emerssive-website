@@ -7,21 +7,21 @@ import { Testimonials } from "@/components/Testimonials";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 import { Navigation } from "@/components/Navigation";
+import { StickyBottom } from "@/components/StickyBottom";
 
 export default function Home() {
   return (
-    <>
+    <main>
       <Navigation />
-      <main id="main-content">
-        <Hero />
-        <CaseStudies />
-        <Services />
-        <ProblemFirst />
-        <CustomerLogos />
-        <Testimonials />
-        <FAQ />
-      </main>
+      <Hero />
+      <ProblemFirst />
+      <Services />
+      <CaseStudies />
+      <CustomerLogos />
+      <Testimonials />
+      <FAQ />
       <Footer />
-    </>
+      <StickyBottom />
+    </main>
   );
 }

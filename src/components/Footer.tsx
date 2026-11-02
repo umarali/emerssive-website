@@ -4,7 +4,7 @@ import { CurrentYear } from "@/components/CurrentYear";
 
 export function Footer() {
   return (
-    <footer className="bg-gray-900 text-white py-16 pb-16 px-4 sm:px-6 lg:px-8">
+    <footer className="bg-gray-900 text-white py-16 pb-32 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
@@ -27,8 +27,10 @@ export function Footer() {
 
             {/* Company Description */}
             <p className="text-gray-400 text-sm leading-relaxed">
-              Emerssive Solutions is based in Pakistan. We build AI systems, web
-              applications and mobile products, and improve existing software.
+              Emerssive is a software development company specializing in AI,
+              web, and mobile. We&apos;ve built for startups, growth companies,
+              and platforms serving Fortune 500 clients like Bank of America
+              and Allstate.
             </p>
           </div>
 
@@ -37,18 +39,12 @@ export function Footer() {
             <h3 className="text-lg font-semibold text-white mb-6">Links</h3>
             <ul className="space-y-3">
               <li>
-                <Link
-                  href="/privacy"
-                  className="text-gray-400 hover:text-white underline-offset-4 hover:underline"
-                >
+                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors duration-200">
                   Privacy policy
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/terms"
-                  className="text-gray-400 hover:text-white underline-offset-4 hover:underline"
-                >
+                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors duration-200">
                   Terms and conditions
                 </Link>
               </li>

@@ -8,8 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test:e2e": "npx playwright test",
-    "test:e2e:ui": "npx playwright test --ui",
-    "test:site": "node tests/site-contracts.cjs"
+    "test:e2e:ui": "npx playwright test --ui"
   },
   "dependencies": {
     "next": "15.4.10",

@@ -1,68 +1,90 @@
 import Image from "next/image";
 import Link from "next/link";
 
+const services = [
+  {
+    id: 1,
+    title: "Generative AI",
+    description:
+      "Your business has data sitting in documents, emails, and systems — unused. We build AI that reads it, learns from it, and puts it to work.",
+    image: "/assets/services/gen_ai_service.svg",
+    href: "/services/generative-ai",
+  },
+  {
+    id: 2,
+    title: "Web/Mobile Development",
+    description:
+      "Your current platform can't keep up. We build web and mobile products that can — fast, secure, and built for where you're going.",
+    image: "/assets/services/web_mobile_service.svg",
+    href: "/services/web-mobile",
+  },
+];
+
 export function Services() {
-  const services = [
-    {
-      title: "AI agents and automation",
-      description:
-        "Connect language models to the work: API testing, document workflows, internal tools and customer-facing assistants.",
-      detail: "For teams with a workflow to improve or an AI product to build.",
-      image: "/assets/services/gen_ai_service.svg",
-      href: "/services/generative-ai",
-    },
-    {
-      title: "Web and mobile products",
-      description:
-        "Build a new application, modernize a legacy frontend, or bring separate products onto a shared foundation.",
-      detail:
-        "For founders and teams building or improving an existing platform.",
-      image: "/assets/services/web_mobile_service.svg",
-      href: "/services/web-mobile",
-    },
-  ];
   return (
     <section
       id="services"
-      className="scroll-mt-24 bg-white px-4 py-20 sm:px-6 lg:px-8"
+      className="py-20 px-4 sm:px-6 lg:px-8 bg-secondary-light"
     >
-      <div className="mx-auto max-w-7xl">
-        <div className="mb-10 max-w-2xl">
-          <p className="mb-3 text-sm font-semibold text-primary-dark">
-            Where we can help
+      <div className="max-w-4xl mx-auto">
+        {/* Section Header */}
+        <div className="text-center mb-16">
+          <h2 className="text-3xl text-text mb-6">What we can do for you</h2>
+          <p className="text-xl text-text-light max-w-3xl mx-auto">
+            We build what your business actually needs — not what sounds
+            good in a pitch deck.
           </p>
-          <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            What are you trying to build?
-          </h2>
         </div>
-        <div className="grid gap-6 md:grid-cols-2">
+
+        {/* Services Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {services.map((service) => (
             <Link
-              key={service.href}
+              key={service.id}
               href={service.href}
-              className="group grid gap-6 rounded-2xl border border-secondary-dark p-7 hover:border-primary sm:grid-cols-[1fr_100px] sm:p-9"
+              className="group bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden border border-gray-100"
             >
-              <div>
-                <h3 className="text-2xl font-bold group-hover:text-primary-dark">
-                  {service.title}
-                </h3>
-                <p className="mt-4 text-sm leading-7 text-text-light">
+              {/* Icons Section with Hover Gradient */}
+              <div className="bg-gray-100 group-hover:bg-gradient-to-br group-hover:from-primary/20 group-hover:to-primary-dark/20 p-12 transition-all duration-300">
+                <div className="transition-transform duration-300 group-hover:scale-105 flex justify-center">
+                  <Image
+                    src={service.image}
+                    alt={service.title}
+                    width={250}
+                    height={150}
+                    className="h-auto object-contain"
+                  />
+                </div>
+              </div>
+
+              {/* Text Section - White Background */}
+              <div className="p-6">
+                {/* Service Title */}
+                <h3 className="text-lg text-gray-900 mb-4">{service.title}</h3>
+
+                {/* Service Description */}
+                <p className="text-base text-gray-700 leading-relaxed mb-4">
                   {service.description}
                 </p>
-                <p className="mt-4 text-sm leading-7 text-text-light">
-                  {service.detail}
-                </p>
-                <span className="mt-6 inline-block text-sm font-semibold text-primary-dark">
-                  Explore this service <span aria-hidden="true">↗</span>
+
+                {/* Learn More Link */}
+                <span className="inline-flex items-center text-sm text-primary font-medium group-hover:text-primary-dark transition-colors">
+                  Learn more
+                  <svg
+                    className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
                 </span>
               </div>
-              <Image
-                src={service.image}
-                alt=""
-                width={100}
-                height={100}
-                className="hidden self-start sm:block"
-              />
             </Link>
           ))}
         </div>
